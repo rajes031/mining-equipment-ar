@@ -94,7 +94,10 @@
       note.innerHTML =
         "<strong>This device supports full AR</strong>" +
         "Open any machine and tap <em>View at full size in AR</em> to stand it " +
-        "on the floor at 1:1. You will want about 20 m² of clear ground.";
+        "on the floor at 1:1. You will want about 20 m² of clear ground." +
+        '<div class="cta">' +
+          '<a class="cta-alt" href="check.html">Device check</a>' +
+        "</div>";
       return;
     }
     note.innerHTML =
@@ -105,6 +108,7 @@
       '<div class="cta">' +
         '<a class="cta-main" href="marker.html">📷 Open Marker AR</a>' +
         '<a class="cta-alt" href="print-markers.html">Print the markers</a>' +
+        '<a class="cta-alt" href="check.html">Why? Device check</a>' +
       "</div>" +
       (secure ? "" :
         "<p class=\"warn\">⚠ This page is on plain http and not on " +
