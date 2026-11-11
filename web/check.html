@@ -104,8 +104,17 @@
              : "This page is on plain http, so the camera and WebXR are " +
                "blocked no matter what the hardware can do.");
 
-  add(isAndroid, "Android device",
-      isAndroid ? "Detected Android." : "Not Android — this app targets Android.");
+  // Informational only, never pass/fail. Reading the platform from the user
+  // agent is guesswork: Chrome's "Desktop site" toggle rewrites the UA while
+  // leaving the hardware untouched, so an Android tablet can report itself as
+  // a desktop and still do full AR. The WebXR check below is the real answer
+  // and overrules anything guessed here.
+  add(null, "Platform (informational)",
+      (isAndroid ? "Looks like Android."
+                 : "Does not look like Android — but if the AR check below " +
+                   "passes, ignore this. Chrome's “Desktop site” option " +
+                   "changes what the browser reports.") +
+      (isChrome ? " Chrome-based browser." : " Not a Chrome-based browser."));
 
   var hasCam = !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
   add(hasCam, "Camera API available",
