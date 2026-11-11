@@ -2,22 +2,32 @@
 
 ## First check: is your device ARCore-certified?
 
-On the tablet, open the Play Store and search **"Google Play Services for AR"**.
+Open **`check.html`** on the device. It queries WebXR in the browser and gives
+a definitive answer in two seconds.
 
-- **It appears and installs** -> you have ARCore. Everything below applies.
-- **No result at all** -> you do not. The Play Store hides incompatible apps
-  from search rather than showing them greyed out, so "no results" is the
-  answer, not a search problem.
+A second, less reliable check is to open the Play Store and search
+**"Google Play Services for AR"**:
 
-Most Android *tablets* fail this test, including the **Redmi Pad 2 Pro**
-(confirmed on the device; Xiaomi's own FAQ says the Pad 2 Pro does not support
-AR, even though Google's list has an entry for the 5G variant). ARCore
-certification is granted per model by Google and most budget and mid-range
-tablets never get it. Check before buying hardware for a lab: the brand tells
-you nothing, only the exact model on
-<https://developers.google.com/ar/devices> does.
+- **It appears and installs** -> you have ARCore.
+- **No result at all** -> inconclusive, NOT a no. The app may be preinstalled
+  as a system component and hidden from search. Open `check.html` instead.
 
-**Without ARCore, use Marker AR** -- see
+**The Play Store test gives false negatives.** On many devices Google Play
+Services for AR is preinstalled as a hidden system component and never appears
+in search, even though AR works perfectly. The **Redmi Pad 2 Pro** is exactly
+such a device: the Play Store shows nothing, Xiaomi's own FAQ claims it "does
+not support AR", and yet it runs full WebXR floor-placement AR and is listed by
+Google as supporting the Depth API.
+
+So use `web/check.html` instead, which queries WebXR directly in the browser.
+That is what actually decides whether AR runs. Trust it over the Play Store,
+over the manufacturer's FAQ, and over any spec sheet.
+
+ARCore certification is still granted per model by Google, and many tablets do
+lack it. Before buying hardware for a lab, check the exact model on
+<https://developers.google.com/ar/devices> -- the brand tells you nothing.
+
+**If check.html says no, use Marker AR** -- see
 [05-marker-ar-without-arcore.md](05-marker-ar-without-arcore.md). It needs only
 a camera and works on any tablet.
 

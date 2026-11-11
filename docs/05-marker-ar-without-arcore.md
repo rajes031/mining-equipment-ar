@@ -1,12 +1,17 @@
 # Marker AR — for tablets without ARCore
 
-Most Android tablets, the Redmi Pad 2 Pro included, are not ARCore-certified.
-No ARCore means no Scene Viewer and no WebXR: the floor-placement AR in
-`viewer.html` simply cannot run.
+Some Android devices are not ARCore-certified. No ARCore means no Scene Viewer
+and no WebXR: the floor-placement AR in `viewer.html` simply cannot run.
+
+(The Redmi Pad 2 Pro this project was first tested on turned out to be fine --
+the Play Store hid the AR component from search and Xiaomi's FAQ was wrong.
+Always confirm with `check.html` before assuming a device cannot do AR.)
 
 Marker tracking is the way round it. It uses nothing but the camera, so it
-works on any device, and it has one genuine advantage over floor AR: the scale
-is exact and known, because it is measured from the printed marker.
+works on any device -- and it is worth having even when floor AR does work,
+because the scale is exact and known, measured from the printed marker. A
+1:25 dumper on a desk is a better classroom object than a 1:1 one you cannot
+fit in the room.
 
 ## Using it
 

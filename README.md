@@ -21,8 +21,12 @@ Open the address it prints — `http://localhost:8000/` on this machine, or the
 `192.168.x.x` one on a tablet on the same Wi-Fi. For in-page AR rather than
 Google's Scene Viewer, use `python serve.py --https`.
 
-**On a tablet without ARCore** (most of them, including the Redmi Pad 2 Pro)
-add one step and use marker tracking instead, which needs only a camera:
+**Not sure what a device supports?** Open `check.html` on it. Do not trust a
+Play Store search -- the AR component is often preinstalled and hidden, so a
+search finding nothing does not mean the device lacks AR.
+
+**On a device that genuinely has no ARCore**, or for exact-scale desk models,
+use marker tracking instead, which needs only a camera:
 
 ```bash
 python make_markers.py    # vendors AR.js, builds printable markers
