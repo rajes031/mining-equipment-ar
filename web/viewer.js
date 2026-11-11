@@ -30,7 +30,7 @@
   var panel = document.getElementById("panel");
   var id = new URLSearchParams(location.search).get("m") || "dumper";
   var data = null;
-  var materials = new Map();   // part name -> [{ material, base: [r,g,b,a] }]
+  var baseColour = new Map();  // material name -> its as-authored [r,g,b,a]
   var selected = null;
   var tab = "parts";
   var labelsOn = true;
@@ -66,18 +66,15 @@
   }
 
   mv.addEventListener("load", function () {
-    materials.clear();
-    // A part is usually one material, but a part made of more than one
-    // substance needs more -- the cab is bodywork AND glass. Those extra
-    // materials are named "<part>.<something>", and they must fade with the
-    // part, otherwise isolating the tyres leaves the cab windows hanging in
-    // mid-air. So the registry maps a part name to a LIST of materials.
+    // Record the as-authored colours by material name, so a faded part can be
+    // put back exactly -- including the cab glass, which is translucent to
+    // begin with and must return to 0.35 rather than to 1. The material
+    // objects themselves are looked up live in setAlpha instead of being
+    // stored, which keeps this to one flat map and survives a model swap.
+    baseColour.clear();
     (mv.model ? mv.model.materials : []).forEach(function (m) {
       var f = m.pbrMetallicRoughness.baseColorFactor;
-      var dot = m.name.indexOf(".");
-      var part = dot === -1 ? m.name : m.name.slice(0, dot);
-      if (!materials.has(part)) materials.set(part, []);
-      materials.get(part).push({ material: m, base: [f[0], f[1], f[2], f[3]] });
+      baseColour.set(m.name, [f[0], f[1], f[2], f[3]]);
     });
     applyFigure();
     applySelection();
@@ -85,19 +82,30 @@
 
   /* --------------------------------------------------- part rendering */
 
+  // A part is usually one material, but a part made of more than one
+  // substance needs more -- the cab is bodywork AND glass. Those extra
+  // materials are named "<part>.<something>", and they must fade with the
+  // part, otherwise isolating the tyres leaves the cab windows hanging in
+  // mid-air.
+  function partOf(materialName) {
+    var dot = materialName.indexOf(".");
+    return dot === -1 ? materialName : materialName.slice(0, dot);
+  }
+
   function setAlpha(name, alpha) {
-    var entries = materials.get(name);
-    if (!entries) return;
-    entries.forEach(function (entry) {
-      var b = entry.base;
+    var list = mv.model ? mv.model.materials : [];
+    for (var i = 0; i < list.length; i++) {
+      var m = list[i];
+      if (partOf(m.name) !== name) continue;
+      var b = baseColour.get(m.name) || m.pbrMetallicRoughness.baseColorFactor;
       var a = alpha === null ? b[3] : alpha;
       try {
-        if (entry.material.setAlphaMode) {
-          entry.material.setAlphaMode(a < 1 ? "BLEND" : "OPAQUE");
+        if (m.setAlphaMode) {
+          m.setAlphaMode(a < 1 ? "BLEND" : "OPAQUE");
         }
-        entry.material.pbrMetallicRoughness.setBaseColorFactor([b[0], b[1], b[2], a]);
+        m.pbrMetallicRoughness.setBaseColorFactor([b[0], b[1], b[2], a]);
       } catch (e) { /* older model-viewer: leave the part as it is */ }
-    });
+    }
   }
 
   function applySelection() {

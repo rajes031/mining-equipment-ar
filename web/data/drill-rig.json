@@ -1,0 +1,206 @@
+{
+ "id": "drill-rig",
+ "name": "Rotary drill rig",
+ "subtitle": "Crawler-mounted rotary rig — 19.6 m mast, detailed mesh",
+ "category": "Drilling",
+ "summary": "Drilling is the first operation in the opencast cycle: no hole, no blast, no broken rock for the shovel to load. This is a crawler-mounted rotary rig — a tracked undercarriage, a slewing machinery deck and a tall mast carrying a rotating drill string. The machine modelled here is a foundation and piling rig rather than a production blasthole drill, so it carries an auger and a telescopic kelly instead of a rotary bit and a pipe rack. Everything that matters for teaching is the same: plumb mast, rotation and pull-down as the two drilling controls, a counterweighted slewing deck, and crawler tracks that tram between holes. The dimensions below are measured off the model itself.",
+ "specs": [
+  [
+   "Configuration",
+   "Crawler base, slewing upper structure, front-mounted mast"
+  ],
+  [
+   "Mast height",
+   "19.6 m (measured, mast vertical)"
+  ],
+  [
+   "Width over tracks",
+   "4.58 m (measured)"
+  ],
+  [
+   "Length over tracks",
+   "8.39 m (measured)"
+  ],
+  [
+   "Drill string shown",
+   "Telescopic kelly bar with auger tool"
+  ],
+  [
+   "Drive",
+   "Diesel-hydraulic; rotary head travels on the mast"
+  ],
+  [
+   "Drilling controls",
+   "Rotation speed and pull-down (crowd) force"
+  ],
+  [
+   "Typical blasthole equivalent",
+   "100-270 mm diameter, 10-20 m bench holes"
+  ],
+  [
+   "Moving parts in the model",
+   "Travel, slew and drill feed (three control nodes)"
+  ]
+ ],
+ "safety": [
+  "Nobody stands within the mast footprint while the string is turning: a dropped tool or a thrown sample travels the full height of the mast.",
+  "Tail swing is wider than the tracks. The exclusion zone is a circle around the slew centre, not a box around the machine.",
+  "Tracks extended and the machine levelled before the mast is raised. Rigs go over sideways far more often than they go over forwards.",
+  "Never drill into a misfired or uncharged hole from a previous round, and keep the rig off the crest until the bench edge has been checked.",
+  "Mast up means no travelling on a grade; lower the mast to tram between benches."
+ ],
+ "ar_tips": [
+  "This machine is 19.6 m tall — taller than a five-storey building. Place it outdoors and walk back 25 m or you will only ever see the tracks.",
+  "Look up the mast from the foot. The height of the mast against the size of the cab is the thing students misjudge on paper every time.",
+  "The model is about 3.4 MB, so give it a few seconds on a slow connection the first time."
+ ],
+ "model": "models/drill-rig.glb",
+ "thumbnail": "models/drill-rig.png",
+ "extents_m": {
+  "width_x": 4.58,
+  "height_y": 19.58,
+  "length_z": 8.39
+ },
+ "triangles": 157424,
+ "bytes": 3431424,
+ "parts": [
+  {
+   "node": "mast",
+   "label": "Mast (leader)",
+   "note": "The vertical guide the drilling head runs up and down. Everything about hole quality starts here: if the mast is not plumb, the hole is not straight, and in production blasting a hole that wanders throws out the whole blast design -- burden and spacing stop being what the pattern says they are. The rig levels itself on the undercarriage before the mast is set, not after.",
+   "position": [
+    0.124,
+    10.558,
+    4.158
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "pivot": null,
+   "parent": null,
+   "rig_parent": "Rotate_conrol",
+   "triangles": 15356
+  },
+  {
+   "node": "drill_string",
+   "label": "Kelly bar, auger and drill tool",
+   "note": "The rotating column that carries torque and thrust down to the cutting tool. A telescopic kelly lets a short mast drill a deep hole. Penetration rate comes from the product of two things the operator controls -- rotation speed and pull-down force -- and pushing either past what the ground will take costs bits, not time.",
+   "position": [
+    -0.049,
+    5.146,
+    4.196
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "pivot": null,
+   "parent": null,
+   "rig_parent": "Drill_kontrol",
+   "triangles": 8000
+  },
+  {
+   "node": "machinery_house",
+   "label": "Machinery deck: engine, winches, counterweight",
+   "note": "Diesel engine, hydraulic pumps, the main and auxiliary winches and the counterweight, all on the slewing upper structure. The counterweight is what lets the rig hold a heavy string out in front without tipping, and it is why the tail swing is dangerous: the back end sweeps a circle wider than the tracks.",
+   "position": [
+    -0.017,
+    2.851,
+    -4.196
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "pivot": null,
+   "parent": null,
+   "rig_parent": "Rotate_conrol",
+   "triangles": 17869
+  },
+  {
+   "node": "operator_cab",
+   "label": "Operator cab",
+   "note": "Sits on the slewing deck with sight of the mast foot and the hole collar. Note how far the operator is from the tool: everything at the bottom of the string is read from instruments and from the banksman, which is why nobody stands inside the mast's footprint while the string is turning.",
+   "position": [
+    -2.062,
+    2.208,
+    0.289
+   ],
+   "normal": [
+    -1.0,
+    0.0,
+    -0.0
+   ],
+   "pivot": null,
+   "parent": null,
+   "rig_parent": "Rotate_conrol",
+   "triangles": 19748
+  },
+  {
+   "node": "track_left",
+   "label": "Crawler track, left",
+   "note": "Spreads the machine's weight to a ground pressure the working bench can carry. Tracked undercarriages move slowly but tram over broken ground between holes without a made-up road, which is exactly what a drill pattern needs.",
+   "position": [
+    2.288,
+    0.52,
+    -0.373
+   ],
+   "normal": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "pivot": null,
+   "parent": null,
+   "rig_parent": "MOve_control",
+   "triangles": 47416
+  },
+  {
+   "node": "track_right",
+   "label": "Crawler track, right",
+   "note": "Tracks can usually be extended outward for working and drawn in for transport. Extended is the stable stance -- drilling on retracted tracks is a classic cause of rigs going over.",
+   "position": [
+    -2.288,
+    0.52,
+    -0.373
+   ],
+   "normal": [
+    -1.0,
+    0.0,
+    -0.0
+   ],
+   "pivot": null,
+   "parent": null,
+   "rig_parent": "MOve_control",
+   "triangles": 47595
+  },
+  {
+   "node": "undercarriage_frame",
+   "label": "Undercarriage frame",
+   "note": "The structural link between the tracks and the slew ring, and where levelling is taken up. The slew ring on top carries the whole upper structure and is the single most loaded bearing on the machine.",
+   "position": [
+    -0.007,
+    0.688,
+    -1.663
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "pivot": null,
+   "parent": null,
+   "rig_parent": "MOve_control",
+   "triangles": 1440
+  }
+ ],
+ "rig_nodes": [
+  "MOve_control",
+  "Rotate_conrol",
+  "Drill_kontrol"
+ ]
+}
