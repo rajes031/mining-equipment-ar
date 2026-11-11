@@ -1,0 +1,259 @@
+/* Mining equipment AR -- shared styles.
+   Mobile-first: the primary device is a phone or 10" tablet held one-handed,
+   often outdoors, sometimes in gloves. Large touch targets, high contrast,
+   and a light theme by default because screens are read in daylight. */
+
+:root {
+  --bg: #f4f6f8;
+  --surface: #ffffff;
+  --surface-2: #e9edf1;
+  --line: #cfd8e0;
+  --text: #16202a;
+  --muted: #5a6977;
+  --accent: #b8860b;
+  --accent-ink: #ffffff;
+  --warn-bg: #fdf3e3;
+  --warn-line: #e0a93c;
+  --radius: 14px;
+  --shadow: 0 1px 2px rgba(16, 32, 48, .08), 0 8px 24px rgba(16, 32, 48, .06);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1419;
+    --surface: #171d25;
+    --surface-2: #212a34;
+    --line: #2e3a46;
+    --text: #e6edf3;
+    --muted: #94a3b1;
+    --accent: #f0b323;
+    --accent-ink: #1a1203;
+    --warn-bg: #2a2214;
+    --warn-line: #8a6a1d;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .3);
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #0f1419;
+  --surface: #171d25;
+  --surface-2: #212a34;
+  --line: #2e3a46;
+  --text: #e6edf3;
+  --muted: #94a3b1;
+  --accent: #f0b323;
+  --accent-ink: #1a1203;
+  --warn-bg: #2a2214;
+  --warn-line: #8a6a1d;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .3);
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  overscroll-behavior-y: contain;
+}
+
+a { color: inherit; }
+
+.wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
+
+/* ---------------------------------------------------------------- header */
+
+.topbar {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 16px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+
+.topbar h1 { font-size: 17px; margin: 0; font-weight: 650; letter-spacing: -.01em; }
+.topbar .sub { font-size: 12.5px; color: var(--muted); margin: 0; }
+.topbar .grow { flex: 1; min-width: 0; }
+.topbar .trunc { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.iconbtn {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 42px; height: 42px; padding: 0 12px;
+  border: 1px solid var(--line); border-radius: 11px;
+  background: var(--surface); color: var(--text);
+  font-size: 14px; font-weight: 600; text-decoration: none;
+  cursor: pointer;
+}
+.iconbtn:active { background: var(--surface-2); }
+
+/* ---------------------------------------------------------------- catalog */
+
+.hero { padding: 26px 0 8px; }
+.hero h2 { font-size: 26px; line-height: 1.2; margin: 0 0 8px; letter-spacing: -.02em; }
+.hero p { margin: 0; color: var(--muted); max-width: 62ch; }
+
+.grid {
+  display: grid; gap: 16px; padding: 18px 0 32px;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+}
+
+.card {
+  display: block; text-decoration: none;
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow);
+}
+.card:active { transform: translateY(1px); }
+.card img { display: block; width: 100%; aspect-ratio: 25 / 16; object-fit: cover; background: var(--surface-2); }
+.card .body { padding: 14px 16px 16px; }
+.card .tag {
+  display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  border-radius: 999px; padding: 2px 9px; margin-bottom: 8px;
+}
+.card h3 { margin: 0 0 4px; font-size: 18px; letter-spacing: -.01em; }
+.card .sub { margin: 0 0 10px; font-size: 13px; color: var(--muted); }
+.card .meta { font-size: 12.5px; color: var(--muted); display: flex; gap: 14px; flex-wrap: wrap; }
+
+.note {
+  background: var(--warn-bg); border: 1px solid var(--warn-line);
+  border-radius: var(--radius); padding: 14px 16px; margin: 0 0 24px;
+  font-size: 14px;
+}
+.note strong { display: block; margin-bottom: 4px; }
+
+/* ---------------------------------------------------------------- viewer */
+
+model-viewer {
+  display: block; width: 100%; height: 56vh; min-height: 320px;
+  background: linear-gradient(180deg, var(--surface-2), var(--surface));
+  --poster-color: transparent;
+}
+
+@media (min-width: 760px) { model-viewer { height: 60vh; } }
+
+#ar-btn {
+  position: absolute; left: 50%; transform: translateX(-50%); bottom: 16px;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 13px 22px; border: none; border-radius: 999px;
+  background: var(--accent); color: var(--accent-ink);
+  font-size: 15.5px; font-weight: 700; cursor: pointer;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, .28);
+}
+
+.hotspot {
+  width: 26px; height: 26px; border-radius: 50%;
+  border: 2.5px solid #fff; background: var(--accent);
+  box-shadow: 0 0 0 1.5px rgba(0, 0, 0, .35);
+  cursor: pointer; padding: 0;
+  --min-hotspot-opacity: 0.25;
+}
+.hotspot[data-selected="true"] { background: #fff; border-color: var(--accent); }
+/* Captions only on the selected marker -- twenty labels at once is noise,
+   especially on a phone held at arm's length in AR. */
+.hotspot .caption {
+  display: none;
+  position: absolute; left: 34px; top: 50%; transform: translateY(-50%);
+  white-space: nowrap; font-size: 12.5px; font-weight: 650;
+  background: var(--surface); color: var(--text);
+  border: 1px solid var(--line); border-radius: 8px;
+  padding: 4px 9px; box-shadow: var(--shadow); pointer-events: none;
+}
+.hotspot[data-selected="true"] .caption { display: block; }
+
+/* model-viewer adds data-visible only while the marker faces the camera
+   (we opt in to that attribute in viewer.js). */
+.hotspot:not([data-visible]) { display: none; }
+
+.toolbar {
+  display: flex; gap: 8px; overflow-x: auto; padding: 12px 16px;
+  border-bottom: 1px solid var(--line); background: var(--surface);
+  -webkit-overflow-scrolling: touch; scrollbar-width: none;
+}
+.toolbar::-webkit-scrollbar { display: none; }
+
+.chip {
+  flex: 0 0 auto; display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 14px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--bg); color: var(--text);
+  font-size: 13.5px; font-weight: 600; cursor: pointer;
+}
+.chip[aria-pressed="true"] {
+  background: var(--accent); color: var(--accent-ink);
+  border-color: var(--accent);
+}
+
+.tabs {
+  display: flex; gap: 2px; padding: 0 10px;
+  border-bottom: 1px solid var(--line); background: var(--surface);
+  position: sticky; top: 61px; z-index: 10;
+}
+.tab {
+  flex: 1; padding: 13px 6px; border: none; background: none; cursor: pointer;
+  color: var(--muted); font-size: 14.5px; font-weight: 650;
+  border-bottom: 2.5px solid transparent;
+}
+.tab[aria-selected="true"] { color: var(--text); border-bottom-color: var(--accent); }
+
+.panel { padding: 16px; }
+
+.partlist { display: grid; gap: 8px; }
+.part {
+  display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 10px;
+  width: 100%; text-align: left; cursor: pointer;
+  padding: 13px 14px; border: 1px solid var(--line); border-radius: 12px;
+  background: var(--surface); color: var(--text); font: inherit;
+}
+.part[aria-expanded="true"] { border-color: var(--accent); background: var(--surface); }
+.part .name { font-weight: 650; font-size: 15px; }
+.part .arrow { color: var(--muted); font-size: 13px; }
+.part .note {
+  grid-column: 1 / -1; margin: 6px 0 0; padding: 0; border: 0; background: none;
+  font-size: 14px; color: var(--muted); line-height: 1.5;
+}
+
+table.specs { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+table.specs th, table.specs td {
+  text-align: left; padding: 11px 4px; border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+table.specs th { font-weight: 600; color: var(--muted); width: 46%; }
+
+ul.safety { margin: 0; padding-left: 20px; }
+ul.safety li { margin-bottom: 11px; font-size: 14.5px; }
+
+.summary { margin: 0 0 18px; font-size: 15px; color: var(--muted); max-width: 70ch; }
+
+.hint {
+  margin-top: 18px; padding: 13px 15px; border-radius: 12px;
+  background: var(--surface-2); font-size: 13.5px; color: var(--muted);
+}
+.hint strong { color: var(--text); }
+
+.stage { position: relative; background: var(--surface); }
+
+footer {
+  padding: 26px 16px 40px; color: var(--muted); font-size: 13px;
+  text-align: center;
+}
+
+/* Call-to-action inside the capability note. The Marker AR entry point has to
+   be unmissable on a tablet -- it is the only route that works there. */
+.note .cta {
+  display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px;
+}
+.note .cta-main, .note .cta-alt {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 48px; padding: 0 20px; border-radius: 12px;
+  font-size: 16px; font-weight: 700; text-decoration: none;
+}
+.note .cta-main { background: var(--accent); color: var(--accent-ink);
+                  border: 1px solid var(--accent); }
+.note .cta-alt  { background: var(--surface); color: var(--text);
+                  border: 1px solid var(--line); }
+.note .cta-main:active, .note .cta-alt:active { transform: translateY(1px); }
+.note .warn { margin: 12px 0 0; font-size: 13.5px; }

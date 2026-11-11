@@ -1,0 +1,37 @@
+{
+  "title": "Mining Equipment AR",
+  "machines": [
+    {
+      "id": "dumper",
+      "name": "Rear-dump truck (dumper)",
+      "subtitle": "220 t payload class -- CAT 793 / Komatsu 830E / BEML BH100 family",
+      "category": "Haulage",
+      "thumbnail": "models/dumper.png",
+      "model": "models/dumper.glb",
+      "extents_m": {
+        "width_x": 7.67,
+        "height_y": 6.53,
+        "length_z": 13.2
+      },
+      "bytes": 236572,
+      "triangles": 2620,
+      "parts": 20
+    },
+    {
+      "id": "shovel",
+      "name": "Hydraulic front shovel",
+      "subtitle": "140 t class, 7.5 m3 bucket -- CAT 6015 / PC1250 / EX1200 family",
+      "category": "Loading",
+      "thumbnail": "models/shovel.png",
+      "model": "models/shovel.glb",
+      "extents_m": {
+        "width_x": 5.13,
+        "height_y": 8.19,
+        "length_z": 15.07
+      },
+      "bytes": 183036,
+      "triangles": 2016,
+      "parts": 16
+    }
+  ]
+}

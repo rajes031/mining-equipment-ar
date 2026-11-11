@@ -1,0 +1,17 @@
+{
+  "patternRatio": 0.5,
+  "markers": [
+    {
+      "preset": "hiro",
+      "image": "markers/hiro.png",
+      "label": "Marker A"
+    },
+    {
+      "preset": "kanji",
+      "image": "markers/kanji.png",
+      "label": "Marker B"
+    }
+  ],
+  "aframe": "1.5.0",
+  "arjs": "3.4.5"
+}

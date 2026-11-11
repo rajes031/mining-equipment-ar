@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Equipment viewer — Mining Equipment AR</title>
+<meta name="theme-color" content="#f0b323">
+<link rel="stylesheet" href="app.css">
+
+<!-- model-viewer: pinned version. For offline / no-signal use, download this
+     file into web/vendor/ and point the src below at it (see docs/04). -->
+<script type="module"
+        src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+</head>
+<body>
+
+<header class="topbar">
+  <a class="iconbtn" href="index.html" aria-label="Back to all equipment">←</a>
+  <div class="grow trunc">
+    <h1 id="title" class="trunc">Loading…</h1>
+    <p id="subtitle" class="sub trunc"></p>
+  </div>
+  <button class="iconbtn" id="theme" title="Switch light / dark">◐</button>
+</header>
+
+<div class="stage">
+  <model-viewer id="mv"
+      alt=""
+      camera-controls
+      touch-action="pan-y"
+      shadow-intensity="1"
+      shadow-softness="0.8"
+      exposure="1.05"
+      environment-image="neutral"
+      tone-mapping="neutral"
+      camera-orbit="-145deg 70deg 100%"
+      min-camera-orbit="auto auto auto"
+      max-camera-orbit="auto 92deg auto"
+      ar
+      ar-modes="webxr scene-viewer quick-look"
+      ar-scale="fixed"
+      ar-placement="floor"
+      min-field-of-view="12deg"
+      max-field-of-view="48deg"
+      interaction-prompt="auto">
+    <button slot="ar-button" id="ar-btn">View at full size in AR</button>
+  </model-viewer>
+</div>
+
+<div class="toolbar">
+  <button class="chip" id="chip-figure" aria-pressed="true">Person for scale</button>
+  <button class="chip" id="chip-isolate" aria-pressed="false" hidden>Clear highlight</button>
+  <button class="chip" id="chip-reset">Reset view</button>
+  <button class="chip" id="chip-labels" aria-pressed="true">Part labels</button>
+</div>
+
+<nav class="tabs" role="tablist">
+  <button class="tab" role="tab" data-tab="parts" aria-selected="true">Parts</button>
+  <button class="tab" role="tab" data-tab="specs" aria-selected="false">Specs</button>
+  <button class="tab" role="tab" data-tab="safety" aria-selected="false">Safety</button>
+</nav>
+
+<main class="panel" id="panel"></main>
+
+<footer>
+  Teaching model — correct envelope, simplified geometry.
+  <a href="index.html">All equipment</a>
+</footer>
+
+<script src="viewer.js"></script>
+</body>
+</html>

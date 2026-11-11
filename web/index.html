@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mining Equipment AR</title>
+<meta name="description" content="Augmented-reality models of opencast mining equipment for Android phones and tablets.">
+<meta name="theme-color" content="#f0b323">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="grow">
+    <h1>Mining Equipment AR</h1>
+    <p class="sub">Life-size machines on your phone or tablet</p>
+  </div>
+  <button class="iconbtn" id="theme" title="Switch light / dark">◐</button>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <h2>Stand next to the machine before you stand next to the machine.</h2>
+    <p>
+      Each model is built to the real envelope of its machine class and placed
+      at 1:1 scale on the ground in front of you. Walk around it, look into the
+      bucket, see how far above your head the dump body sits — then tap any
+      part for what it does and why it matters.
+    </p>
+  </section>
+
+  <!-- Above the machine cards on purpose: on a tablet this is the entry
+       point that actually works, and below the grid nobody ever finds it. -->
+  <div class="note" id="device-note">
+    <strong>Checking what this device can do…</strong>
+    One moment.
+  </div>
+
+  <div id="catalog" class="grid" aria-busy="true"></div>
+</main>
+
+<footer>
+  Teaching models — correct overall envelope and part breakdown, simplified
+  geometry. Not for engineering, clearance or dimensional work.
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  var saved = null;
+  try { saved = localStorage.getItem("mining-ar-theme"); } catch (e) {}
+  if (saved) document.documentElement.setAttribute("data-theme", saved);
+
+  document.getElementById("theme").addEventListener("click", function () {
+    var root = document.documentElement;
+    var dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    var current = root.getAttribute("data-theme") || (dark ? "dark" : "light");
+    var next = current === "dark" ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    try { localStorage.setItem("mining-ar-theme", next); } catch (e) {}
+  });
+
+  var grid = document.getElementById("catalog");
+
+  function card(m) {
+    var a = document.createElement("a");
+    a.className = "card";
+    a.href = "viewer.html?m=" + encodeURIComponent(m.id);
+    a.innerHTML =
+      '<img src="' + m.thumbnail + '" alt="' + m.name + '" loading="lazy">' +
+      '<div class="body">' +
+        '<span class="tag">' + m.category + "</span>" +
+        "<h3>" + m.name + "</h3>" +
+        '<p class="sub">' + m.subtitle + "</p>" +
+        '<div class="meta">' +
+          "<span>" + m.extents_m.length_z + " × " + m.extents_m.width_x +
+            " × " + m.extents_m.height_y + " m</span>" +
+          "<span>" + Math.round(m.bytes / 1024) + " KB</span>" +
+        "</div>" +
+      "</div>";
+    return a;
+  }
+
+  // Tell the user which AR route their device can actually take, rather than
+  // letting them discover it by tapping a button that does nothing. Plenty of
+  // Android tablets -- the Redmi Pad 2 Pro among them -- have no ARCore, and
+  // for those marker tracking is the working path.
+  var note = document.getElementById("device-note");
+
+  function describeDevice(hasWebXR) {
+    var secure = window.isSecureContext;
+    if (hasWebXR) {
+      note.innerHTML =
+        "<strong>This device supports full AR</strong>" +
+        "Open any machine and tap <em>View at full size in AR</em> to stand it " +
+        "on the floor at 1:1. You will want about 20 m² of clear ground.";
+      return;
+    }
+    note.innerHTML =
+      "<strong>No ARCore on this device — use Marker AR</strong>" +
+      "This device cannot place models on the floor, but marker tracking " +
+      "needs only the camera. Print a marker, put it on a table, and the " +
+      "machine stands on it as a scale model." +
+      '<div class="cta">' +
+        '<a class="cta-main" href="marker.html">📷 Open Marker AR</a>' +
+        '<a class="cta-alt" href="print-markers.html">Print the markers</a>' +
+      "</div>" +
+      (secure ? "" :
+        "<p class=\"warn\">⚠ This page is on plain http and not on " +
+        "localhost, so the camera is blocked. Connect the tablet by USB and " +
+        "run <code>python usb_tablet.py</code>, or serve over https.</p>");
+  }
+
+  if (navigator.xr && navigator.xr.isSessionSupported) {
+    navigator.xr.isSessionSupported("immersive-ar")
+      .then(describeDevice)
+      .catch(function () { describeDevice(false); });
+  } else {
+    describeDevice(false);
+  }
+
+  fetch("data/catalog.json", { cache: "no-cache" })
+    .then(function (r) {
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    })
+    .then(function (cat) {
+      grid.removeAttribute("aria-busy");
+      cat.machines.forEach(function (m) { grid.appendChild(card(m)); });
+    })
+    .catch(function (err) {
+      grid.removeAttribute("aria-busy");
+      grid.innerHTML =
+        '<div class="note"><strong>Could not load the catalogue</strong>' +
+        "Open this page through a web server rather than as a file — run " +
+        "<code>python tools/serve.py</code> and use the address it prints. " +
+        "(" + err.message + ")</div>";
+    });
+})();
+</script>
+</body>
+</html>

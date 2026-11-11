@@ -1,0 +1,446 @@
+{
+  "id": "dumper",
+  "name": "Rear-dump truck (dumper)",
+  "subtitle": "220 t payload class -- CAT 793 / Komatsu 830E / BEML BH100 family",
+  "category": "Haulage",
+  "summary": "The haulage half of a shovel-dumper system. A rigid-frame rear-dump truck takes a loaded bucket from the shovel and hauls it to the crusher, stockpile or dump. Match factor -- shovel passes per truck against truck cycle time -- is what keeps both machines busy.",
+  "specs": [
+    [
+      "Nominal payload",
+      "220 t (approx. 136 m3 of broken rock)"
+    ],
+    [
+      "Gross operating weight",
+      "approx. 385 t loaded"
+    ],
+    [
+      "Engine",
+      "approx. 2500 kW (3400 hp) diesel"
+    ],
+    [
+      "Drive",
+      "Diesel-electric (AC/DC wheel motors) or mechanical"
+    ],
+    [
+      "Body capacity",
+      "approx. 130 m3 struck / 170 m3 heaped (2:1)"
+    ],
+    [
+      "Overall length",
+      "13.1 m"
+    ],
+    [
+      "Overall width",
+      "7.67 m"
+    ],
+    [
+      "Height, body down",
+      "6.5 m (approx. 13 m with body raised)"
+    ],
+    [
+      "Loading height",
+      "6.1 m -- sets the minimum shovel dump height"
+    ],
+    [
+      "Tyres",
+      "6 x 40.00R57, 3.57 m diameter"
+    ],
+    [
+      "Top speed",
+      "approx. 55 km/h empty on a level haul road"
+    ],
+    [
+      "Turning circle",
+      "approx. 30 m -- governs dump-point layout"
+    ]
+  ],
+  "safety": [
+    "Blind spots are large: never park a light vehicle within one truck length, and always make positive radio contact before approaching.",
+    "Never travel with the body raised, and never tip across a slope.",
+    "Haul-road berms must be at least axle-height of the largest truck.",
+    "Wheel-chock and isolate before any work on tyres or hydraulics."
+  ],
+  "ar_tips": [
+    "Place it on open ground: the model is 13 m long and needs about 20 m of clear floor to walk around at 1:1.",
+    "Use the 1:1 scale button, then stand next to a tyre -- the tyre is taller than two people. That is the lesson students remember."
+  ],
+  "model": "models/dumper.glb",
+  "extents_m": {
+    "width_x": 7.67,
+    "height_y": 6.53,
+    "length_z": 13.2
+  },
+  "triangles": 2620,
+  "bytes": 236572,
+  "parts": [
+    {
+      "node": "chassis",
+      "label": "Main frame / chassis",
+      "note": "Box-section fabricated steel frame that carries engine, axles and body. Fatigue life of the frame, not the engine, usually decides a dumper's economic life.",
+      "position": [
+        0.0,
+        2.15,
+        -1.6
+      ],
+      "normal": [
+        0,
+        -1,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 48
+    },
+    {
+      "node": "suspension",
+      "label": "Suspension & front axle",
+      "note": "Oil-pneumatic (nitrogen over oil) struts. On a 220 t truck each front strut carries roughly 45 t when loaded; strut pressure is what payload-monitoring systems actually measure.",
+      "position": [
+        0.0,
+        2.9,
+        -3.6
+      ],
+      "normal": [
+        0,
+        0,
+        -1
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 108
+    },
+    {
+      "node": "rear_axle",
+      "label": "Rear axle & final drives",
+      "note": "Electric-drive trucks carry an AC/DC wheel motor and two-stage planetary final drive in each rear hub; mechanical-drive trucks use a torque converter and powershift transmission instead.",
+      "position": [
+        0.0,
+        2.6,
+        2.3
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 124
+    },
+    {
+      "node": "front_tyres",
+      "label": "Front tyres (40.00R57)",
+      "note": "3.57 m tall, about 4.5 t each, and roughly 5-6% of total operating cost. Steering axle runs singles; TKPH rating limits how fast a loaded truck may cycle in hot weather.",
+      "position": [
+        -3.4,
+        2.685,
+        -3.6
+      ],
+      "normal": [
+        -1,
+        0.3,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 288
+    },
+    {
+      "node": "rear_tyres",
+      "label": "Rear tyres (dual)",
+      "note": "Four tyres on the drive axle share about 67% of gross weight. Unequal inflation between a dual pair overloads one tyre and is a common cause of premature failure.",
+      "position": [
+        3.4,
+        2.685,
+        2.3
+      ],
+      "normal": [
+        1,
+        0.3,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 576
+    },
+    {
+      "node": "wheel_rims",
+      "label": "Wheels & rims",
+      "note": "Five-piece lock-ring rims. Never approach a hot or inflating rim from the side -- always from the tread face.",
+      "position": [
+        -3.9,
+        1.785,
+        -3.6
+      ],
+      "normal": [
+        -1,
+        0,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 336
+    },
+    {
+      "node": "engine_hood",
+      "label": "Engine enclosure",
+      "note": "Houses a ~2500 kW (3400 hp) quad-turbo diesel. On diesel-electric trucks it drives an alternator feeding the wheel motors; there is no driveshaft to the rear axle.",
+      "position": [
+        0.0,
+        3.8,
+        -4.9
+      ],
+      "normal": [
+        0,
+        0.4,
+        -1
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 24
+    },
+    {
+      "node": "radiator_grille",
+      "label": "Radiator & grille",
+      "note": "Rejects roughly as much heat as the engine makes power. Plugged cores from spillage and dust are a top cause of derating.",
+      "position": [
+        0.0,
+        3.0,
+        -5.9
+      ],
+      "normal": [
+        0,
+        0,
+        -1
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 12
+    },
+    {
+      "node": "fuel_tank",
+      "label": "Fuel tank",
+      "note": "Around 4500 litres -- about one 12-hour shift. Fuel burn of roughly 350-450 l/h dominates operating cost.",
+      "position": [
+        2.3,
+        2.4,
+        0.4
+      ],
+      "normal": [
+        1,
+        0,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 56
+    },
+    {
+      "node": "exhaust_stacks",
+      "label": "Exhaust stacks",
+      "note": "Routed up alongside the body front wall; exhaust heat is also used to warm the body floor in cold climates to stop sticky material freezing on.",
+      "position": [
+        0.9,
+        5.4,
+        -3.9
+      ],
+      "normal": [
+        0.5,
+        0.5,
+        -1
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 80
+    },
+    {
+      "node": "operator_deck",
+      "label": "Operator deck",
+      "note": "Non-slip walkway giving access to the cab and to service points. Three-point contact on the ladder is mandatory; falls from dumper decks are a leading injury category.",
+      "position": [
+        1.9,
+        4.35,
+        -4.4
+      ],
+      "normal": [
+        0.6,
+        1,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 24
+    },
+    {
+      "node": "cab",
+      "label": "Operator cab (ROPS/FOPS)",
+      "note": "Sound-suppressed, pressurised and air-conditioned, certified as Roll-Over and Falling-Object Protective Structure. Houses the payload display, retarder control and tyre-pressure monitor.",
+      "position": [
+        -2.95,
+        5.3,
+        -4.7
+      ],
+      "normal": [
+        -1,
+        0.2,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 24
+    },
+    {
+      "node": "cab_glass",
+      "label": "Cab glazing",
+      "note": "Laminated screens plus mirrors and cameras. Even so, a loaded dumper has large blind areas -- light vehicles must keep a safe distance and make positive radio contact.",
+      "position": [
+        -1.75,
+        5.5,
+        -5.9
+      ],
+      "normal": [
+        0,
+        0.2,
+        -1
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 36
+    },
+    {
+      "node": "handrails",
+      "label": "Handrails & walkways",
+      "note": "Yellow handrails mark every legitimate access route. Climbing anywhere else on a 6 m tall machine is prohibited.",
+      "position": [
+        2.9,
+        5.1,
+        -4.4
+      ],
+      "normal": [
+        1,
+        0.4,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 160
+    },
+    {
+      "node": "access_ladder",
+      "label": "Access ladder",
+      "note": "Inclined stairway from ground to deck, often with a powered lower flight. Face the steps and keep three-point contact.",
+      "position": [
+        -1.0,
+        2.6,
+        -6.3
+      ],
+      "normal": [
+        0,
+        0,
+        -1
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 160
+    },
+    {
+      "node": "dump_body",
+      "label": "Dump body (tray)",
+      "note": "Abrasion-resistant steel body of roughly 130 m3 struck / 170 m3 heaped (2:1). Body choice is a trade-off: a lighter body hauls more payload, a thicker one survives blocky blasted rock.",
+      "position": [
+        -3.6,
+        5.6,
+        1.2
+      ],
+      "normal": [
+        -1,
+        0.3,
+        0
+      ],
+      "pivot": [
+        0.0,
+        3.35,
+        5.0
+      ],
+      "parent": null,
+      "triangles": 84
+    },
+    {
+      "node": "body_canopy",
+      "label": "Body canopy (rock guard)",
+      "note": "Forward extension of the body over the cab. It protects the operator while loading -- which is why a shovel never swings a bucket over the cab side of the truck.",
+      "position": [
+        0.0,
+        6.7,
+        -5.3
+      ],
+      "normal": [
+        0,
+        1,
+        -0.3
+      ],
+      "pivot": [
+        0.0,
+        3.35,
+        5.0
+      ],
+      "parent": "dump_body",
+      "triangles": 24
+    },
+    {
+      "node": "hoist_cylinders",
+      "label": "Hoist cylinders",
+      "note": "Twin three-stage cylinders tip the body to about 45 degrees in 12-15 seconds. Never tip on a side slope and never travel with the body raised -- it is the classic dumper overturn.",
+      "position": [
+        1.4,
+        3.3,
+        -0.4
+      ],
+      "normal": [
+        1,
+        0.3,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 192
+    },
+    {
+      "node": "body_pivot",
+      "label": "Body pivot pins",
+      "note": "The body hinges on these rear pins. Lubrication here is a daily-check item; a seized pin tears the body mounting.",
+      "position": [
+        0.0,
+        3.3,
+        5.2
+      ],
+      "normal": [
+        0,
+        -0.4,
+        1
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 48
+    },
+    {
+      "node": "scale_figure",
+      "label": "1.8 m person (for scale)",
+      "note": "A person in PPE, 1.8 m tall, standing clear of the machine. Use the scale toggle to hide them. In real AR at 1:1 you can simply walk up to the machine yourself.",
+      "position": [
+        -5.4,
+        2.05,
+        -5.2
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 216
+    }
+  ],
+  "thumbnail": "models/dumper.png"
+}

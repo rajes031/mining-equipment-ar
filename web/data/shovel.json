@@ -1,0 +1,414 @@
+{
+  "id": "shovel",
+  "name": "Hydraulic front shovel",
+  "subtitle": "140 t class, 7.5 m3 bucket -- CAT 6015 / PC1250 / EX1200 family",
+  "category": "Loading",
+  "summary": "The loading half of a shovel-dumper system. A face shovel digs into a blasted vertical face, swings about 90 degrees and bottom-dumps into a truck. Four to five passes should fill one dumper -- if it takes more, the pair is mismatched and both machines lose money.",
+  "specs": [
+    [
+      "Operating weight",
+      "approx. 140 t"
+    ],
+    [
+      "Bucket capacity",
+      "7.5 m3 (approx. 13-14 t of blasted rock)"
+    ],
+    [
+      "Engine",
+      "approx. 600-800 kW diesel (electric drive optional)"
+    ],
+    [
+      "Hydraulic pressure",
+      "approx. 300-350 bar"
+    ],
+    [
+      "Passes per 220 t truck",
+      "4 to 5"
+    ],
+    [
+      "Cycle time",
+      "approx. 28-35 s (dig, swing, dump, return)"
+    ],
+    [
+      "Max digging reach",
+      "approx. 10.5 m at ground level"
+    ],
+    [
+      "Max digging height",
+      "approx. 12 m -- governs safe face height"
+    ],
+    [
+      "Track gauge / shoe width",
+      "4.25 m / 750 mm"
+    ],
+    [
+      "Overall width",
+      "5.0 m over tracks"
+    ],
+    [
+      "Ground bearing pressure",
+      "approx. 2.2 kg/cm2"
+    ],
+    [
+      "Productivity",
+      "approx. 800-1000 t/h in good digging"
+    ]
+  ],
+  "safety": [
+    "Never approach the machine until the operator has grounded the bucket and signalled you in -- the swing radius is a no-go zone.",
+    "Trucks reverse in on the operator's side so the bucket never swings over the truck cab.",
+    "Face height must stay within the shovel's digging height; overhangs and loose boulders above the bucket are a fatal hazard.",
+    "Hydraulic oil at 300 bar injects through skin -- never search for a leak with your hand."
+  ],
+  "ar_tips": [
+    "Place the shovel and the dumper together on open ground to show why the bucket must clear a 6.1 m loading height.",
+    "Walk round to the front: the bucket teeth sit about 10 m from the machine centre, which is the whole digging envelope in one view."
+  ],
+  "model": "models/shovel.glb",
+  "extents_m": {
+    "width_x": 5.13,
+    "height_y": 8.19,
+    "length_z": 15.07
+  },
+  "triangles": 2016,
+  "bytes": 183036,
+  "parts": [
+    {
+      "node": "crawler_tracks",
+      "label": "Crawler tracks",
+      "note": "Two independently driven crawlers, 750 mm shoes. Ground bearing pressure is only about 2.2 kg/cm2 -- roughly a walking person -- which is how a 140 t machine works on a soft floor.",
+      "position": [
+        -2.625,
+        1.1,
+        0.0
+      ],
+      "normal": [
+        -1,
+        0.2,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 56
+    },
+    {
+      "node": "sprockets_idlers",
+      "label": "Drive sprockets & idlers",
+      "note": "Travel motor and planetary drive at the sprocket end; track tension is set hydraulically at the idler. Shovels travel very little -- undercarriage wear comes mostly from swing and dig reaction forces.",
+      "position": [
+        2.625,
+        0.85,
+        2.75
+      ],
+      "normal": [
+        1,
+        0,
+        0.3
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 544
+    },
+    {
+      "node": "car_body",
+      "label": "Car body & swing circle",
+      "note": "The car body ties the crawlers together and carries the swing bearing. All power and oil to the upper works passes through the centre swivel inside this ring.",
+      "position": [
+        0.0,
+        1.95,
+        1.2
+      ],
+      "normal": [
+        0,
+        1,
+        0.3
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 92
+    },
+    {
+      "node": "superstructure",
+      "label": "Superstructure (house)",
+      "note": "Carries the diesel engine (about 600-800 kW), the main hydraulic pumps, oil coolers and tanks. Everything above the swing circle rotates 360 degrees.",
+      "position": [
+        2.525,
+        3.2,
+        0.5
+      ],
+      "normal": [
+        1,
+        0.2,
+        0
+      ],
+      "pivot": [
+        0.0,
+        1.9,
+        0.0
+      ],
+      "parent": null,
+      "triangles": 24
+    },
+    {
+      "node": "engine_cooling",
+      "label": "Engine & cooling pack",
+      "note": "Diesel-hydraulic drive: the engine turns variable-displacement pumps, and oil does all the work. Electric-drive versions trail a cable and cut fuel cost where the pit layout allows it.",
+      "position": [
+        1.3,
+        5.1,
+        1.4
+      ],
+      "normal": [
+        0.3,
+        1,
+        0
+      ],
+      "pivot": [
+        0.0,
+        1.9,
+        0.0
+      ],
+      "parent": "superstructure",
+      "triangles": 52
+    },
+    {
+      "node": "counterweight",
+      "label": "Counterweight",
+      "note": "Balances the loaded bucket at full reach. Removing or under-specifying it is what turns a hard dig into a tipping incident.",
+      "position": [
+        0.0,
+        2.9,
+        4.0
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "pivot": [
+        0.0,
+        1.9,
+        0.0
+      ],
+      "parent": "superstructure",
+      "triangles": 24
+    },
+    {
+      "node": "cab",
+      "label": "Operator cab (FOPS)",
+      "note": "Mounted high on the left front for a clear view into the bucket. Falling-Object Protective Structure plus a rock deflector; the operator sits about 5 m up.",
+      "position": [
+        -2.6,
+        5.5,
+        -2.3
+      ],
+      "normal": [
+        -1,
+        0.2,
+        0
+      ],
+      "pivot": [
+        0.0,
+        1.9,
+        0.0
+      ],
+      "parent": "superstructure",
+      "triangles": 24
+    },
+    {
+      "node": "cab_glass",
+      "label": "Cab glazing",
+      "note": "Large front and roof windows -- the operator must watch the bucket teeth, the face above, and the truck being loaded.",
+      "position": [
+        -1.55,
+        5.7,
+        -3.45
+      ],
+      "normal": [
+        0,
+        0.2,
+        -1
+      ],
+      "pivot": [
+        0.0,
+        1.9,
+        0.0
+      ],
+      "parent": "superstructure",
+      "triangles": 36
+    },
+    {
+      "node": "walkways_rails",
+      "label": "Walkways & handrails",
+      "note": "Service access to pumps, filters and the cooling pack. Isolate and lock out hydraulics before any work on the upper works.",
+      "position": [
+        2.4,
+        4.9,
+        -1.0
+      ],
+      "normal": [
+        1,
+        0.4,
+        0
+      ],
+      "pivot": [
+        0.0,
+        1.9,
+        0.0
+      ],
+      "parent": "superstructure",
+      "triangles": 320
+    },
+    {
+      "node": "access_ladder",
+      "label": "Access ladder",
+      "note": "Retractable stairway, raised while digging. The machine must be shut down and the bucket grounded before anyone climbs.",
+      "position": [
+        -2.2,
+        1.6,
+        -3.2
+      ],
+      "normal": [
+        -0.5,
+        0,
+        -1
+      ],
+      "pivot": [
+        0.0,
+        1.9,
+        0.0
+      ],
+      "parent": "superstructure",
+      "triangles": 124
+    },
+    {
+      "node": "boom",
+      "label": "Boom",
+      "note": "Fabricated box-section arm pinned to the house front. On a face shovel the boom is short and steep -- it is built to resist crowd forces into a vertical face rather than to reach down.",
+      "position": [
+        0.9,
+        5.9,
+        -4.8
+      ],
+      "normal": [
+        0.6,
+        0.6,
+        0
+      ],
+      "pivot": [
+        0.0,
+        3.2,
+        -2.2
+      ],
+      "parent": "superstructure",
+      "triangles": 108
+    },
+    {
+      "node": "stick",
+      "label": "Stick (dipper arm)",
+      "note": "Carries the bucket and provides the crowd force that drives the teeth into the face. Stick length trades reach against breakout force.",
+      "position": [
+        0.8,
+        5.6,
+        -8.9
+      ],
+      "normal": [
+        0.6,
+        0.3,
+        -0.3
+      ],
+      "pivot": [
+        0.0,
+        7.6,
+        -7.4
+      ],
+      "parent": "boom",
+      "triangles": 60
+    },
+    {
+      "node": "bucket",
+      "label": "Bucket (7.5 m3)",
+      "note": "Bottom-dump face-shovel bucket: the floor unlatches and swings open to release the load. Four passes fill a 220 t dumper, so bucket size must match truck size -- that is the match factor.",
+      "position": [
+        1.6,
+        3.0,
+        -9.6
+      ],
+      "normal": [
+        1,
+        0.2,
+        0
+      ],
+      "pivot": [
+        0.0,
+        4.2,
+        -8.9
+      ],
+      "parent": "stick",
+      "triangles": 60
+    },
+    {
+      "node": "bucket_teeth",
+      "label": "Teeth & GET",
+      "note": "Ground Engaging Tools: replaceable tooth adapters, side cutters and wear plates. Worn teeth raise dig time and fuel burn, and a tooth lost into the load can wreck a crusher.",
+      "position": [
+        0.0,
+        2.0,
+        -10.6
+      ],
+      "normal": [
+        0,
+        0.2,
+        -1
+      ],
+      "pivot": [
+        0.0,
+        4.2,
+        -8.9
+      ],
+      "parent": "bucket",
+      "triangles": 84
+    },
+    {
+      "node": "hydraulic_cylinders",
+      "label": "Hydraulic cylinders",
+      "note": "Boom-hoist pair, stick cylinder and bucket cylinder, working at roughly 300-350 bar. Breakout force at the teeth -- not engine power -- is the shovel's real digging rating.",
+      "position": [
+        1.5,
+        4.6,
+        -4.2
+      ],
+      "normal": [
+        1,
+        0.4,
+        0
+      ],
+      "pivot": [
+        0.0,
+        1.9,
+        0.0
+      ],
+      "parent": "superstructure",
+      "triangles": 192
+    },
+    {
+      "node": "scale_figure",
+      "label": "1.8 m person (for scale)",
+      "note": "A person in PPE, 1.8 m tall, standing clear of the machine. Use the scale toggle to hide them. In real AR at 1:1 you can simply walk up to the machine yourself.",
+      "position": [
+        -4.6,
+        2.05,
+        -4.6
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 216
+    }
+  ],
+  "thumbnail": "models/shovel.png"
+}

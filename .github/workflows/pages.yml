@@ -1,0 +1,46 @@
+# Publish the web/ folder to GitHub Pages.
+#
+# The repository keeps the whole project (generators, docs, Unity scripts),
+# but only web/ is a website, so this uploads that subfolder rather than the
+# repo root. GitHub Pages' simpler "deploy from a branch" setting can only
+# serve the root or /docs, and /docs here is written documentation, not the
+# site -- hence the workflow.
+
+name: Deploy site to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Let a running deployment finish rather than cancelling it.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload the site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: web
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
