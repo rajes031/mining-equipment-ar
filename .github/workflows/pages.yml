@@ -33,12 +33,13 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@v4
 
+      # Note: this step does NOT enable Pages. The `enablement: true` option
+      # exists but fails on a fresh repository, because the workflow token
+      # cannot create the Pages site before one exists. Enable it once, by
+      # hand, at Settings -> Pages -> Source: GitHub Actions. After that this
+      # workflow deploys every push to main on its own.
       - name: Configure Pages
         uses: actions/configure-pages@v5
-        with:
-          # Creates the Pages site on first run, so nobody has to go to
-          # Settings -> Pages and switch the source by hand.
-          enablement: true
 
       - name: Upload the site
         uses: actions/upload-pages-artifact@v3
