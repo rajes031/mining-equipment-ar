@@ -30,7 +30,7 @@
   var panel = document.getElementById("panel");
   var id = new URLSearchParams(location.search).get("m") || "dumper";
   var data = null;
-  var materials = new Map();   // part name -> { material, base: [r,g,b,a] }
+  var materials = new Map();   // part name -> [{ material, base: [r,g,b,a] }]
   var selected = null;
   var tab = "parts";
   var labelsOn = true;
@@ -67,9 +67,17 @@
 
   mv.addEventListener("load", function () {
     materials.clear();
+    // A part is usually one material, but a part made of more than one
+    // substance needs more -- the cab is bodywork AND glass. Those extra
+    // materials are named "<part>.<something>", and they must fade with the
+    // part, otherwise isolating the tyres leaves the cab windows hanging in
+    // mid-air. So the registry maps a part name to a LIST of materials.
     (mv.model ? mv.model.materials : []).forEach(function (m) {
       var f = m.pbrMetallicRoughness.baseColorFactor;
-      materials.set(m.name, { material: m, base: [f[0], f[1], f[2], f[3]] });
+      var dot = m.name.indexOf(".");
+      var part = dot === -1 ? m.name : m.name.slice(0, dot);
+      if (!materials.has(part)) materials.set(part, []);
+      materials.get(part).push({ material: m, base: [f[0], f[1], f[2], f[3]] });
     });
     applyFigure();
     applySelection();
@@ -78,16 +86,18 @@
   /* --------------------------------------------------- part rendering */
 
   function setAlpha(name, alpha) {
-    var entry = materials.get(name);
-    if (!entry) return;
-    var b = entry.base;
-    var a = alpha === null ? b[3] : alpha;
-    try {
-      if (entry.material.setAlphaMode) {
-        entry.material.setAlphaMode(a < 1 ? "BLEND" : "OPAQUE");
-      }
-      entry.material.pbrMetallicRoughness.setBaseColorFactor([b[0], b[1], b[2], a]);
-    } catch (e) { /* older model-viewer: leave the part as it is */ }
+    var entries = materials.get(name);
+    if (!entries) return;
+    entries.forEach(function (entry) {
+      var b = entry.base;
+      var a = alpha === null ? b[3] : alpha;
+      try {
+        if (entry.material.setAlphaMode) {
+          entry.material.setAlphaMode(a < 1 ? "BLEND" : "OPAQUE");
+        }
+        entry.material.pbrMetallicRoughness.setBaseColorFactor([b[0], b[1], b[2], a]);
+      } catch (e) { /* older model-viewer: leave the part as it is */ }
+    });
   }
 
   function applySelection() {

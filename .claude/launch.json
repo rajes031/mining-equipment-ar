@@ -1,0 +1,6 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    { "name": "mining-ar", "runtimeExecutable": "python", "runtimeArgs": ["-m", "http.server", "8111", "--directory", "web"], "port": 8111 }
+  ]
+}

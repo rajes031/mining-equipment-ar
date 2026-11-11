@@ -2,9 +2,25 @@
   "title": "Mining Equipment AR",
   "machines": [
     {
+      "id": "dumper-detailed",
+      "name": "Rear-dump truck — detailed model",
+      "subtitle": "220 t payload class — full mesh, 20 400 triangles",
+      "category": "Haulage",
+      "thumbnail": "models/dumper-detailed.png",
+      "model": "models/dumper-detailed.glb",
+      "extents_m": {
+        "width_x": 8.13,
+        "height_y": 7.16,
+        "length_z": 12.62
+      },
+      "bytes": 829900,
+      "triangles": 20416,
+      "parts": 8
+    },
+    {
       "id": "dumper",
-      "name": "Rear-dump truck (dumper)",
-      "subtitle": "220 t payload class -- CAT 793 / Komatsu 830E / BEML BH100 family",
+      "name": "Rear-dump truck — schematic",
+      "subtitle": "220 t class, simplified geometry, 20 labelled parts",
       "category": "Haulage",
       "thumbnail": "models/dumper.png",
       "model": "models/dumper.glb",

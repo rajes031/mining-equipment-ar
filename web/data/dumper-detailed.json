@@ -1,0 +1,226 @@
+{
+ "id": "dumper-detailed",
+ "name": "Rear-dump truck — detailed model",
+ "subtitle": "220 t payload class — full mesh, 20 400 triangles",
+ "category": "Haulage",
+ "summary": "The haulage half of a shovel-dumper system. A rigid-frame rear-dump truck takes a loaded bucket from the shovel and hauls it to the crusher, stockpile or dump. Match factor -- shovel passes per truck against truck cycle time -- is what keeps both machines busy. This is the detailed mesh: real body profile, suspension, deck rails and six tyres, scaled to the 220 t class envelope.",
+ "specs": [
+  [
+   "Nominal payload",
+   "220 t (approx. 136 m3 of broken rock)"
+  ],
+  [
+   "Gross operating weight",
+   "approx. 385 t loaded"
+  ],
+  [
+   "Engine",
+   "approx. 2500 kW (3400 hp) diesel"
+  ],
+  [
+   "Drive",
+   "Diesel-electric (AC/DC wheel motors) or mechanical"
+  ],
+  [
+   "Body capacity",
+   "approx. 130 m3 struck / 170 m3 heaped (2:1)"
+  ],
+  [
+   "Overall length",
+   "13.1 m"
+  ],
+  [
+   "Overall width",
+   "7.67 m"
+  ],
+  [
+   "Height, body down",
+   "6.5 m (approx. 13 m with body raised)"
+  ],
+  [
+   "Loading height",
+   "6.1 m -- sets the minimum shovel dump height"
+  ],
+  [
+   "Tyres",
+   "6 x 40.00R57, 3.57 m diameter"
+  ],
+  [
+   "Top speed",
+   "approx. 55 km/h empty on a level haul road"
+  ],
+  [
+   "Turning circle",
+   "approx. 30 m -- governs dump-point layout"
+  ]
+ ],
+ "safety": [
+  "Blind spots are large: never park a light vehicle within one truck length, and always make positive radio contact before approaching.",
+  "Never travel with the body raised, and never tip across a slope.",
+  "Haul-road berms must be at least axle-height of the largest truck.",
+  "Wheel-chock and isolate before any work on tyres or hydraulics."
+ ],
+ "ar_tips": [
+  "Place it on open ground: the model is 13 m long and needs about 20 m of clear floor to walk around at 1:1.",
+  "Use the 1:1 scale button, then stand next to a tyre -- the tyre is taller than two people. That is the lesson students remember."
+ ],
+ "model": "models/dumper-detailed.glb",
+ "extents_m": {
+  "width_x": 8.13,
+  "height_y": 7.16,
+  "length_z": 12.62
+ },
+ "triangles": 20416,
+ "bytes": 829900,
+ "parts": [
+  {
+   "node": "dump_body",
+   "label": "Dump body (tray)",
+   "note": "Holds the payload: about 130 m3 struck, 170 m3 heaped at a 2:1 ratio. The floor is lined with wear plate and is usually heated by exhaust gas ducted under it, which stops wet clay and fines freezing on in winter and refusing to tip. The body is raised by twin hoist cylinders and must never be carried raised while travelling.",
+   "position": [
+    0.0,
+    7.083,
+    -0.07
+   ],
+   "normal": [
+    0.0,
+    1.0,
+    -0.0
+   ],
+   "pivot": [
+    0.0,
+    7.083,
+    -0.07
+   ],
+   "parent": null,
+   "triangles": 1162
+  },
+  {
+   "node": "chassis_frame",
+   "label": "Main frame, engine and drivetrain",
+   "note": "A rigid (non-articulated) box-section frame carrying a roughly 2500 kW diesel. Drive is either diesel-electric, where the engine turns an alternator feeding wheel motors in the rear hubs, or mechanical through a powershift transmission. The rear hubs also carry the final-drive reduction, which is why they are so large.",
+   "position": [
+    0.0,
+    3.029,
+    -5.817
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "pivot": null,
+   "parent": null,
+   "triangles": 2278
+  },
+  {
+   "node": "operator_cab",
+   "label": "Operator cab (ROPS / FOPS)",
+   "note": "Mounted on the left of the deck, ahead of the body. Certified as a roll-over and falling-object protective structure. Visibility is the limitation, not the cab: the operator cannot see a light vehicle parked close to the front or anywhere behind, which is why spotting and positive radio contact are mandatory.",
+   "position": [
+    3.04,
+    5.238,
+    3.104
+   ],
+   "normal": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "pivot": null,
+   "parent": null,
+   "triangles": 2330
+  },
+  {
+   "node": "access_ladder",
+   "label": "Access ladder, catwalk and handrails",
+   "note": "The only approved way on and off. Three points of contact at all times, face the ladder, and never carry anything up by hand. Falls from truck access are one of the commonest lost-time injuries in opencast haulage, and the deck is roughly first-floor height.",
+   "position": [
+    0.0,
+    3.857,
+    6.308
+   ],
+   "normal": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "pivot": null,
+   "parent": null,
+   "triangles": 4850
+  },
+  {
+   "node": "tyre_front_left",
+   "label": "Front tyre, left (steer axle)",
+   "note": "A single 40.00R57 on each side of the steer axle, about 3.57 m tall -- higher than two people. Tyre life is governed by TKPH (tonne-kilometre per hour), which is why haul-road surface, length and speed are managed as carefully as the machine itself.",
+   "position": [
+    3.656,
+    1.913,
+    2.8
+   ],
+   "normal": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "pivot": null,
+   "parent": null,
+   "triangles": 1725
+  },
+  {
+   "node": "tyre_front_right",
+   "label": "Front tyre, right (steer axle)",
+   "note": "The steer axle carries roughly a third of the gross weight when the body is loaded, and more than half when it is empty. Watch the stand-off distance: the tyre alone weighs several tonnes and stores enormous energy if it fails.",
+   "position": [
+    -3.656,
+    1.913,
+    2.8
+   ],
+   "normal": [
+    -1.0,
+    0.0,
+    -0.0
+   ],
+   "pivot": null,
+   "parent": null,
+   "triangles": 1725
+  },
+  {
+   "node": "tyre_rear_left",
+   "label": "Rear tyres, left (drive axle, dual)",
+   "note": "Duals, because the drive axle takes about two thirds of the loaded weight. Running one tyre of a dual pair flat overloads its partner and destroys both, so pressures are checked as a pair.",
+   "position": [
+    4.064,
+    1.913,
+    -3.05
+   ],
+   "normal": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "pivot": null,
+   "parent": null,
+   "triangles": 3173
+  },
+  {
+   "node": "tyre_rear_right",
+   "label": "Rear tyres, right (drive axle, dual)",
+   "note": "Each rear hub contains the final-drive reduction and, on a diesel-electric truck, the traction motor. Retarding on a downgrade is done electrically or through oil-cooled brakes here, not on the service brakes, which would otherwise overheat and fade.",
+   "position": [
+    -4.064,
+    1.913,
+    -3.05
+   ],
+   "normal": [
+    -1.0,
+    0.0,
+    -0.0
+   ],
+   "pivot": null,
+   "parent": null,
+   "triangles": 3173
+  }
+ ],
+ "thumbnail": "models/dumper-detailed.png"
+}
