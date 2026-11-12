@@ -190,15 +190,45 @@ def render(parts, out_png: Path, size=(1000, 640), fov_deg=32.0,
     return out_png
 
 
+DEFAULT_VIEWS = {
+    "": dict(azimuth=38.0, elevation=16.0),
+    "-front": dict(azimuth=-18.0, elevation=11.0),
+    "-rear": dict(azimuth=150.0, elevation=18.0),
+}
+
+# A machine reads fine from a three-quarter view. The three models that are
+# not machines do not: a blast pattern is flat, so it needs to be looked down
+# on, and a gallery is a hole, so the only view that shows anything is
+# straight down its axis and into the portal.
+VIEWS = {
+    "blast-pattern": {
+        "": dict(azimuth=30.0, elevation=42.0),
+        "-front": dict(azimuth=0.0, elevation=24.0),
+        "-rear": dict(azimuth=0.0, elevation=78.0, distance_factor=1.15),
+    },
+    "gallery": {
+        "": dict(azimuth=6.0, elevation=7.0, distance_factor=0.72),
+        "-front": dict(azimuth=0.0, elevation=2.0, distance_factor=0.58),
+        "-rear": dict(azimuth=42.0, elevation=22.0),
+    },
+    "roof-support": {
+        "": dict(azimuth=52.0, elevation=12.0),
+        "-front": dict(azimuth=-14.0, elevation=8.0),
+        "-rear": dict(azimuth=160.0, elevation=16.0),
+    },
+}
+
+MODELS = ("dumper", "shovel", "roof-support", "blast-pattern", "gallery")
+
+
 def main():
-    views = {
-        "": dict(azimuth=38.0, elevation=16.0),
-        "-front": dict(azimuth=-18.0, elevation=11.0),
-        "-rear": dict(azimuth=150.0, elevation=18.0),
-    }
-    for name in ("dumper", "shovel"):
-        parts = read_glb(WEB / "models" / f"{name}.glb")
-        for suffix, kw in views.items():
+    for name in MODELS:
+        glb = WEB / "models" / f"{name}.glb"
+        if not glb.exists():
+            print(f"{name}: no GLB yet, skipped")
+            continue
+        parts = read_glb(glb)
+        for suffix, kw in VIEWS.get(name, DEFAULT_VIEWS).items():
             out = WEB / "models" / f"{name}{suffix}.png"
             render(parts, out, **kw)
             print(f"{out.name:22s} {out.stat().st_size/1024:6.1f} KB")

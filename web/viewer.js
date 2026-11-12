@@ -97,7 +97,16 @@
     for (var i = 0; i < list.length; i++) {
       var m = list[i];
       if (partOf(m.name) !== name) continue;
-      var b = baseColour.get(m.name) || m.pbrMetallicRoughness.baseColorFactor;
+      var b = baseColour.get(m.name);
+      if (!b) {
+        // Not captured at load. Record what it is NOW and keep it, rather
+        // than reading the live factor on every call -- by the time a part
+        // is restored its live factor is the faded one, so using that would
+        // make 0.1 the part's new "base" and it could never come back.
+        var f = m.pbrMetallicRoughness.baseColorFactor;
+        b = [f[0], f[1], f[2], f[3]];
+        baseColour.set(m.name, b);
+      }
       var a = alpha === null ? b[3] : alpha;
       try {
         if (m.setAlphaMode) {

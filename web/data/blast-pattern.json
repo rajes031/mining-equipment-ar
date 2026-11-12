@@ -1,0 +1,279 @@
+{
+  "id": "blast-pattern",
+  "name": "Blasthole pattern (bench blast)",
+  "category": "Drilling & blasting",
+  "subtitle": "165 mm holes, 5.5 m burden × 6.5 m spacing, 10 m bench",
+  "summary": "A production bench blast, staggered in three rows, set out at full size on the ground. Burden is the distance from a hole to the nearest free face; spacing is the distance between holes along a row. Those two numbers, with hole diameter and bench height, decide fragmentation, throw, ground vibration and flyrock — and they are the numbers a blast designer actually chooses. Walk between the collars and the geometry stops being arithmetic. One hole is laid out on its side at the edge of the pattern so the charge column, the stemming and the subgrade drilling are visible.",
+  "specs": [
+    [
+      "Hole diameter",
+      "165 mm"
+    ],
+    [
+      "Bench height",
+      "10.0 m"
+    ],
+    [
+      "Burden",
+      "5.5 m (about 33 × hole diameter)"
+    ],
+    [
+      "Spacing",
+      "6.5 m (1.18 × burden, staggered)"
+    ],
+    [
+      "Subgrade drilling",
+      "1.5 m below floor level"
+    ],
+    [
+      "Total hole depth",
+      "11.5 m"
+    ],
+    [
+      "Stemming",
+      "5.0 m (about 0.9 × burden)"
+    ],
+    [
+      "Charge column",
+      "6.5 m, site-mixed emulsion"
+    ],
+    [
+      "Charge per hole",
+      "approx. 160 kg"
+    ],
+    [
+      "Rock broken per hole",
+      "357 m³ (5.5 × 6.5 × 10)"
+    ],
+    [
+      "Powder factor",
+      "approx. 0.45 kg/m³"
+    ],
+    [
+      "Initiation",
+      "Row-to-row surface delays, firing towards the face"
+    ]
+  ],
+  "safety": [
+    "Stemming is not spoil. Too little, or the wrong material, and the charge vents up the hole — that is where flyrock and airblast come from, not from the burden.",
+    "The front-row burden is measured to the real face, not to the designed crest. A face that has sloughed leaves an under-burdened hole, and an under-burdened hole throws rock.",
+    "Never drill or charge within the danger zone of a hole already primed, and never re-drill a socket or a misfired hole.",
+    "Keep clear of the crest. Drilling close to an unsupported edge is how rigs go over the face; the berm is there to stop that.",
+    "Ground vibration is controlled by the maximum charge per delay, not by the total charge. That is why delays exist."
+  ],
+  "ar_tips": [
+    "This needs real space: about 20 m by 18 m, so a car park or a playing field, not a classroom.",
+    "Stand on a collar in the front row and pace the 5.5 m to the crest. That single walk teaches burden better than any diagram.",
+    "Walk the length of the laid-out hole — 11.5 m — and you understand why a drill rig needs a mast that tall.",
+    "No room outdoors? Print a marker and view the same pattern at 1:50 on a desk."
+  ],
+  "model": "models/blast-pattern.glb",
+  "extents_m": {
+    "width_x": 20.6,
+    "height_y": 0.9,
+    "length_z": 18.0
+  },
+  "triangles": 1572,
+  "bytes": 141136,
+  "parts": [
+    {
+      "node": "bench_floor",
+      "label": "Bench top",
+      "note": "The working surface the rig stands on and the holes are collared from. Bench height is fixed by the machines that have to work it — the shovel has to be able to dig the muckpile and the drill has to reach the depth — so it is a planning decision long before it is a blasting one.",
+      "position": [
+        -6.0,
+        0.06,
+        14.0
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 12
+    },
+    {
+      "node": "crest_berm",
+      "label": "Crest and safety berm",
+      "note": "The edge of the bench, and the windrow along it. A berm has to be at least axle height of the largest machine on the bench — it is not a marker, it is a physical stop. Everything in front of this line is a 10 m drop.",
+      "position": [
+        0.0,
+        0.95,
+        -0.45
+      ],
+      "normal": [
+        0,
+        0.5,
+        -1
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 12
+    },
+    {
+      "node": "free_face_line",
+      "label": "Free face (the crest line)",
+      "note": "Burden is measured from a hole to the nearest free face, and for the front row that face is this edge. It is the only direction the rock can move, which is why the whole pattern is timed to break towards it. Take the free face away and the same charge in the same hole will crater upwards instead.",
+      "position": [
+        6.0,
+        0.1,
+        0.0
+      ],
+      "normal": [
+        0,
+        1,
+        -0.3
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 24
+    },
+    {
+      "node": "blasthole_collars",
+      "label": "Blasthole collars (165 mm)",
+      "note": "Eleven holes in three staggered rows. The holes themselves are drawn at their true 165 mm; the pale ring round each one is the collar of drill cuttings, which is what you actually see when you walk a drilled pattern. Staggering the rows gives every hole in the back rows a free face opening between the two in front of it.",
+      "position": [
+        0.0,
+        0.25,
+        5.5
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 896
+    },
+    {
+      "node": "burden_marker",
+      "label": "Burden — 5.5 m",
+      "note": "The distance from a hole to the nearest free face, measured perpendicular to it. Burden is the single most powerful number in the design: too large and the charge cannot break out, so it vents up the hole and leaves toe; too small and it throws rock a long way. A useful first guess is 25 to 35 times the hole diameter, which for 165 mm gives roughly 4 to 6 m.",
+      "position": [
+        -6.5,
+        0.3,
+        2.75
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 36
+    },
+    {
+      "node": "spacing_marker",
+      "label": "Spacing — 6.5 m",
+      "note": "The distance between neighbouring holes along a row. Spacing is normally 1.1 to 1.3 times the burden; much wider and the cracks between adjacent holes never link up, leaving coarse blocks on the row line. Burden and spacing together set the volume each hole has to break, and so the powder factor.",
+      "position": [
+        3.25,
+        0.3,
+        5.5
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 36
+    },
+    {
+      "node": "initiation_sequence",
+      "label": "Surface delays and firing direction",
+      "note": "The holes do not go off together. Surface delays fire them hole by hole and row by row, towards the free face, so each hole has somewhere to break into by the time its turn comes. Delays also control vibration: what a seismograph responds to is the maximum charge on any single delay, not the total in the blast. The arrows show the direction the blast runs.",
+      "position": [
+        -6.5,
+        0.3,
+        16.5
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 156
+    },
+    {
+      "node": "stemming_zone",
+      "label": "Stemming — top 5.0 m",
+      "note": "Crushed angular aggregate rammed into the top of the hole. Its job is to hold the explosion gases in long enough for them to break rock instead of blowing out of the collar. Drill cuttings are the usual temptation and the usual mistake: fine, rounded material flows straight out. Stemming length is about 0.9 times the burden — less invites flyrock, more leaves a hard top.",
+      "position": [
+        10.4,
+        0.44,
+        6.5
+      ],
+      "normal": [
+        1,
+        0.4,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 80
+    },
+    {
+      "node": "charge_column",
+      "label": "Charge column — 6.5 m, about 160 kg",
+      "note": "Site-mixed emulsion pumped into the hole, with a cartridge primer and detonator near the bottom. The charge is drawn here at roughly two and a half times true diameter so you can see it: a real 165 mm column is barely wider than your hand. Dividing 160 kg by the 357 m³ this hole has to break gives the powder factor, about 0.45 kg/m³.",
+      "position": [
+        10.4,
+        0.44,
+        12.25
+      ],
+      "normal": [
+        1,
+        0.4,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 80
+    },
+    {
+      "node": "subgrade_section",
+      "label": "Subgrade drilling — 1.5 m below floor",
+      "note": "The hole is drilled past the intended floor, usually about 0.3 times the burden. Without it the charge cannot break the rock at the very bottom and the blast leaves toe — humps across the floor that the shovel cannot clean up and that wreck truck tyres and haul-road grade. The marker shows which part of the hole is below floor level.",
+      "position": [
+        9.8,
+        0.35,
+        14.75
+      ],
+      "normal": [
+        -1,
+        0.3,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 24
+    },
+    {
+      "node": "scale_figure",
+      "label": "1.8 m person (for scale)",
+      "note": "A person in PPE, 1.8 m tall, standing clear of the machine. Use the scale toggle to hide them. In real AR at 1:1 you can simply walk up to the machine yourself.",
+      "position": [
+        -4.65,
+        2.05,
+        8.25
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 216
+    }
+  ],
+  "thumbnail": "models/blast-pattern.png"
+}

@@ -1,0 +1,256 @@
+{
+  "id": "roof-support",
+  "name": "Powered roof support (shield)",
+  "category": "Underground",
+  "subtitle": "Two-leg lemniscate shield — 1.75 m pitch, set at 3.5 m",
+  "summary": "On a longwall face the roof is not held up by pillars; it is held up by a line of hydraulic shields that walk forward behind the shearer. Each one sets against the roof, takes the load, and is then lowered, pushed forward about 0.8 m and re-set — so the supported span travels with the face and the roof behind it is allowed to cave. This is one support out of the hundred and fifty on a face. It is shown set at 3.5 m with the canopy against the roof and the advance ram extended towards the conveyor.",
+  "specs": [
+    [
+      "Type",
+      "Two-leg shield, lemniscate linkage"
+    ],
+    [
+      "Face pitch (width)",
+      "1.75 m — one support per 1.75 m of face"
+    ],
+    [
+      "Operating height",
+      "2.2 – 4.8 m (shown set at 3.5 m)"
+    ],
+    [
+      "Yield load",
+      "approx. 1,000 t (about 9.8 MN)"
+    ],
+    [
+      "Setting load",
+      "approx. 750 t at 320 bar supply"
+    ],
+    [
+      "Legs",
+      "2 × double-telescopic, approx. 400 mm bore"
+    ],
+    [
+      "Canopy length",
+      "4.2 m"
+    ],
+    [
+      "Base length",
+      "4.6 m"
+    ],
+    [
+      "Mass",
+      "approx. 25–30 t per support"
+    ],
+    [
+      "Advance step",
+      "approx. 0.8 m — one web of the shearer"
+    ],
+    [
+      "Supports per face",
+      "130–180 for a 230–300 m face"
+    ]
+  ],
+  "safety": [
+    "The canopy tip is the boundary of supported ground. Nothing and nobody goes beyond it — that is the definition of unsupported roof.",
+    "A support that is not set to pressure is carrying nothing. Setting pressure is confirmed, not assumed, and a bank of low supports is a roof fall waiting for a trigger.",
+    "Stay clear of the lemniscate linkage and the caving shield. When the support lowers and advances, that space closes and it will not stop.",
+    "Advance in sequence. A gap left out of sequence concentrates load on its neighbours and unsupports the roof exactly where people work.",
+    "Hydraulic fluid at 320 bar penetrates skin through a pinhole leak. Never run a hand along a hose to find one."
+  ],
+  "ar_tips": [
+    "Place it and walk underneath. The canopy is at 3.5 m, so you stand under it with room to spare — and that is the whole point.",
+    "Look along the width: 1.75 m is one support. Picture 150 of them shoulder to shoulder and you have a 260 m longwall face.",
+    "Fade everything except the legs. Two cylinders carry 1,000 t."
+  ],
+  "model": "models/roof-support.glb",
+  "extents_m": {
+    "width_x": 1.75,
+    "height_y": 3.5,
+    "length_z": 6.06
+  },
+  "triangles": 868,
+  "bytes": 81276,
+  "parts": [
+    {
+      "node": "base",
+      "label": "Base (floor pontoons)",
+      "note": "Two skids spreading the support's load onto the floor. They are separate so the support can straddle an uneven floor and so the advance ram can sit between them. Soft floor is a real problem on longwall: a base that punches into the floor loses setting height and the canopy stops reaching the roof.",
+      "position": [
+        0.8,
+        0.3,
+        -1.2
+      ],
+      "normal": [
+        1,
+        0.2,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 36
+    },
+    {
+      "node": "hydraulic_legs",
+      "label": "Hydraulic legs (2 × double-telescopic)",
+      "note": "The two props that actually carry the roof. Fluid is pumped in to set the canopy hard against the roof, then the leg is locked; as the roof converges the leg resists until the yield valve opens at about 1,000 t and lets it shorten rather than burst. Yield load and setting load are different numbers and both matter: setting load is what you start with, yield is the most the support will ever give you.",
+      "position": [
+        0.0,
+        2.0,
+        0.3
+      ],
+      "normal": [
+        0,
+        0,
+        -1
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 304
+    },
+    {
+      "node": "canopy",
+      "label": "Canopy",
+      "note": "The roof beam. Its length is what decides how much ground stays supported between the face and the caving line, and its tip is the legal edge of supported roof. A canopy set level and hard carries load across its whole length; one set tip-low loads the front edge only and lets the roof break ahead of the face.",
+      "position": [
+        0.0,
+        3.5,
+        -1.6
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 12
+    },
+    {
+      "node": "canopy_tip_extension",
+      "label": "Canopy tip extension (flipper)",
+      "note": "A hinged extension that reaches out over the conveyor to hold the newly exposed roof immediately behind the shearer drum, before the whole support can be advanced. It is the difference between supporting the face line and supporting it one web too late.",
+      "position": [
+        0.0,
+        3.44,
+        -3.1
+      ],
+      "normal": [
+        0,
+        0.4,
+        -1
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 12
+    },
+    {
+      "node": "caving_shield",
+      "label": "Caving shield",
+      "note": "The sloping plate across the back. It does not hold up the roof; it keeps the caved goaf out of the walkway and guides the broken rock away behind the support. Everything behind this plate is meant to collapse — that is how a longwall works.",
+      "position": [
+        0.0,
+        2.45,
+        2.3
+      ],
+      "normal": [
+        0,
+        0.3,
+        1
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 12
+    },
+    {
+      "node": "lemniscate_links",
+      "label": "Lemniscate linkage",
+      "note": "Two unequal links on each side tying the caving shield to the base. Their geometry is the clever part: as the support is raised and lowered, the linkage makes the canopy tip travel almost straight up and down instead of swinging. That keeps the tip-to-face distance constant at every seam height.",
+      "position": [
+        0.7,
+        1.3,
+        1.9
+      ],
+      "normal": [
+        1,
+        0,
+        0.3
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 48
+    },
+    {
+      "node": "advance_ram",
+      "label": "Advance (double-acting) ram",
+      "note": "The ram between the base pontoons. Pushed one way it shoves the armoured face conveyor over towards the new face line; pulled the other, with the legs lowered, it drags the whole support forward to follow it. The conveyor is the anchor — the support pushes off it, which is why the two advance as a system and never independently.",
+      "position": [
+        0.0,
+        0.28,
+        -3.1
+      ],
+      "normal": [
+        0,
+        -0.2,
+        -1
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 128
+    },
+    {
+      "node": "afc_pan",
+      "label": "Armoured face conveyor (one pan)",
+      "note": "A single 1.75 m pan of the AFC — the same width as the support, because the face is built from repeats of exactly this module. The chain conveyor running in it carries the cut coal off the face, and its spill plate doubles as the track the shearer rides on.",
+      "position": [
+        0.0,
+        0.7,
+        -3.6
+      ],
+      "normal": [
+        0,
+        0.3,
+        -1
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 24
+    },
+    {
+      "node": "control_valve_bank",
+      "label": "Control valve bank and hoses",
+      "note": "Where the support is operated from — and, on a modern face, where the electro-hydraulic controller sits so that supports can be set and advanced in automatic sequence from the neighbouring unit, keeping people out from under the newly exposed roof altogether.",
+      "position": [
+        -0.72,
+        1.35,
+        0.95
+      ],
+      "normal": [
+        -1,
+        0.2,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 76
+    },
+    {
+      "node": "scale_figure",
+      "label": "1.8 m person (for scale)",
+      "note": "A person in PPE, 1.8 m tall, standing clear of the machine. Use the scale toggle to hide them. In real AR at 1:1 you can simply walk up to the machine yourself.",
+      "position": [
+        0.0,
+        2.05,
+        -1.75
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 216
+    }
+  ],
+  "thumbnail": "models/roof-support.png"
+}

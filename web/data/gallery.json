@@ -1,0 +1,234 @@
+{
+  "id": "gallery",
+  "name": "Bolted gallery (development roadway)",
+  "category": "Underground",
+  "subtitle": "4.8 m × 3.0 m roadway, 1.2 m bolt pattern — walk through it",
+  "summary": "A development heading in a bord-and-pillar mine, supported by resin-grouted roof bolts on a 1.2 m square pattern with W-straps and mesh. Bolting does not prop the roof up from below; it binds the laminated strata above into a single thicker beam that can carry itself across the roadway. That is why the bolts are drawn here inside semi-transparent rock — what the support actually does happens entirely out of sight, above the roof line, and a bolt pattern you only see from below is a pattern you cannot reason about. Both ends are open: place it and walk through.",
+  "specs": [
+    [
+      "Roadway width",
+      "4.8 m"
+    ],
+    [
+      "Roadway height",
+      "3.0 m"
+    ],
+    [
+      "Length modelled",
+      "14 m"
+    ],
+    [
+      "Roof bolts",
+      "22 mm bar, 1.8 m long, full-column resin grouted"
+    ],
+    [
+      "Bolt pattern",
+      "1.2 m × 1.2 m — 4 bolts per row"
+    ],
+    [
+      "Bolt density",
+      "about 0.69 bolts per m² of roof"
+    ],
+    [
+      "Anchorage",
+      "Resin capsules, full encapsulation"
+    ],
+    [
+      "Surface support",
+      "W-straps on each row, weldmesh between"
+    ],
+    [
+      "Rib bolts",
+      "1.5 m, two per side per row at 2 m centres"
+    ],
+    [
+      "Typical bolt capacity",
+      "approx. 12–15 t yield per bolt"
+    ]
+  ],
+  "safety": [
+    "Never go under unsupported roof. The last row of bolts is the limit of supported ground, and the temptation to step one metre past it to look at something is how people are killed.",
+    "The roof is tested before anyone works under it — sound it, look for fresh spalling, and check for bed separation. A drummy sound means a parting has opened above the bolt horizon.",
+    "Bolt length has to exceed the thickness of the laminated beam it is binding. A 1.8 m bolt in strata that separates at 2.5 m anchors nothing and gives false confidence.",
+    "Report and re-support any bolt with a loose plate, a sheared head or visible rust staining at the collar. The plate is the only part you can inspect; it is also the first part to tell you something moved.",
+    "Ribs fail as often as roofs in coal. Rib bolts and mesh are not optional in a 3 m heading."
+  ],
+  "ar_tips": [
+    "Place it in a corridor or a hall about 16 m long and walk straight through. The roadway is 3.0 m high, so there is plenty of headroom — and realising that a 'low' coal roadway is still well above you is part of the lesson.",
+    "Stop in the middle and look up. Fade everything except the bolts and you are left looking at the only thing holding the roof together.",
+    "Pace the 1.2 m between bolt rows. That spacing is a design decision made from rock-mass rating, not a convention."
+  ],
+  "model": "models/gallery.glb",
+  "extents_m": {
+    "width_x": 8.8,
+    "height_y": 5.2,
+    "length_z": 14.01
+  },
+  "triangles": 3912,
+  "bytes": 336024,
+  "parts": [
+    {
+      "node": "gallery_floor",
+      "label": "Floor",
+      "note": "Often the weakest horizon in a coal roadway and the one nobody supports. Floor heave squeezes the roadway closed from below, and in a wet seam it turns a 3 m heading into a 2.5 m one over a few months.",
+      "position": [
+        0.0,
+        0.06,
+        7.0
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 12
+    },
+    {
+      "node": "coal_ribs",
+      "label": "Coal ribs (sides)",
+      "note": "The solid coal either side. In bord-and-pillar these are the pillars that carry the overburden, so what is left standing is a mine-design decision, not a local one — pillar size comes from depth, seam height and the extraction ratio you are willing to accept.",
+      "position": [
+        2.4,
+        1.6,
+        7.0
+      ],
+      "normal": [
+        -1,
+        0,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 24
+    },
+    {
+      "node": "roof_strata",
+      "label": "Roof strata",
+      "note": "The rock above the roadway, drawn transparent so the bolts inside it are visible. Immediate roof in Indian coal measures is usually laminated shale or sandy shale — strong enough in a thick bed, weak across the partings between beds. Unbolted, each thin lamination has to span the full 4.8 m on its own and sags away from the one above it.",
+      "position": [
+        0.0,
+        5.2,
+        7.0
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 12
+    },
+    {
+      "node": "bedding_planes",
+      "label": "Bedding planes",
+      "note": "The partings the whole support problem turns on. Laminated strata slip and separate along these surfaces; bolts clamp the laminations together so that several thin beams act as one thick one, and a thick beam deflects far less than the same thickness of loose leaves. This is why bolt length is chosen against where the separation is expected, not against the roadway width.",
+      "position": [
+        0.0,
+        4.35,
+        1.0
+      ],
+      "normal": [
+        0,
+        0,
+        -1
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 36
+    },
+    {
+      "node": "roof_bolts",
+      "label": "Roof bolts (22 mm × 1.8 m, resin grouted)",
+      "note": "Full-column resin anchorage: a resin capsule is pushed to the back of the hole and the bar spun through it, so the bar is bonded to the rock along its whole length rather than gripped only at the far end. That makes the bolt stiff — it picks up load after a fraction of a millimetre of bed separation, which is what stops the separation rather than merely surviving it.",
+      "position": [
+        0.6,
+        4.8,
+        2.4
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 1936
+    },
+    {
+      "node": "w_straps",
+      "label": "W-straps",
+      "note": "A pressed steel channel run across the roadway under each row of bolt plates. It spreads what each bolt holds over the whole row, so the roof between two bolts cannot sag down past them. Cheap, and it does more for surface control than adding bolts.",
+      "position": [
+        0.0,
+        2.9,
+        2.4
+      ],
+      "normal": [
+        0,
+        -1,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 132
+    },
+    {
+      "node": "weldmesh",
+      "label": "Weldmesh",
+      "note": "Holds the small stuff. Bolts and straps keep the roof beam together, but neither stops a fist-sized piece of shale dropping out between them, and that is what actually injures people day to day. Mesh is the difference between a bruise and a fatality.",
+      "position": [
+        -1.8,
+        2.86,
+        7.0
+      ],
+      "normal": [
+        0,
+        -1,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 312
+    },
+    {
+      "node": "rib_bolts",
+      "label": "Rib bolts",
+      "note": "Shorter bolts into the sides. In a 3 m heading the ribs are as tall as a person and coal spalls off them as the pillar takes load; an unbolted rib in a stressed pillar sheds slabs without warning. They are often fibreglass rather than steel so a future cut through the pillar does not have to chew steel.",
+      "position": [
+        -2.4,
+        2.35,
+        4.0
+      ],
+      "normal": [
+        1,
+        0,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 1232
+    },
+    {
+      "node": "scale_figure",
+      "label": "1.8 m person (for scale)",
+      "note": "A person in PPE, 1.8 m tall, standing clear of the machine. Use the scale toggle to hide them. In real AR at 1:1 you can simply walk up to the machine yourself.",
+      "position": [
+        -1.1,
+        2.05,
+        8.5
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 216
+    }
+  ],
+  "thumbnail": "models/gallery.png"
+}

@@ -83,9 +83,10 @@
   }
 
   // Tell the user which AR route their device can actually take, rather than
-  // letting them discover it by tapping a button that does nothing. Plenty of
-  // Android tablets -- the Redmi Pad 2 Pro among them -- have no ARCore, and
-  // for those marker tracking is the working path.
+  // letting them discover it by tapping a button that does nothing. Ask the
+  // browser, never the user agent and never a Play Store search: the Redmi
+  // Pad 2 Pro runs full AR but shows no "Google Play Services for AR" in the
+  // store, because the component is preinstalled and hidden from search.
   var note = document.getElementById("device-note");
 
   function describeDevice(hasWebXR) {

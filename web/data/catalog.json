@@ -19,8 +19,8 @@
     },
     {
       "id": "dumper",
-      "name": "Rear-dump truck — schematic",
-      "subtitle": "220 t class, simplified geometry, 20 labelled parts",
+      "name": "Rear-dump truck -- schematic",
+      "subtitle": "220 t class, simplified geometry, 20 labelled parts -- CAT 793 / Komatsu 830E family",
       "category": "Haulage",
       "thumbnail": "models/dumper.png",
       "model": "models/dumper.glb",
@@ -64,6 +64,54 @@
       "bytes": 3431424,
       "triangles": 157424,
       "parts": 7
+    },
+    {
+      "id": "blast-pattern",
+      "name": "Blasthole pattern (bench blast)",
+      "subtitle": "165 mm holes, 5.5 m burden × 6.5 m spacing, 10 m bench",
+      "category": "Drilling & blasting",
+      "thumbnail": "models/blast-pattern.png",
+      "model": "models/blast-pattern.glb",
+      "extents_m": {
+        "width_x": 20.6,
+        "height_y": 0.9,
+        "length_z": 18.0
+      },
+      "bytes": 141136,
+      "triangles": 1572,
+      "parts": 11
+    },
+    {
+      "id": "roof-support",
+      "name": "Powered roof support (shield)",
+      "subtitle": "Two-leg lemniscate shield — 1.75 m pitch, set at 3.5 m",
+      "category": "Underground",
+      "thumbnail": "models/roof-support.png",
+      "model": "models/roof-support.glb",
+      "extents_m": {
+        "width_x": 1.75,
+        "height_y": 3.5,
+        "length_z": 6.06
+      },
+      "bytes": 81276,
+      "triangles": 868,
+      "parts": 10
+    },
+    {
+      "id": "gallery",
+      "name": "Bolted gallery (development roadway)",
+      "subtitle": "4.8 m × 3.0 m roadway, 1.2 m bolt pattern — walk through it",
+      "category": "Underground",
+      "thumbnail": "models/gallery.png",
+      "model": "models/gallery.glb",
+      "extents_m": {
+        "width_x": 8.8,
+        "height_y": 5.2,
+        "length_z": 14.01
+      },
+      "bytes": 336024,
+      "triangles": 3912,
+      "parts": 9
     }
   ]
 }

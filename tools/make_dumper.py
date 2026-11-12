@@ -327,8 +327,8 @@ def build() -> Builder:
 
 SPECS = {
     "id": "dumper",
-    "name": "Rear-dump truck (dumper)",
-    "subtitle": "220 t payload class -- CAT 793 / Komatsu 830E / BEML BH100 family",
+    "name": "Rear-dump truck -- schematic",
+    "subtitle": "220 t class, simplified geometry, 20 labelled parts -- CAT 793 / Komatsu 830E family",
     "category": "Haulage",
     "summary": (
         "The haulage half of a shovel-dumper system. A rigid-frame rear-dump "

@@ -1,7 +1,7 @@
 {
   "id": "dumper",
-  "name": "Rear-dump truck (dumper)",
-  "subtitle": "220 t payload class -- CAT 793 / Komatsu 830E / BEML BH100 family",
+  "name": "Rear-dump truck -- schematic",
+  "subtitle": "220 t class, simplified geometry, 20 labelled parts -- CAT 793 / Komatsu 830E family",
   "category": "Haulage",
   "summary": "The haulage half of a shovel-dumper system. A rigid-frame rear-dump truck takes a loaded bucket from the shovel and hauls it to the crusher, stockpile or dump. Match factor -- shovel passes per truck against truck cycle time -- is what keeps both machines busy.",
   "specs": [
