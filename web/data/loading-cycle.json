@@ -1,0 +1,812 @@
+{
+  "id": "loading-cycle",
+  "name": "Shovel–dumper loading cycle",
+  "category": "Loading",
+  "subtitle": "Animated — truck spots, four passes, truck away",
+  "summary": "Loading is a two-machine system, and its output is set by whichever machine is waiting. Too few trucks and the shovel stands idle between them; too many and the trucks queue at the face. The ratio that balances the two is the match factor, and it falls straight out of the two cycle times you can see here: how long the shovel takes per pass, and how long a truck is away on the haul. The animation runs at about four times real speed — use the cycle times in the specs for any arithmetic, not a stopwatch.",
+  "specs": [
+    [
+      "Shovel",
+      "140 t class, 7.5 m³ bucket"
+    ],
+    [
+      "Truck",
+      "220 t payload, rear-dump"
+    ],
+    [
+      "Shovel cycle (real)",
+      "approx. 30 s — dig 8 s, swing loaded 7 s, dump 5 s, swing back 10 s"
+    ],
+    [
+      "Swing angle shown",
+      "90° — keep it under 90° if the layout allows"
+    ],
+    [
+      "Bucket payload",
+      "approx. 12 t (7.5 m³ × 1.8 t/m³ × 0.9 fill)"
+    ],
+    [
+      "Passes to fill this truck",
+      "approx. 18 — far too many, see the bucket note"
+    ],
+    [
+      "Passes you design for",
+      "4 to 6"
+    ],
+    [
+      "Spot time",
+      "approx. 40 s to reverse in and settle"
+    ],
+    [
+      "Animation speed",
+      "approx. 4× real time, 40 s loop"
+    ]
+  ],
+  "safety": [
+    "The truck is spotted by the shovel operator, and no truck moves under a loaded bucket. The bucket never swings over the cab.",
+    "Operators keep positive radio contact and an agreed horn code. A truck that reverses on an assumption is the commonest way people are killed at a loading face.",
+    "Light vehicles stay a full truck length clear of the loading area and never approach without being acknowledged by both operators.",
+    "The face behind the shovel is as much a hazard as the machines. Watch for loose on the highwall before anyone walks the floor."
+  ],
+  "ar_tips": [
+    "This is a loading bay, not a machine: about 25 m by 26 m. View it on screen first and save AR for a large open area.",
+    "Count the passes and time the swing. Then halve the haul distance in your head and ask how many trucks the shovel could keep busy — that is match factor, and the animation gives you both numbers.",
+    "Watch the truck settle on its suspension as it fills."
+  ],
+  "model": "models/loading-cycle.glb",
+  "extents_m": {
+    "width_x": 26.0,
+    "height_y": 10.0,
+    "length_z": 29.0
+  },
+  "triangles": 4452,
+  "bytes": 410704,
+  "parts": [
+    {
+      "node": "bench_floor",
+      "label": "Loading floor",
+      "note": "The floor the shovel and the trucks share. Keeping it clean and level is not housekeeping: a rough floor slows every truck spotting onto it, and spot time is dead time for the shovel.",
+      "position": [
+        0.0,
+        0.05,
+        12.0
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 12
+    },
+    {
+      "node": "bench_face",
+      "label": "Bench face (highwall)",
+      "note": "A face shovel digs upward into the face rather than down into the floor, which is what the boom-stick-bucket geometry here is shaped for. Face height is matched to the machine: much above the shovel's maximum cutting height and the top of the face has to be brought down separately, which is slow and dangerous.",
+      "position": [
+        -3.0,
+        8.0,
+        -11.2
+      ],
+      "normal": [
+        0,
+        0.3,
+        1
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 12
+    },
+    {
+      "node": "muckpile",
+      "label": "Muckpile",
+      "note": "Blasted rock at the toe of the face. Its fragmentation is set by the blast, not by the shovel, and it decides how fast the bucket fills. Coarse, blocky muck means a part-full bucket on every pass, which quietly costs more than most people expect.",
+      "position": [
+        -3.0,
+        1.6,
+        -9.0
+      ],
+      "normal": [
+        0,
+        0.6,
+        1
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 8
+    },
+    {
+      "node": "sh_crawler_tracks",
+      "label": "Crawler tracks",
+      "note": "Two independently driven crawlers, 750 mm shoes. Ground bearing pressure is only about 2.2 kg/cm2 -- roughly a walking person -- which is how a 140 t machine works on a soft floor.",
+      "position": [
+        -2.625,
+        1.1,
+        0.0
+      ],
+      "normal": [
+        -1,
+        0.2,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 56
+    },
+    {
+      "node": "sh_sprockets_idlers",
+      "label": "Drive sprockets & idlers",
+      "note": "Travel motor and planetary drive at the sprocket end; track tension is set hydraulically at the idler. Shovels travel very little -- undercarriage wear comes mostly from swing and dig reaction forces.",
+      "position": [
+        2.625,
+        0.85,
+        2.75
+      ],
+      "normal": [
+        1,
+        0,
+        0.3
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 544
+    },
+    {
+      "node": "sh_car_body",
+      "label": "Car body & swing circle",
+      "note": "The car body ties the crawlers together and carries the swing bearing. All power and oil to the upper works passes through the centre swivel inside this ring.",
+      "position": [
+        0.0,
+        1.95,
+        1.2
+      ],
+      "normal": [
+        0,
+        1,
+        0.3
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 92
+    },
+    {
+      "node": "sh_superstructure",
+      "label": "Superstructure (house)",
+      "note": "Carries the diesel engine (about 600-800 kW), the main hydraulic pumps, oil coolers and tanks. Everything above the swing circle rotates 360 degrees.",
+      "position": [
+        2.525,
+        3.2,
+        0.5
+      ],
+      "normal": [
+        1,
+        0.2,
+        0
+      ],
+      "pivot": [
+        0.0,
+        1.9,
+        0.0
+      ],
+      "parent": null,
+      "triangles": 24
+    },
+    {
+      "node": "sh_engine_cooling",
+      "label": "Engine & cooling pack",
+      "note": "Diesel-hydraulic drive: the engine turns variable-displacement pumps, and oil does all the work. Electric-drive versions trail a cable and cut fuel cost where the pit layout allows it.",
+      "position": [
+        1.3,
+        5.1,
+        1.4
+      ],
+      "normal": [
+        0.3,
+        1,
+        0
+      ],
+      "pivot": [
+        0.0,
+        1.9,
+        0.0
+      ],
+      "parent": "sh_superstructure",
+      "triangles": 52
+    },
+    {
+      "node": "sh_counterweight",
+      "label": "Counterweight",
+      "note": "Balances the loaded bucket at full reach. Removing or under-specifying it is what turns a hard dig into a tipping incident.",
+      "position": [
+        0.0,
+        2.9,
+        4.0
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ],
+      "pivot": [
+        0.0,
+        1.9,
+        0.0
+      ],
+      "parent": "sh_superstructure",
+      "triangles": 24
+    },
+    {
+      "node": "sh_cab",
+      "label": "Operator cab (FOPS)",
+      "note": "Mounted high on the left front for a clear view into the bucket. Falling-Object Protective Structure plus a rock deflector; the operator sits about 5 m up.",
+      "position": [
+        -2.6,
+        5.5,
+        -2.3
+      ],
+      "normal": [
+        -1,
+        0.2,
+        0
+      ],
+      "pivot": [
+        0.0,
+        1.9,
+        0.0
+      ],
+      "parent": "sh_superstructure",
+      "triangles": 24
+    },
+    {
+      "node": "sh_cab_glass",
+      "label": "Cab glazing",
+      "note": "Large front and roof windows -- the operator must watch the bucket teeth, the face above, and the truck being loaded.",
+      "position": [
+        -1.55,
+        5.7,
+        -3.45
+      ],
+      "normal": [
+        0,
+        0.2,
+        -1
+      ],
+      "pivot": [
+        0.0,
+        1.9,
+        0.0
+      ],
+      "parent": "sh_superstructure",
+      "triangles": 36
+    },
+    {
+      "node": "sh_walkways_rails",
+      "label": "Walkways & handrails",
+      "note": "Service access to pumps, filters and the cooling pack. Isolate and lock out hydraulics before any work on the upper works.",
+      "position": [
+        2.4,
+        4.9,
+        -1.0
+      ],
+      "normal": [
+        1,
+        0.4,
+        0
+      ],
+      "pivot": [
+        0.0,
+        1.9,
+        0.0
+      ],
+      "parent": "sh_superstructure",
+      "triangles": 320
+    },
+    {
+      "node": "sh_access_ladder",
+      "label": "Access ladder",
+      "note": "Retractable stairway, raised while digging. The machine must be shut down and the bucket grounded before anyone climbs.",
+      "position": [
+        -2.2,
+        1.6,
+        -3.2
+      ],
+      "normal": [
+        -0.5,
+        0,
+        -1
+      ],
+      "pivot": [
+        0.0,
+        1.9,
+        0.0
+      ],
+      "parent": "sh_superstructure",
+      "triangles": 124
+    },
+    {
+      "node": "sh_boom",
+      "label": "Boom",
+      "note": "Fabricated box-section arm pinned to the house front. On a face shovel the boom is short and steep -- it is built to resist crowd forces into a vertical face rather than to reach down.",
+      "position": [
+        0.9,
+        5.9,
+        -4.8
+      ],
+      "normal": [
+        0.6,
+        0.6,
+        0
+      ],
+      "pivot": [
+        0.0,
+        3.2,
+        -2.2
+      ],
+      "parent": "sh_superstructure",
+      "triangles": 108
+    },
+    {
+      "node": "sh_stick",
+      "label": "Stick (dipper arm)",
+      "note": "Carries the bucket and provides the crowd force that drives the teeth into the face. Stick length trades reach against breakout force.",
+      "position": [
+        0.8,
+        5.6,
+        -8.9
+      ],
+      "normal": [
+        0.6,
+        0.3,
+        -0.3
+      ],
+      "pivot": [
+        0.0,
+        7.6,
+        -7.4
+      ],
+      "parent": "sh_boom",
+      "triangles": 60
+    },
+    {
+      "node": "sh_bucket",
+      "label": "Bucket (7.5 m3)",
+      "note": "Bottom-dump face-shovel bucket: the floor unlatches and swings open to release the load. Four passes fill a 220 t dumper, so bucket size must match truck size -- that is the match factor.",
+      "position": [
+        1.6,
+        3.0,
+        -9.6
+      ],
+      "normal": [
+        1,
+        0.2,
+        0
+      ],
+      "pivot": [
+        0.0,
+        4.2,
+        -8.9
+      ],
+      "parent": "sh_stick",
+      "triangles": 60
+    },
+    {
+      "node": "sh_bucket_teeth",
+      "label": "Teeth & GET",
+      "note": "Ground Engaging Tools: replaceable tooth adapters, side cutters and wear plates. Worn teeth raise dig time and fuel burn, and a tooth lost into the load can wreck a crusher.",
+      "position": [
+        0.0,
+        2.0,
+        -10.6
+      ],
+      "normal": [
+        0,
+        0.2,
+        -1
+      ],
+      "pivot": [
+        0.0,
+        4.2,
+        -8.9
+      ],
+      "parent": "sh_bucket",
+      "triangles": 84
+    },
+    {
+      "node": "sh_hydraulic_cylinders",
+      "label": "Hydraulic cylinders",
+      "note": "Boom-hoist pair, stick cylinder and bucket cylinder, working at roughly 300-350 bar. Breakout force at the teeth -- not engine power -- is the shovel's real digging rating.",
+      "position": [
+        1.5,
+        4.6,
+        -4.2
+      ],
+      "normal": [
+        1,
+        0.4,
+        0
+      ],
+      "pivot": [
+        0.0,
+        1.9,
+        0.0
+      ],
+      "parent": "sh_superstructure",
+      "triangles": 192
+    },
+    {
+      "node": "tr_chassis",
+      "label": "Main frame / chassis",
+      "note": "Box-section fabricated steel frame that carries engine, axles and body. Fatigue life of the frame, not the engine, usually decides a dumper's economic life.",
+      "position": [
+        8.6,
+        2.15,
+        5.1
+      ],
+      "normal": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "pivot": null,
+      "parent": "truck",
+      "triangles": 48
+    },
+    {
+      "node": "tr_suspension",
+      "label": "Suspension & front axle",
+      "note": "Oil-pneumatic (nitrogen over oil) struts. On a 220 t truck each front strut carries roughly 45 t when loaded; strut pressure is what payload-monitoring systems actually measure.",
+      "position": [
+        8.6,
+        2.9,
+        7.1
+      ],
+      "normal": [
+        -1.2246467991473532e-16,
+        0.0,
+        1.0
+      ],
+      "pivot": null,
+      "parent": "truck",
+      "triangles": 108
+    },
+    {
+      "node": "tr_rear_axle",
+      "label": "Rear axle & final drives",
+      "note": "Electric-drive trucks carry an AC/DC wheel motor and two-stage planetary final drive in each rear hub; mechanical-drive trucks use a torque converter and powershift transmission instead.",
+      "position": [
+        8.6,
+        2.6,
+        1.2000000000000002
+      ],
+      "normal": [
+        1.2246467991473532e-16,
+        0.0,
+        -1.0
+      ],
+      "pivot": null,
+      "parent": "truck",
+      "triangles": 124
+    },
+    {
+      "node": "tr_front_tyres",
+      "label": "Front tyres (40.00R57)",
+      "note": "3.57 m tall, about 4.5 t each, and roughly 5-6% of total operating cost. Steering axle runs singles; TKPH rating limits how fast a loaded truck may cycle in hot weather.",
+      "position": [
+        12.0,
+        2.685,
+        7.1000000000000005
+      ],
+      "normal": [
+        1.0,
+        0.3,
+        1.2246467991473532e-16
+      ],
+      "pivot": null,
+      "parent": "truck",
+      "triangles": 288
+    },
+    {
+      "node": "tr_rear_tyres",
+      "label": "Rear tyres (dual)",
+      "note": "Four tyres on the drive axle share about 67% of gross weight. Unequal inflation between a dual pair overloads one tyre and is a common cause of premature failure.",
+      "position": [
+        5.2,
+        2.685,
+        1.1999999999999997
+      ],
+      "normal": [
+        -1.0,
+        0.3,
+        -1.2246467991473532e-16
+      ],
+      "pivot": null,
+      "parent": "truck",
+      "triangles": 576
+    },
+    {
+      "node": "tr_wheel_rims",
+      "label": "Wheels & rims",
+      "note": "Five-piece lock-ring rims. Never approach a hot or inflating rim from the side -- always from the tread face.",
+      "position": [
+        12.5,
+        1.785,
+        7.1000000000000005
+      ],
+      "normal": [
+        1.0,
+        0.0,
+        1.2246467991473532e-16
+      ],
+      "pivot": null,
+      "parent": "truck",
+      "triangles": 336
+    },
+    {
+      "node": "tr_engine_hood",
+      "label": "Engine enclosure",
+      "note": "Houses a ~2500 kW (3400 hp) quad-turbo diesel. On diesel-electric trucks it drives an alternator feeding the wheel motors; there is no driveshaft to the rear axle.",
+      "position": [
+        8.6,
+        3.8,
+        8.4
+      ],
+      "normal": [
+        -1.2246467991473532e-16,
+        0.4,
+        1.0
+      ],
+      "pivot": null,
+      "parent": "truck",
+      "triangles": 24
+    },
+    {
+      "node": "tr_radiator_grille",
+      "label": "Radiator & grille",
+      "note": "Rejects roughly as much heat as the engine makes power. Plugged cores from spillage and dust are a top cause of derating.",
+      "position": [
+        8.6,
+        3.0,
+        9.4
+      ],
+      "normal": [
+        -1.2246467991473532e-16,
+        0.0,
+        1.0
+      ],
+      "pivot": null,
+      "parent": "truck",
+      "triangles": 12
+    },
+    {
+      "node": "tr_fuel_tank",
+      "label": "Fuel tank",
+      "note": "Around 4500 litres -- about one 12-hour shift. Fuel burn of roughly 350-450 l/h dominates operating cost.",
+      "position": [
+        6.3,
+        2.4,
+        3.0999999999999996
+      ],
+      "normal": [
+        -1.0,
+        0.0,
+        -1.2246467991473532e-16
+      ],
+      "pivot": null,
+      "parent": "truck",
+      "triangles": 56
+    },
+    {
+      "node": "tr_exhaust_stacks",
+      "label": "Exhaust stacks",
+      "note": "Routed up alongside the body front wall; exhaust heat is also used to warm the body floor in cold climates to stop sticky material freezing on.",
+      "position": [
+        7.699999999999999,
+        5.4,
+        7.4
+      ],
+      "normal": [
+        -0.5000000000000001,
+        0.5,
+        0.9999999999999999
+      ],
+      "pivot": null,
+      "parent": "truck",
+      "triangles": 80
+    },
+    {
+      "node": "tr_operator_deck",
+      "label": "Operator deck",
+      "note": "Non-slip walkway giving access to the cab and to service points. Three-point contact on the ladder is mandatory; falls from dumper decks are a leading injury category.",
+      "position": [
+        6.699999999999999,
+        4.35,
+        7.9
+      ],
+      "normal": [
+        -0.6,
+        1.0,
+        -7.347880794884119e-17
+      ],
+      "pivot": null,
+      "parent": "truck",
+      "triangles": 24
+    },
+    {
+      "node": "tr_cab",
+      "label": "Operator cab (ROPS/FOPS)",
+      "note": "Sound-suppressed, pressurised and air-conditioned, certified as Roll-Over and Falling-Object Protective Structure. Houses the payload display, retarder control and tyre-pressure monitor.",
+      "position": [
+        11.549999999999999,
+        5.3,
+        8.2
+      ],
+      "normal": [
+        1.0,
+        0.2,
+        1.2246467991473532e-16
+      ],
+      "pivot": null,
+      "parent": "truck",
+      "triangles": 24
+    },
+    {
+      "node": "tr_cab_glass",
+      "label": "Cab glazing",
+      "note": "Laminated screens plus mirrors and cameras. Even so, a loaded dumper has large blind areas -- light vehicles must keep a safe distance and make positive radio contact.",
+      "position": [
+        10.35,
+        5.5,
+        9.4
+      ],
+      "normal": [
+        -1.2246467991473532e-16,
+        0.2,
+        1.0
+      ],
+      "pivot": null,
+      "parent": "truck",
+      "triangles": 36
+    },
+    {
+      "node": "tr_handrails",
+      "label": "Handrails & walkways",
+      "note": "Yellow handrails mark every legitimate access route. Climbing anywhere else on a 6 m tall machine is prohibited.",
+      "position": [
+        5.699999999999999,
+        5.1,
+        7.9
+      ],
+      "normal": [
+        -1.0,
+        0.4,
+        -1.2246467991473532e-16
+      ],
+      "pivot": null,
+      "parent": "truck",
+      "triangles": 160
+    },
+    {
+      "node": "tr_access_ladder",
+      "label": "Access ladder",
+      "note": "Inclined stairway from ground to deck, often with a powered lower flight. Face the steps and keep three-point contact.",
+      "position": [
+        9.6,
+        2.6,
+        9.8
+      ],
+      "normal": [
+        -1.2246467991473532e-16,
+        0.0,
+        1.0
+      ],
+      "pivot": null,
+      "parent": "truck",
+      "triangles": 160
+    },
+    {
+      "node": "tr_dump_body",
+      "label": "Dump body (tray)",
+      "note": "Abrasion-resistant steel body of roughly 130 m3 struck / 170 m3 heaped (2:1). Body choice is a trade-off: a lighter body hauls more payload, a thicker one survives blocky blasted rock.",
+      "position": [
+        12.2,
+        5.6,
+        2.3000000000000007
+      ],
+      "normal": [
+        1.0,
+        0.3,
+        1.2246467991473532e-16
+      ],
+      "pivot": [
+        8.6,
+        3.35,
+        -1.5
+      ],
+      "parent": "truck",
+      "triangles": 84
+    },
+    {
+      "node": "tr_body_canopy",
+      "label": "Body canopy (rock guard)",
+      "note": "Forward extension of the body over the cab. It protects the operator while loading -- which is why a shovel never swings a bucket over the cab side of the truck.",
+      "position": [
+        8.6,
+        6.7,
+        8.8
+      ],
+      "normal": [
+        -3.6739403974420595e-17,
+        1.0,
+        0.3
+      ],
+      "pivot": [
+        8.6,
+        3.35,
+        -1.5
+      ],
+      "parent": "tr_dump_body",
+      "triangles": 24
+    },
+    {
+      "node": "tr_hoist_cylinders",
+      "label": "Hoist cylinders",
+      "note": "Twin three-stage cylinders tip the body to about 45 degrees in 12-15 seconds. Never tip on a side slope and never travel with the body raised -- it is the classic dumper overturn.",
+      "position": [
+        7.199999999999999,
+        3.3,
+        3.9
+      ],
+      "normal": [
+        -1.0,
+        0.3,
+        -1.2246467991473532e-16
+      ],
+      "pivot": null,
+      "parent": "truck",
+      "triangles": 192
+    },
+    {
+      "node": "tr_body_pivot",
+      "label": "Body pivot pins",
+      "note": "The body hinges on these rear pins. Lubrication here is a daily-check item; a seized pin tears the body mounting.",
+      "position": [
+        8.6,
+        3.3,
+        -1.7000000000000002
+      ],
+      "normal": [
+        1.2246467991473532e-16,
+        -0.4,
+        -1.0
+      ],
+      "pivot": null,
+      "parent": "truck",
+      "triangles": 48
+    },
+    {
+      "node": "scale_figure",
+      "label": "1.8 m person (for scale)",
+      "note": "A person in PPE, 1.8 m tall, standing clear of the machine. Use the scale toggle to hide them. In real AR at 1:1 you can simply walk up to the machine yourself.",
+      "position": [
+        -6.5,
+        2.05,
+        12.5
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 216
+    }
+  ],
+  "animation": {
+    "name": "loading-cycle",
+    "seconds": 40.0,
+    "speed_vs_real": 4
+  },
+  "thumbnail": "models/loading-cycle.png"
+}

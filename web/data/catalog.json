@@ -29,7 +29,7 @@
         "height_y": 6.53,
         "length_z": 13.2
       },
-      "bytes": 236572,
+      "bytes": 236544,
       "triangles": 2620,
       "parts": 20
     },
@@ -45,9 +45,25 @@
         "height_y": 8.19,
         "length_z": 15.07
       },
-      "bytes": 183036,
+      "bytes": 182812,
       "triangles": 2016,
       "parts": 16
+    },
+    {
+      "id": "loading-cycle",
+      "name": "Shovel–dumper loading cycle",
+      "subtitle": "Animated — truck spots, four passes, truck away",
+      "category": "Loading",
+      "thumbnail": "models/loading-cycle.png",
+      "model": "models/loading-cycle.glb",
+      "extents_m": {
+        "width_x": 26.0,
+        "height_y": 10.0,
+        "length_z": 29.0
+      },
+      "bytes": 410704,
+      "triangles": 4452,
+      "parts": 38
     },
     {
       "id": "drill-rig",

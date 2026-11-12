@@ -38,6 +38,10 @@
 
   var FADED = 0.1;
 
+  function isFigure(node) {
+    return /scale_figure$/.test(node);
+  }
+
   /* ------------------------------------------------------- model load */
 
   fetch("data/" + encodeURIComponent(id) + ".json", { cache: "no-cache" })
@@ -61,6 +65,7 @@
     mv.alt = d.name + ", " + d.subtitle;
     mv.poster = d.thumbnail || "";
     mv.src = d.model;
+    syncAnimation(d);
     buildHotspots();
     render();
   }
@@ -120,14 +125,22 @@
   function applySelection() {
     if (!data) return;
     data.parts.forEach(function (p) {
-      if (p.node === "scale_figure") return;
+      if (isFigure(p.node)) return;
       setAlpha(p.node, selected === null || selected === p.node ? null : FADED);
     });
     applyFigure();
   }
 
   function applyFigure() {
-    setAlpha("scale_figure", figureOn ? (selected && selected !== "scale_figure" ? FADED : null) : 0);
+    // A scene composed from two machines has two figures, named
+    // sh_scale_figure and tr_scale_figure, so match on the suffix
+    // rather than on the bare name.
+    (data ? data.parts : []).forEach(function (p) {
+      if (!isFigure(p.node)) return;
+      setAlpha(p.node, figureOn
+        ? (selected && !isFigure(selected) ? FADED : null)
+        : 0);
+    });
   }
 
   function buildHotspots() {
@@ -290,6 +303,49 @@
     labelsOn = !labelsOn;
     this.setAttribute("aria-pressed", String(labelsOn));
     buildHotspots();
+  });
+
+  /* ------------------------------------------------------- animation */
+
+  // Only the loading cycle carries a glTF animation, so the control appears
+  // only when the loaded model actually has one -- asking model-viewer is
+  // more reliable than flagging it in the data file, and it keeps the
+  // toolbar honest if a model gains or loses its animation later.
+  var playChip = document.getElementById("chip-play");
+
+  function syncAnimation(d) {
+    var anim = d && d.animation;
+    playChip.hidden = !anim;
+    if (!anim) return;
+    // Driven from the model's own data file, not from model-viewer's
+    // availableAnimations: that list is only filled in once the scene has
+    // rendered a frame, so it reads empty for as long as the tab is in the
+    // background and the control would never appear. autoplay lets
+    // model-viewer start the clip whenever it is ready.
+    mv.animationName = anim.name;
+    mv.setAttribute("autoplay", "");
+    playChip.setAttribute("aria-pressed", "true");
+    playChip.textContent = "Pause cycle";
+
+    // Two machines means getting on for forty parts, and forty hotspots
+    // swarm over a scene this size -- they also drift about as the parts
+    // move. The motion is the point here, so labels start off and the
+    // existing chip turns them back on.
+    labelsOn = false;
+    var labelChip = document.getElementById("chip-labels");
+    labelChip.setAttribute("aria-pressed", "false");
+  }
+
+  playChip.addEventListener("click", function () {
+    var playing = this.getAttribute("aria-pressed") === "true";
+    if (playing) {
+      mv.pause();
+      this.textContent = "Play cycle";
+    } else {
+      mv.play({ repetitions: Infinity });
+      this.textContent = "Pause cycle";
+    }
+    this.setAttribute("aria-pressed", String(!playing));
   });
 
   /* --------------------------------------------------- AR availability */

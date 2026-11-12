@@ -287,6 +287,63 @@ class Part:
     def triangle_count(self):
         return len(self._tris)
 
+    # -- composition --------------------------------------------------------
+
+    def transform(self, xform):
+        """Move this part bodily by a 4x4 transform.
+
+        Used when two separately-built machines are composed into one scene.
+        The orientation reference points move with the geometry, so normals
+        still come out facing the right way; the hotspot normal gets the
+        rotation only, being a direction rather than a position.
+        """
+        self._tris = [_apply(xform, t) for t in self._tris]
+        self._groups = [
+            (s, e, None if r is None else _apply(xform, np.array([r]))[0], inv)
+            for s, e, r, inv in self._groups
+        ]
+        if self.pivot is not None:
+            self.pivot = tuple(_apply(xform, np.array([self.pivot]))[0])
+        if self._hotspot is not None:
+            self._hotspot = tuple(_apply(xform, np.array([self._hotspot]))[0])
+        rot = np.asarray(xform, dtype=np.float64)[:3, :3]
+        self.hotspot_normal = tuple(rot @ np.asarray(self.hotspot_normal,
+                                                     dtype=np.float64))
+        return self
+
+
+class Group:
+    """A node with no geometry: somewhere to hang parts from and animate.
+
+    A part can only be rotated about its own pivot, which is right for a boom
+    or a dump body but no use for moving a whole machine along a haul road.
+    A group gives the scene a handle for that.
+    """
+
+    def __init__(self, name, origin=(0.0, 0.0, 0.0), parent=None):
+        self.name = name
+        self.origin = tuple(float(v) for v in origin)
+        self.parent = parent
+
+
+def euler_to_quat(xyz_degrees):
+    """Intrinsic XYZ Euler angles in degrees -> glTF (x, y, z, w) quaternion.
+
+    Authoring animation in degrees per axis is far easier to read than
+    quaternions, and every rotation in these models is about a single axis
+    anyway -- swing about Y, boom and bucket about X.
+    """
+    rx, ry, rz = (math.radians(a) / 2.0 for a in xyz_degrees)
+    c1, s1 = math.cos(rx), math.sin(rx)
+    c2, s2 = math.cos(ry), math.sin(ry)
+    c3, s3 = math.cos(rz), math.sin(rz)
+    return (
+        s1 * c2 * c3 + c1 * s2 * s3,
+        c1 * s2 * c3 - s1 * c2 * s3,
+        c1 * c2 * s3 + s1 * s2 * c3,
+        c1 * c2 * c3 - s1 * s2 * s3,
+    )
+
 
 class Builder:
     def __init__(self, name="model"):
@@ -294,6 +351,8 @@ class Builder:
         self._materials = {}
         self._material_defs = []
         self._parts = []
+        self._node_groups = []
+        self._animations = []
 
     def material(self, key, color, roughness=0.6, metallic=0.1, alpha=1.0,
                  double_sided=False):
@@ -314,20 +373,69 @@ class Builder:
         self._material_defs.append(mat)
         return key
 
+    def group(self, name, origin=(0.0, 0.0, 0.0), parent=None):
+        g = Group(name, origin, parent)
+        self._node_groups.append(g)
+        return g
+
+    def _group_names(self):
+        return {g.name for g in self._node_groups}
+
     def part(self, name, material, **kw):
         if material not in self._materials:
             raise KeyError("material %r not defined" % material)
         parent = kw.get("parent")
         if parent is not None:
-            if parent not in [q.name for q in self._parts]:
-                raise KeyError("parent part %r must be created first" % parent)
-            if kw.get("pivot") is None:
+            known = [q.name for q in self._parts]
+            if parent not in known and parent not in self._group_names():
+                raise KeyError("parent %r must be created first" % parent)
+            # A part hung off another PART needs its own pivot, because the
+            # only reason to do that is to hinge it. A part hung off a GROUP
+            # is just being carried along, so it needs no pivot of its own.
+            if parent in known and kw.get("pivot") is None:
                 raise ValueError("part %r has a parent so it needs a pivot: "
                                  "its geometry must be expressed relative to "
                                  "the joint it hangs from" % name)
         p = Part(name, material, **kw)
         self._parts.append(p)
         return p
+
+    def absorb(self, other, prefix="", xform=None, parent=None, drop=()):
+        """Pull another Builder's materials and parts into this one.
+
+        Lets a scene be composed from machines that were each written as a
+        standalone generator, rather than copying their geometry code. Parts
+        are renamed with `prefix` (so two machines can both have a `cab`),
+        moved by `xform`, and any part that was a root over there is hung off
+        `parent` here.
+        """
+        for key, idx in other._materials.items():
+            if key not in self._materials:
+                defn = json.loads(json.dumps(other._material_defs[idx]))
+                self._materials[key] = len(self._material_defs)
+                self._material_defs.append(defn)
+        added = []
+        drop = set(drop)
+        for p in other._parts:
+            if p.name in drop:
+                continue
+            if xform is not None:
+                p.transform(xform)
+            p.name = prefix + p.name
+            p.parent = (prefix + p.parent) if p.parent else parent
+            self._parts.append(p)
+            added.append(p)
+        return added
+
+    def animate(self, name, channels):
+        """Add a glTF animation.
+
+        `channels` is a list of (node_name, path, times, values) where path is
+        "translation", "rotation" or "scale". Rotation values are XYZ Euler
+        angles in degrees -- readable, and converted to quaternions on write.
+        """
+        self._animations.append({"name": name, "channels": list(channels)})
+        return self
 
     # -- glTF assembly ------------------------------------------------------
 
@@ -369,11 +477,32 @@ class Builder:
 
         index_of = {p.name: i for i, p in enumerate(self._parts)}
         by_name = {p.name: p for p in self._parts}
+        groups = {g.name: g for g in self._node_groups}
+
+        def origin_of(name):
+            """The point a node's children are expressed relative to."""
+            if name in groups:
+                return groups[name].origin
+            p = by_name.get(name)
+            if p is not None and p.pivot is not None:
+                return p.pivot
+            return (0.0, 0.0, 0.0)
+
+        def node_origin(part):
+            """Where this part's node sits, and so what its geometry is
+            offset by. Its own pivot if it hinges; otherwise, if it is
+            carried by a group, that group's origin; otherwise nothing."""
+            if part.pivot is not None:
+                return part.pivot
+            if part.parent in groups:
+                return groups[part.parent].origin
+            return None
 
         for mat_index, part in enumerate(self._parts):
             pos, nrm, idx = part.mesh_arrays()
-            if part.pivot is not None:
-                pos = (pos - np.array(part.pivot, dtype=np.float32)).astype(np.float32)
+            local = node_origin(part)
+            if local is not None:
+                pos = (pos - np.array(local, dtype=np.float32)).astype(np.float32)
             v_pos = push(pos.tobytes(), ARRAY_BUFFER)
             v_nrm = push(nrm.tobytes(), ARRAY_BUFFER)
             v_idx = push(idx.tobytes(), ELEMENT_ARRAY)
@@ -391,19 +520,62 @@ class Builder:
                 }],
             })
             node = {"name": part.name, "mesh": len(meshes) - 1}
-            if part.pivot is not None:
-                origin = (0.0, 0.0, 0.0)
-                if part.parent is not None and by_name[part.parent].pivot:
-                    origin = by_name[part.parent].pivot
-                node["translation"] = [part.pivot[i] - origin[i] for i in range(3)]
+            if local is not None:
+                parent_origin = origin_of(part.parent) if part.parent else (0.0,) * 3
+                t = [local[i] - parent_origin[i] for i in range(3)]
+                if any(abs(v) > 1e-9 for v in t):
+                    node["translation"] = t
             nodes.append(node)
 
-        for part in self._parts:          # wire the parent chain
-            if part.parent is not None:
-                parent_node = nodes[index_of[part.parent]]
-                parent_node.setdefault("children", []).append(index_of[part.name])
+        for g in self._node_groups:       # group nodes come after the parts
+            index_of[g.name] = len(nodes)
+            parent_origin = origin_of(g.parent) if g.parent else (0.0,) * 3
+            node = {"name": g.name}
+            t = [g.origin[i] - parent_origin[i] for i in range(3)]
+            if any(abs(v) > 1e-9 for v in t):
+                node["translation"] = t
+            nodes.append(node)
 
-        roots = [i for i, p in enumerate(self._parts) if p.parent is None]
+        for item in list(self._parts) + list(self._node_groups):
+            if item.parent is not None:   # wire the parent chain
+                nodes[index_of[item.parent]].setdefault(
+                    "children", []).append(index_of[item.name])
+
+        roots = [index_of[i.name]
+                 for i in list(self._parts) + list(self._node_groups)
+                 if i.parent is None]
+
+        animations = []
+        for anim in self._animations:
+            samplers, chans = [], []
+            for node_name, path, times, values in anim["channels"]:
+                if node_name not in index_of:
+                    raise KeyError("animation targets unknown node %r" % node_name)
+                t = np.asarray(times, dtype=np.float32)
+                # Animation accessors are plain data, not vertex attributes,
+                # so they take no bufferView target. The input accessor needs
+                # min/max; the spec requires it and players rely on it for
+                # the clip length.
+                a_t = accessor(push(t.tobytes()), FLOAT, len(t), "SCALAR",
+                               [float(t.min())], [float(t.max())])
+                if path == "rotation":
+                    arr = np.array([euler_to_quat(v) for v in values],
+                                   dtype=np.float32)
+                    kind = "VEC4"
+                else:
+                    arr = np.asarray(values, dtype=np.float32).reshape(-1, 3)
+                    kind = "VEC3"
+                if len(arr) != len(t):
+                    raise ValueError("channel %s/%s has %d times but %d values"
+                                     % (node_name, path, len(t), len(arr)))
+                a_v = accessor(push(arr.tobytes()), FLOAT, len(arr), kind)
+                samplers.append({"input": a_t, "output": a_v,
+                                 "interpolation": "LINEAR"})
+                chans.append({"sampler": len(samplers) - 1,
+                              "target": {"node": index_of[node_name],
+                                         "path": path}})
+            animations.append({"name": anim["name"], "samplers": samplers,
+                               "channels": chans})
 
         gltf = {
             "asset": {"version": "2.0", "generator": "glbgen.py (mining-ar)"},
@@ -416,6 +588,8 @@ class Builder:
             "bufferViews": views,
             "buffers": [{"byteLength": len(blob)}],
         }
+        if animations:
+            gltf["animations"] = animations
         return gltf, bytes(blob)
 
     def write(self, path, parts_json=None):
@@ -436,7 +610,8 @@ class Builder:
 
         # The scale figure is a teaching aid standing beside the machine, not
         # part of it -- it must not inflate the published envelope.
-        machine = [p for p in self._parts if p.name != "scale_figure"] or self._parts
+        machine = [p for p in self._parts
+                   if not p.name.endswith("scale_figure")] or self._parts
         lo = np.min([p.bounds()[0] for p in machine], axis=0)
         hi = np.max([p.bounds()[1] for p in machine], axis=0)
         summary = {

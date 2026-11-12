@@ -88,3 +88,46 @@ class or a general engineering fact. Where a number varies between
 manufacturers, the files say "approx." and name the class rather than implying
 one maker's exact spec. Keep that habit — a specific-looking wrong number is
 worse than an honest range, and someone will eventually check.
+
+## Animating a model, and composing two
+
+`tools/make_loading_cycle.py` is the worked example: it builds no geometry of
+its own, it composes the shovel and the dumper and animates them.
+
+**Composing.** `Builder.absorb(other, prefix, xform, parent, drop)` pulls
+another builder's materials and parts in, renames them with `prefix` (so two
+machines can both own a `cab`), moves them by `xform`, and re-parents what
+were roots over there. `drop` leaves parts behind — both machines ship a
+scale figure and the scene only wants one.
+
+**Groups.** A part can only rotate about its own pivot, which is right for a
+boom and no use for driving a truck down a haul road. `Builder.group(name,
+origin)` adds a node with no geometry to hang parts from and animate. Parts
+given a group as their parent need no pivot of their own; their geometry is
+expressed relative to the group's origin automatically.
+
+**Animating.** `Builder.animate(name, channels)`, where each channel is
+`(node_name, path, times, values)` and `path` is `translation`, `rotation` or
+`scale`. Rotations are authored as XYZ Euler **degrees** and converted to
+quaternions on write, because degrees per axis can be read and corrected by
+hand and quaternions cannot.
+
+Then add `"animation": {"name": ..., "seconds": ...}` to the model's record.
+The viewer shows its play/pause control, and starts the clip, based on that
+field rather than on model-viewer's `availableAnimations` — that list is only
+populated once the scene has rendered a frame, so it reads empty on a
+backgrounded tab and the control would never appear. An animated model also
+starts with part labels off: forty hotspots swarm over a two-machine scene
+and drift about as it moves.
+
+**Checking it.** Static renders cannot show a clip. Import the GLB into
+Blender and step to a time:
+
+```bash
+blender -b -noaudio --python render_anim.py -- model.glb out/ 7.4 11.2
+```
+
+Blender bakes glTF animation onto the objects as actions keyed in frames, so
+a time in seconds is `t * fps`. Measuring where the bucket teeth actually end
+up at the dump, rather than eyeballing it, is what caught the bucket dipping
+0.6 m into the truck body on the first attempt.

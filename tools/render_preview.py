@@ -211,6 +211,11 @@ VIEWS = {
         "-front": dict(azimuth=0.0, elevation=2.0, distance_factor=0.58),
         "-rear": dict(azimuth=42.0, elevation=22.0),
     },
+    "loading-cycle": {
+        "": dict(azimuth=10.0, elevation=25.0),
+        "-front": dict(azimuth=-32.0, elevation=16.0),
+        "-rear": dict(azimuth=4.0, elevation=64.0),
+    },
     "roof-support": {
         "": dict(azimuth=52.0, elevation=12.0),
         "-front": dict(azimuth=-14.0, elevation=8.0),
@@ -218,7 +223,8 @@ VIEWS = {
     },
 }
 
-MODELS = ("dumper", "shovel", "roof-support", "blast-pattern", "gallery")
+MODELS = ("dumper", "shovel", "loading-cycle", "roof-support",
+          "blast-pattern", "gallery")
 
 
 def main():

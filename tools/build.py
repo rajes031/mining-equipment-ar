@@ -26,6 +26,7 @@ from pathlib import Path
 import make_blast_pattern
 import make_dumper
 import make_gallery
+import make_loading_cycle
 import make_roof_support
 import make_shovel
 import render_preview
@@ -39,6 +40,7 @@ GENERATORS = [
     make_roof_support,
     make_blast_pattern,
     make_gallery,
+    make_loading_cycle,
 ]
 
 # Built by tools/make_dumper_glb.py and tools/make_drill_glb.py under Blender.
@@ -51,6 +53,7 @@ ORDER = [
     "dumper-detailed",
     "dumper",
     "shovel",
+    "loading-cycle",
     "drill-rig",
     "blast-pattern",
     "roof-support",
