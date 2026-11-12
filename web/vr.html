@@ -40,11 +40,23 @@
   }
   #status strong { color: var(--text); display: block; margin-bottom: 4px; }
   a.back { text-decoration: none; }
+
+  /* Flat-screen hover tooltip. In the headset the equivalent is a small
+     label floating above the controller. */
+  #tip {
+    position: fixed; z-index: 5; pointer-events: none; display: none;
+    transform: translate(12px, -50%);
+    background: var(--surface); color: var(--text);
+    border: 1px solid var(--accent); border-radius: 8px;
+    padding: 4px 9px; font-size: 13px; font-weight: 600;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .25);
+  }
 </style>
 </head>
 <body>
 
 <div id="stage"></div>
+<div id="tip"></div>
 
 <div id="panel">
   <a class="flat back" href="index.html" style="display:inline-flex;align-items:center">←</a>
@@ -54,8 +66,10 @@
   <button class="vrbtn" id="enter" disabled>Checking VR…</button>
   <p class="sub">
     In the headset: left stick walks, right stick turns in steps,
-    <b>A</b> or <b>X</b> switches between life size and 1:10,
+    <b>trigger</b> reads out the part you are pointing at, <b>grip</b> clears
+    it, <b>A</b> or <b>X</b> switches between life size and 1:10,
     <b>B</b> or <b>Y</b> moves to the next machine.
+    On screen: drag to look, click any part to read it.
   </p>
 </div>
 
@@ -65,7 +79,8 @@
 {
   "imports": {
     "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/",
+    "three-mesh-bvh": "https://cdn.jsdelivr.net/npm/three-mesh-bvh@0.7.8/build/index.module.js"
   }
 }
 </script>
@@ -80,19 +95,43 @@ import { VRButton } from "three/addons/webxr/VRButton.js";
 const DRACO_PATH =
   "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco/";
 
+// Pointing at a part means raycasting the model twice a frame, once per hand,
+// and the drill rig is 150k triangles: measured at about 2 ms a pick on a
+// desktop, which a standalone headset cannot afford inside a 13 ms frame. A
+// BVH takes that to microseconds. It is loaded as a bonus -- if the CDN is
+// unreachable the page still works, just with the plain triangle-walk.
+const bvhLib = import("three-mesh-bvh").then(function (m) {
+  THREE.BufferGeometry.prototype.computeBoundsTree = m.computeBoundsTree;
+  THREE.BufferGeometry.prototype.disposeBoundsTree = m.disposeBoundsTree;
+  THREE.Mesh.prototype.raycast = m.acceleratedRaycast;
+  return m;
+}).catch(function () { return null; });
+let bvhBuilt = 0;
+
 const SCALES = [
   { label: "life size", value: 1.0 },
   { label: "1:10 model", value: 0.1 },
 ];
+
+const ACCENT = "#f0b323";
+const FADE = 0.10;              // what an unselected part drops to
+const FONT = "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif";
 
 const stage = document.getElementById("stage");
 const picker = document.getElementById("pick");
 const scaleBtn = document.getElementById("scale");
 const enterBtn = document.getElementById("enter");
 const statusEl = document.getElementById("status");
+const tipEl = document.getElementById("tip");
 
 function say(title, detail) {
   statusEl.innerHTML = "<strong>" + title + "</strong>" + detail;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>]/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c];
+  });
 }
 
 /* ------------------------------------------------------------- scene */
@@ -146,6 +185,183 @@ orbit.target.set(0, 3, 0);
 orbit.enableDamping = true;
 orbit.maxPolarAngle = Math.PI * 0.495;
 
+/* ------------------------------------------------------- the read-out */
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+function wrapLines(ctx, text, maxWidth, maxLines) {
+  const words = String(text || "").split(/\s+/).filter(Boolean);
+  const lines = [];
+  let line = "";
+  let cut = false;
+  for (const w of words) {
+    const t = line ? line + " " + w : w;
+    if (ctx.measureText(t).width <= maxWidth || !line) {
+      line = t;
+    } else {
+      lines.push(line);
+      line = w;
+      if (lines.length === maxLines) { cut = true; line = ""; break; }
+    }
+  }
+  if (line && lines.length < maxLines) lines.push(line);
+  if (cut && lines.length) lines[lines.length - 1] += "…";
+  return lines;
+}
+
+// A canvas painted onto a plane. There is no HTML inside a headset, so every
+// word read in VR has to be geometry with a texture on it.
+const PANEL_W = 1.15;
+const PANEL_H = 0.80;
+const panelCanvas = document.createElement("canvas");
+panelCanvas.width = 1024;
+panelCanvas.height = 712;
+const panelTex = new THREE.CanvasTexture(panelCanvas);
+panelTex.colorSpace = THREE.SRGBColorSpace;
+panelTex.anisotropy = 4;
+const infoPanel = new THREE.Mesh(
+  new THREE.PlaneGeometry(PANEL_W, PANEL_H),
+  new THREE.MeshBasicMaterial({
+    map: panelTex, transparent: true, depthWrite: false, toneMapped: false }));
+infoPanel.renderOrder = 10;
+infoPanel.visible = false;
+scene.add(infoPanel);
+
+function drawPanel(p) {
+  const ctx = panelCanvas.getContext("2d");
+  const W = panelCanvas.width;
+  const H = panelCanvas.height;
+  ctx.clearRect(0, 0, W, H);
+  roundRect(ctx, 8, 8, W - 16, H - 16, 30);
+  ctx.fillStyle = "rgba(16,18,22,0.95)";
+  ctx.fill();
+  ctx.lineWidth = 6;
+  ctx.strokeStyle = ACCENT;
+  ctx.stroke();
+
+  const pad = 54;
+  const inner = W - pad * 2;
+  ctx.textAlign = "left";
+  ctx.textBaseline = "top";
+
+  ctx.font = "600 54px " + FONT;
+  ctx.fillStyle = ACCENT;
+  let y = 44;
+  for (const l of wrapLines(ctx, p.label || p.node, inner, 2)) {
+    ctx.fillText(l, pad, y);
+    y += 62;
+  }
+
+  y += 12;
+  ctx.strokeStyle = "rgba(240,179,35,0.35)";
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(pad, y);
+  ctx.lineTo(W - pad, y);
+  ctx.stroke();
+  y += 26;
+
+  ctx.font = "34px " + FONT;
+  ctx.fillStyle = "#e9e7e2";
+  for (const l of wrapLines(ctx, p.note, inner, 10)) {
+    ctx.fillText(l, pad, y);
+    y += 46;
+  }
+  panelTex.needsUpdate = true;
+}
+
+// A leader from the part to the panel, so a note that had to be offset from a
+// 10 m dump body still obviously belongs to it.
+const leaderGeo = new THREE.BufferGeometry().setFromPoints(
+  [new THREE.Vector3(), new THREE.Vector3()]);
+const leader = new THREE.Line(
+  leaderGeo, new THREE.LineBasicMaterial({ color: 0xf0b323 }));
+leader.visible = false;
+scene.add(leader);
+
+const panelAnchor = new THREE.Vector3();
+const headPos = new THREE.Vector3();
+const toHead = new THREE.Vector3();
+const panelFoot = new THREE.Vector3();
+// Where the note is pinned, kept in the picked mesh's own coordinates so that
+// a note on the shovel bucket rides round with the swing instead of hanging
+// in the air where the bucket used to be.
+let anchorObj = null;
+const anchorLocal = new THREE.Vector3();
+
+function updatePanel() {
+  if (!infoPanel.visible) return;
+  if (anchorObj) {
+    panelAnchor.copy(anchorLocal);
+    anchorObj.localToWorld(panelAnchor);
+  }
+  camera.getWorldPosition(headPos);
+  toHead.subVectors(headPos, panelAnchor);
+  const dist = Math.max(toHead.length(), 0.35);
+  // Constant apparent size: a note on the top of a 19 m mast has to be as
+  // readable as one on a tyre two paces away.
+  const s = THREE.MathUtils.clamp(dist * 0.42, 1, 8);
+  infoPanel.scale.setScalar(s);
+  toHead.normalize();
+  infoPanel.position.copy(panelAnchor)
+    .addScaledVector(toHead, Math.min(0.5 * s, dist * 0.4));
+  infoPanel.position.y += 0.34 * s;
+  infoPanel.lookAt(headPos);
+  infoPanel.updateMatrixWorld();
+  panelFoot.set(0, -PANEL_H / 2, 0);
+  infoPanel.localToWorld(panelFoot);
+  leaderGeo.setFromPoints([panelAnchor, panelFoot]);
+  leaderGeo.computeBoundingSphere();
+}
+
+/* -------------------------------------------- hover labels on the hands */
+
+function makeHandLabel() {
+  const canvas = document.createElement("canvas");
+  canvas.width = 512;
+  canvas.height = 128;
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  const mesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(0.28, 0.07),
+    new THREE.MeshBasicMaterial({
+      map: tex, transparent: true, depthWrite: false, toneMapped: false }));
+  mesh.position.set(0, 0.07, -0.16);
+  mesh.rotation.x = -0.45;
+  mesh.renderOrder = 11;
+  mesh.visible = false;
+  mesh.userData.draw = function (text) {
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (!text) return;
+    roundRect(ctx, 4, 4, canvas.width - 8, canvas.height - 8, 22);
+    ctx.fillStyle = "rgba(16,18,22,0.92)";
+    ctx.fill();
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = ACCENT;
+    ctx.stroke();
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    let size = 56;
+    do {
+      size -= 4;
+      ctx.font = "600 " + size + "px " + FONT;
+    } while (size > 22 && ctx.measureText(text).width > canvas.width - 48);
+    ctx.fillStyle = "#f6f4f0";
+    ctx.fillText(text, canvas.width / 2, canvas.height / 2 + 2);
+    tex.needsUpdate = true;
+  };
+  return mesh;
+}
+
 /* ------------------------------------------------------------ loading */
 
 const draco = new DRACOLoader().setDecoderPath(DRACO_PATH);
@@ -157,6 +373,11 @@ let current = null;          // THREE.Group holding the loaded model
 let mixer = null;
 let scaleStep = 0;
 const clock = new THREE.Clock();
+
+let parts = new Map();       // node name -> { label, note, ... }
+let partMeshes = [];         // every mesh in the model, tagged with its part
+let selected = null;         // the part being read out, or null
+let hovered = null;
 
 function applyScale() {
   if (!current) return;
@@ -191,16 +412,144 @@ function frameModel(box) {
   orbit.update();
 }
 
+/* Which part does this mesh belong to? Every part gets its own glTF node
+   named after the part, but a node with children loads as a Group with the
+   mesh inside it, so the answer can be an ancestor and not the hit object. */
+function partNameOf(obj) {
+  let o = obj;
+  while (o && o !== current) {
+    if (parts.has(o.name)) return o.name;
+    o = o.parent;
+  }
+  return null;
+}
+
+function tagParts() {
+  partMeshes = [];
+  current.traverse(function (o) {
+    if (!o.isMesh) return;
+    // Materials are shared between parts by name in the generators, so a
+    // clone per mesh is what makes "fade everything except this" possible at
+    // all -- without it, fading the chassis fades every steel part with it.
+    o.material = Array.isArray(o.material)
+      ? o.material.map(m => m.clone())
+      : o.material.clone();
+    const mats = Array.isArray(o.material) ? o.material : [o.material];
+    for (const m of mats) {
+      m.userData.opacity0 = m.opacity;
+      m.userData.transparent0 = m.transparent;
+      m.userData.depthWrite0 = m.depthWrite;
+      if (m.emissive) {
+        m.userData.emissive0 = m.emissive.getHex();
+        m.userData.emissiveIntensity0 = m.emissiveIntensity;
+      }
+    }
+    o.userData.part = partNameOf(o);
+    partMeshes.push(o);
+  });
+
+  const model = current;
+  bvhLib.then(function (m) {
+    if (!m || current !== model) return;      // a later machine won the race
+    bvhBuilt = 0;
+    for (const o of partMeshes) {
+      if (!o.geometry.boundsTree) o.geometry.computeBoundsTree();
+      bvhBuilt++;
+    }
+  });
+}
+
+function setHighlight(name) {
+  selected = name || null;
+  for (const o of partMeshes) {
+    const mats = Array.isArray(o.material) ? o.material : [o.material];
+    const dim = selected !== null && o.userData.part !== selected;
+    for (const m of mats) {
+      const was = m.transparent;
+      if (dim) {
+        m.transparent = true;
+        m.opacity = Math.min(m.userData.opacity0, FADE);
+        m.depthWrite = false;
+      } else {
+        m.transparent = m.userData.transparent0;
+        m.opacity = m.userData.opacity0;
+        m.depthWrite = m.userData.depthWrite0;
+      }
+      if (m.emissive) {
+        // A warm lift on the chosen part. Fading the rest is not enough on
+        // its own underground, where the part itself is near-black steel in
+        // a near-black roadway.
+        const lit = selected !== null && !dim;
+        m.emissive.setHex(lit ? 0xf0b323 : m.userData.emissive0);
+        m.emissiveIntensity = lit ? 0.22 : m.userData.emissiveIntensity0;
+      }
+      // transparent is part of the shader program's cache key, so flipping it
+      // without this leaves the part compiled opaque and the fade does
+      // nothing at all on screen -- opacity alone is silently ignored.
+      if (m.transparent !== was) m.needsUpdate = true;
+    }
+  }
+}
+
+function readOut(name, point, obj) {
+  const p = parts.get(name);
+  if (!p) return;
+  setHighlight(name);
+  drawPanel(p);
+  anchorObj = obj || null;
+  panelAnchor.copy(point);
+  if (anchorObj) {
+    anchorObj.updateMatrixWorld();
+    anchorLocal.copy(point);
+    anchorObj.worldToLocal(anchorLocal);
+  }
+  infoPanel.visible = true;
+  leader.visible = true;
+  updatePanel();
+  if (!renderer.xr.isPresenting) {
+    say(p.label || name,
+        escapeHtml(p.note || "") +
+        "<br><br>Click another part to move on, or empty space to clear.");
+  }
+}
+
+function clearReadOut() {
+  if (selected === null && !infoPanel.visible) return;
+  setHighlight(null);
+  anchorObj = null;
+  infoPanel.visible = false;
+  leader.visible = false;
+  if (!renderer.xr.isPresenting) describeModel();
+}
+
+function describeModel() {
+  if (!current) return;
+  const m = machines[index];
+  const size = new THREE.Box3().setFromObject(current)
+    .getSize(new THREE.Vector3())
+    .divideScalar(SCALES[scaleStep].value);
+  say(m.name,
+      size.x.toFixed(1) + " × " + size.y.toFixed(1) + " × " +
+      size.z.toFixed(1) + " m" + (mixer ? " — animated" : "") + ". " +
+      parts.size + " labelled parts — click one to read it. Drag to look, " +
+      "scroll to zoom, or put the headset on and press <b>Enter VR</b>.");
+}
+
 async function load(i) {
   index = (i + machines.length) % machines.length;
   const m = machines[index];
   picker.value = String(index);
   say("Loading " + m.name + "…", Math.round(m.bytes / 1024) + " KB");
 
+  clearReadOut();
+  hovered = null;
+  tipEl.style.display = "none";
+
   if (current) {
     scene.remove(current);
-    current.traverse(o => {
+    current.traverse(function (o) {
       if (o.isMesh) {
+        if (o.geometry.disposeBoundsTree) o.geometry.disposeBoundsTree();
         o.geometry.dispose();
         const mats = Array.isArray(o.material) ? o.material : [o.material];
         mats.forEach(mt => mt && mt.dispose());
@@ -208,7 +557,21 @@ async function load(i) {
     });
     current = null;
     mixer = null;
+    partMeshes = [];
   }
+
+  // The part notes live in a separate file from the model -- the same one the
+  // AR viewer reads. Missing notes are not fatal: the machine still loads and
+  // can still be walked around.
+  parts = new Map();
+  try {
+    const r = await fetch("data/" + encodeURIComponent(m.id) + ".json",
+                          { cache: "no-cache" });
+    if (r.ok) {
+      const info = await r.json();
+      (info.parts || []).forEach(p => parts.set(p.node, p));
+    }
+  } catch (err) { /* labels are a bonus; the model is the point */ }
 
   let gltf;
   try {
@@ -221,20 +584,15 @@ async function load(i) {
   current = gltf.scene;
   scene.add(current);
   applyScale();
+  tagParts();
 
   if (gltf.animations && gltf.animations.length) {
     mixer = new THREE.AnimationMixer(current);
     mixer.clipAction(gltf.animations[0]).play();
   }
 
-  const box = new THREE.Box3().setFromObject(current);
-  frameModel(box);
-  const size = box.getSize(new THREE.Vector3());
-  say(m.name,
-      size.x.toFixed(1) + " × " + size.y.toFixed(1) + " × " + size.z.toFixed(1) +
-      " m" + (mixer ? " — animated" : "") +
-      ". Drag to look, scroll to zoom, or put the headset on and press " +
-      "<b>Enter VR</b>.");
+  frameModel(new THREE.Box3().setFromObject(current));
+  describeModel();
 }
 
 /* ------------------------------------------------- controllers and XR */
@@ -245,9 +603,30 @@ const RAY = new THREE.BufferGeometry().setFromPoints(
 const controllers = [];
 for (let i = 0; i < 2; i++) {
   const c = renderer.xr.getController(i);
-  c.add(new THREE.Line(RAY, new THREE.LineBasicMaterial({ color: 0xf0b323 })));
+  const line = new THREE.Line(
+    RAY, new THREE.LineBasicMaterial({ color: 0xf0b323 }));
+  line.scale.z = 6;
+  const label = makeHandLabel();
+  c.add(line);
+  c.add(label);
+  c.userData.line = line;
+  c.userData.label = label;
   player.add(c);
   controllers.push(c);
+}
+
+const raycaster = new THREE.Raycaster();
+const rayRot = new THREE.Matrix4();
+
+function pickFrom(ctrl) {
+  if (!partMeshes.length) return null;
+  rayRot.identity().extractRotation(ctrl.matrixWorld);
+  raycaster.ray.origin.setFromMatrixPosition(ctrl.matrixWorld);
+  raycaster.ray.direction.set(0, 0, -1).applyMatrix4(rayRot).normalize();
+  raycaster.near = 0;
+  raycaster.far = 400;
+  const hits = raycaster.intersectObjects(partMeshes, false);
+  return hits.length ? hits[0] : null;
 }
 
 const MOVE_SPEED = 2.6;          // m/s, a brisk walk
@@ -256,8 +635,15 @@ const DEAD = 0.18;
 let turnReady = true;
 let scaleReady = true;
 let nextReady = true;
+const edge = new Map();          // per-hand, per-button edge tracking
 
-function readSticks(dt) {
+function once(hand, key, down, fire) {
+  const k = hand + ":" + key;
+  if (down && !edge.get(k)) { edge.set(k, true); fire(); }
+  else if (!down) edge.set(k, false);
+}
+
+function readControllers(dt) {
   const session = renderer.xr.getSession();
   if (!session) return;
 
@@ -268,14 +654,47 @@ function readSticks(dt) {
   head.normalize();
   const right = new THREE.Vector3(-head.z, 0, head.x);
 
-  for (const src of session.inputSources) {
+  const sources = session.inputSources;
+  hovered = null;
+
+  for (let i = 0; i < sources.length && i < controllers.length; i++) {
+    const src = sources[i];
+    const ctrl = controllers[i];
+    const hand = src.handedness || ("h" + i);
+
+    // Point and read. The ray is shortened to whatever it touches, which is
+    // the only cue in VR that tells you the beam has landed on something.
+    const hit = pickFrom(ctrl);
+    const name = hit ? hit.object.userData.part : null;
+    const p = name ? parts.get(name) : null;
+    const label = ctrl.userData.label;
+    ctrl.userData.line.scale.z = hit ? Math.max(hit.distance, 0.05) : 6;
+    if (p) {
+      hovered = name;
+      if (label.userData.shown !== name) {
+        label.userData.draw(p.label || name);
+        label.userData.shown = name;
+      }
+      label.visible = true;
+    } else {
+      label.visible = false;
+      label.userData.shown = null;
+    }
+
     const gp = src.gamepad;
     if (!gp) continue;
+    const pressed = n => !!(gp.buttons[n] && gp.buttons[n].pressed);
+
+    once(hand, "trigger", pressed(0), function () {
+      if (p) readOut(name, hit.point, hit.object);
+      else clearReadOut();            // pointing at nothing means "done"
+    });
+    once(hand, "grip", pressed(1), clearReadOut);
+
     // Quest reports the thumbstick on axes 2 and 3; 0 and 1 are the
     // touchpad that these controllers do not have.
     const ax = gp.axes.length > 3 ? gp.axes[2] : gp.axes[0] || 0;
     const ay = gp.axes.length > 3 ? gp.axes[3] : gp.axes[1] || 0;
-    const pressed = n => gp.buttons[n] && gp.buttons[n].pressed;
 
     if (src.handedness === "right") {
       if (Math.abs(ax) > 0.75 && turnReady) {
@@ -321,17 +740,72 @@ function readSticks(dt) {
   }
 }
 
+/* ------------------------------------------ flat-screen pointer picking */
+
+const ndc = new THREE.Vector2();
+let downAt = null;
+
+function pickAtPointer(ev) {
+  if (!partMeshes.length) return null;
+  const r = renderer.domElement.getBoundingClientRect();
+  ndc.set((ev.clientX - r.left) / r.width * 2 - 1,
+          -((ev.clientY - r.top) / r.height) * 2 + 1);
+  raycaster.setFromCamera(ndc, camera);
+  const hits = raycaster.intersectObjects(partMeshes, false);
+  return hits.length ? hits[0] : null;
+}
+
+renderer.domElement.addEventListener("pointermove", function (ev) {
+  if (renderer.xr.isPresenting) return;
+  const hit = pickAtPointer(ev);
+  const name = hit ? hit.object.userData.part : null;
+  const p = name ? parts.get(name) : null;
+  hovered = p ? name : null;
+  renderer.domElement.style.cursor = p ? "pointer" : "";
+  if (p) {
+    tipEl.textContent = p.label || name;
+    tipEl.style.display = "block";
+    tipEl.style.left = ev.clientX + "px";
+    tipEl.style.top = ev.clientY + "px";
+  } else {
+    tipEl.style.display = "none";
+  }
+});
+
+renderer.domElement.addEventListener("pointerleave", function () {
+  tipEl.style.display = "none";
+});
+
+// A click, not a drag: OrbitControls owns dragging, so only a press that goes
+// down and up in nearly the same place counts as a pick.
+renderer.domElement.addEventListener("pointerdown", function (ev) {
+  downAt = { x: ev.clientX, y: ev.clientY, t: performance.now() };
+});
+
+renderer.domElement.addEventListener("pointerup", function (ev) {
+  if (renderer.xr.isPresenting || !downAt) return;
+  const moved = Math.hypot(ev.clientX - downAt.x, ev.clientY - downAt.y);
+  const held = performance.now() - downAt.t;
+  downAt = null;
+  if (moved > 6 || held > 600) return;
+  const hit = pickAtPointer(ev);
+  const name = hit ? hit.object.userData.part : null;
+  if (name && parts.has(name)) readOut(name, hit.point, hit.object);
+  else clearReadOut();
+});
+
 /* ------------------------------------------------------------- frame */
 
-renderer.setAnimationLoop(() => {
+renderer.setAnimationLoop(function () {
   const dt = Math.min(clock.getDelta(), 0.1);
   if (mixer) mixer.update(dt);
-  if (renderer.xr.isPresenting) readSticks(dt);
+  if (renderer.xr.isPresenting) readControllers(dt);
   else orbit.update();
+  updatePanel();
   renderer.render(scene, camera);
 });
 
-window.addEventListener("resize", () => {
+window.addEventListener("resize", function () {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -339,25 +813,28 @@ window.addEventListener("resize", () => {
 
 /* --------------------------------------------------------------- UI */
 
-scaleBtn.addEventListener("click", () => {
+scaleBtn.addEventListener("click", function () {
   scaleStep = (scaleStep + 1) % SCALES.length;
   applyScale();
+  if (selected === null) describeModel();
 });
 
-picker.addEventListener("change", () => load(Number(picker.value)));
+picker.addEventListener("change", function () { load(Number(picker.value)); });
 
 const panel = document.getElementById("panel");
-renderer.xr.addEventListener("sessionstart", () => {
+renderer.xr.addEventListener("sessionstart", function () {
   panel.style.display = "none";
   statusEl.style.display = "none";
+  tipEl.style.display = "none";
   // Put the user on the floor by the machine, rather than wherever the
   // flat-screen orbit camera happened to be hovering.
   player.position.copy(standSpot);
   player.rotation.set(0, 0, 0);
 });
-renderer.xr.addEventListener("sessionend", () => {
+renderer.xr.addEventListener("sessionend", function () {
   panel.style.display = "";
   statusEl.style.display = "";
+  for (const c of controllers) c.userData.label.visible = false;
   if (current) frameModel(new THREE.Box3().setFromObject(current));
 });
 
@@ -368,9 +845,75 @@ vrButton.style.width = "auto";
 vrButton.className = "vrbtn";
 enterBtn.replaceWith(vrButton);
 
+// Debug hook. The module scope is closed, so this is the only way to check
+// picking and highlighting from a console or a test harness.
+window.vrState = function () {
+  return {
+    machine: machines.length ? machines[index].id : null,
+    parts: [...parts.keys()],
+    unlabelled: partMeshes.filter(o => !o.userData.part).map(o => o.name),
+    selected: selected,
+    hovered: hovered,
+    panelVisible: infoPanel.visible,
+    panelPos: infoPanel.position.toArray().map(v => +v.toFixed(2)),
+    faded: partMeshes.filter(function (o) {
+      const m = Array.isArray(o.material) ? o.material[0] : o.material;
+      return m.opacity <= FADE + 1e-6 && m.userData.opacity0 > FADE;
+    }).length,
+    meshes: partMeshes.length,
+    bvh: bvhBuilt,
+    centre: current
+      ? new THREE.Box3().setFromObject(current).getCenter(new THREE.Vector3())
+          .toArray().map(v => +v.toFixed(2))
+      : null,
+    // What the floating label over the hand currently reads, as a PNG.
+    handLabelPNG: function () {
+      return controllers[0].userData.label.material.map.image.toDataURL();
+    },
+    // Fires the controller's own picking path from a given pose, which is
+    // the only way to exercise it without a headset attached.
+    probeRay: function (from, at) {
+      const c = controllers[0];
+      // Object3D.lookAt() points +Z at the target for everything that is not
+      // a camera, and a controller's ray runs down -Z, so the pose is built
+      // from Matrix4.lookAt directly. An XR controller group also has
+      // matrixAutoUpdate off -- in a session the matrix comes straight from
+      // the headset -- so it has to be composed explicitly here.
+      const eye = new THREE.Vector3(from[0], from[1], from[2]);
+      const tgt = new THREE.Vector3(at[0], at[1], at[2]);
+      c.position.copy(eye);
+      c.quaternion.setFromRotationMatrix(
+        new THREE.Matrix4().lookAt(eye, tgt, new THREE.Vector3(0, 1, 0)));
+      c.updateMatrix();
+      c.updateMatrixWorld(true);
+      const hit = pickFrom(c);
+      const name = hit ? hit.object.userData.part : null;
+      const p = name ? parts.get(name) : null;
+      c.userData.line.scale.z = hit ? Math.max(hit.distance, 0.05) : 6;
+      if (p) {
+        c.userData.label.userData.draw(p.label || name);
+        c.userData.label.visible = true;
+      }
+      return { part: name, label: p ? p.label : null,
+               hit: !!hit,
+               distance: hit ? +hit.distance.toFixed(2) : null,
+               origin: raycaster.ray.origin.toArray().map(v => +v.toFixed(2)),
+               direction: raycaster.ray.direction.toArray().map(v => +v.toFixed(2)) };
+    },
+    readOut: function (name) {
+      const o = partMeshes.find(x => x.userData.part === name);
+      if (!o) return false;
+      readOut(name, new THREE.Box3().setFromObject(o)
+        .getCenter(new THREE.Vector3()), o);
+      return true;
+    },
+    clear: clearReadOut,
+  };
+};
+
 fetch("data/catalog.json", { cache: "no-cache" })
   .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
-  .then(cat => {
+  .then(function (cat) {
     machines = cat.machines;
     picker.innerHTML = machines
       .map((m, i) => '<option value="' + i + '">' + m.name + "</option>")

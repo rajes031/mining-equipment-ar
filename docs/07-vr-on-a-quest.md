@@ -53,6 +53,8 @@ WebXR needs a secure context, which `localhost` counts as — so a plain
 |---|---|
 | Left thumbstick | Walk, relative to where you are looking |
 | Right thumbstick | Turn in 30° steps |
+| **Trigger** | Read out the part you are pointing at |
+| **Grip** | Clear the read-out |
 | **A** or **X** | Switch between life size and 1:10 |
 | **B** or **Y** | Next machine |
 
@@ -66,6 +68,27 @@ The 1:10 setting matters more than it sounds. The loading cycle is 26 m by
 either whole from inside. Shrinking to 1:10 turns the scene into a tabletop
 model you can walk around in a few steps, then switch back to stand next to
 a tyre.
+
+## Reading a part
+
+Point either hand at the machine. The beam stops where it lands and the name
+of whatever it touched floats over your hand, so you can sweep the machine
+and read the part names off it without pressing anything.
+
+Pull the **trigger** and that part is explained: everything else drops to a
+ghost, the part itself lifts to a warm highlight, and a board appears beside
+it with the same note the AR viewer gives. The board is pinned to the part it
+belongs to, so on the loading cycle a note on the bucket rides round with the
+swing instead of hanging where the bucket used to be. It turns to face you
+wherever you walk, and it is sized by distance, so a note on the top of a
+19 m mast reads the same as one on a tyre two paces away.
+
+**Trigger on empty space**, or the **grip**, clears it and brings the whole
+machine back.
+
+The same thing works on the flat screen without a headset: hover a part for
+its name, click it to read it. That is also how to check a new model's part
+notes before taking it into a classroom.
 
 ## What suits VR and what does not
 
@@ -90,3 +113,27 @@ harder than a dumper in an empty grey void.
   the rig is parked at the origin whenever a session is not running.
 * Reference space is `local-floor`, so y = 0 is the real floor and a 3.5 m
   canopy really is 3.5 m above the user's feet.
+* Part names come from `web/data/<id>.json` -- the same file the AR viewer
+  reads, keyed on the glTF node name. Add a part to a generator and it is
+  pointable in VR with no further work. A model whose data file is missing
+  still loads; it just has nothing to read out.
+* Materials are cloned per mesh on load. The generators share one material
+  between parts by name, so without the clone, fading the chassis fades every
+  steel part on the machine with it.
+* `transparent` is part of a material's shader program key in three.js.
+  Flipping it without setting `needsUpdate` leaves the part compiled opaque
+  and the fade silently does nothing -- the opacity is set and ignored.
+* Pointing costs a raycast per hand per frame, and the drill rig is 150k
+  triangles: measured at 2.09 ms a pick, which no standalone headset can
+  afford inside a 13 ms frame. `three-mesh-bvh` takes it to 0.13 ms. It is
+  loaded with `import().catch()`, so if the CDN is unreachable the page still
+  works, only slower.
+* The read-out board is a canvas painted into a plane, because there is no
+  HTML inside a headset. Notes are wrapped to ten lines and the overflow is
+  elided; the longest note in the set today is 403 characters and fits.
+* `window.vrState()` is a debug hook: it reports the tagged parts, what is
+  selected, how many meshes are faded, and `probeRay(from, at)` fires the
+  controller's own picking path from a pose you choose. It is the only way to
+  test the VR interaction without a headset attached. Note that an XR
+  controller group has `matrixAutoUpdate` off and `Object3D.lookAt` aims +Z
+  rather than -Z, which is why the probe composes its pose by hand.
