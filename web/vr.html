@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VR walkthrough — Mining Equipment AR</title>
+<meta name="description" content="Walk around life-size mining equipment in VR on a Meta Quest.">
+<meta name="theme-color" content="#f0b323">
+<link rel="stylesheet" href="app.css">
+<style>
+  html, body { height: 100%; }
+  body { margin: 0; overflow: hidden; }
+  #stage { position: fixed; inset: 0; }
+  #stage canvas { display: block; width: 100%; height: 100%; }
+
+  /* Everything below is the flat-screen overlay. It is hidden the moment a
+     VR session starts, because in the headset it is neither visible nor
+     wanted. */
+  #panel {
+    position: fixed; left: 0; right: 0; top: 0;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+    background: var(--surface); border-bottom: 1px solid var(--line);
+    display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+    max-height: 48vh; overflow-y: auto;
+  }
+  #panel h1 { font-size: 16px; margin: 0 12px 0 0; }
+  #panel .sub { font-size: 12.5px; color: var(--muted); margin: 0; width: 100%; }
+  select, .vrbtn, .flat {
+    min-height: 44px; padding: 0 16px; border-radius: 11px; font: inherit;
+    font-size: 15px; font-weight: 600;
+    border: 1px solid var(--line); background: var(--surface-2); color: var(--text);
+  }
+  .vrbtn { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .vrbtn[disabled] { opacity: .55; }
+  #status {
+    position: fixed; left: 16px; bottom: 16px; max-width: min(520px, 90vw);
+    font-size: 13px; line-height: 1.5; color: var(--muted);
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 12px; padding: 12px 14px;
+  }
+  #status strong { color: var(--text); display: block; margin-bottom: 4px; }
+  a.back { text-decoration: none; }
+</style>
+</head>
+<body>
+
+<div id="stage"></div>
+
+<div id="panel">
+  <a class="flat back" href="index.html" style="display:inline-flex;align-items:center">←</a>
+  <h1>VR walkthrough</h1>
+  <select id="pick" aria-label="Machine"></select>
+  <button class="flat" id="scale">Scale: life size</button>
+  <button class="vrbtn" id="enter" disabled>Checking VR…</button>
+  <p class="sub">
+    In the headset: left stick walks, right stick turns in steps,
+    <b>A</b> or <b>X</b> switches between life size and 1:10,
+    <b>B</b> or <b>Y</b> moves to the next machine.
+  </p>
+</div>
+
+<div id="status"><strong>Loading…</strong>Fetching the machine list.</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from "three";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { VRButton } from "three/addons/webxr/VRButton.js";
+
+const DRACO_PATH =
+  "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/libs/draco/";
+
+const SCALES = [
+  { label: "life size", value: 1.0 },
+  { label: "1:10 model", value: 0.1 },
+];
+
+const stage = document.getElementById("stage");
+const picker = document.getElementById("pick");
+const scaleBtn = document.getElementById("scale");
+const enterBtn = document.getElementById("enter");
+const statusEl = document.getElementById("status");
+
+function say(title, detail) {
+  statusEl.innerHTML = "<strong>" + title + "</strong>" + detail;
+}
+
+/* ------------------------------------------------------------- scene */
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+renderer.xr.enabled = true;
+// local-floor puts y = 0 on the real floor, so a 3.5 m canopy really is
+// 3.5 m above the user's feet. Without it the model floats at eye height.
+renderer.xr.setReferenceSpaceType("local-floor");
+stage.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x9fb4cc);
+scene.fog = new THREE.Fog(0x9fb4cc, 60, 320);
+
+const camera = new THREE.PerspectiveCamera(
+  60, window.innerWidth / window.innerHeight, 0.08, 1000);
+camera.position.set(9, 2.6, 16);
+
+// The user is moved by moving this group, never the camera: in a VR session
+// the camera's pose belongs to the headset and anything written to it is
+// overwritten on the next frame.
+const player = new THREE.Group();
+player.add(camera);
+scene.add(player);
+
+scene.add(new THREE.HemisphereLight(0xcfe0f5, 0x4a4036, 2.2));
+const sun = new THREE.DirectionalLight(0xfff3dd, 2.3);
+sun.position.set(14, 26, 10);
+scene.add(sun);
+
+const ground = new THREE.Mesh(
+  new THREE.PlaneGeometry(400, 400),
+  new THREE.MeshStandardMaterial({ color: 0x6f6a61, roughness: 1 }));
+ground.rotation.x = -Math.PI / 2;
+ground.position.y = -0.01;   // just under the models, which sit on y = 0
+scene.add(ground);
+
+const grid = new THREE.GridHelper(200, 100, 0x8e8778, 0x80796b);
+grid.material.transparent = true;
+grid.material.opacity = 0.45;
+scene.add(grid);
+
+const orbit = new OrbitControls(camera, renderer.domElement);
+orbit.target.set(0, 3, 0);
+orbit.enableDamping = true;
+orbit.maxPolarAngle = Math.PI * 0.495;
+
+/* ------------------------------------------------------------ loading */
+
+const draco = new DRACOLoader().setDecoderPath(DRACO_PATH);
+const loader = new GLTFLoader().setDRACOLoader(draco);
+
+let machines = [];
+let index = 0;
+let current = null;          // THREE.Group holding the loaded model
+let mixer = null;
+let scaleStep = 0;
+const clock = new THREE.Clock();
+
+function applyScale() {
+  if (!current) return;
+  current.scale.setScalar(SCALES[scaleStep].value);
+  scaleBtn.textContent = "Scale: " + SCALES[scaleStep].label;
+}
+
+const standSpot = new THREE.Vector3();
+
+function frameModel(box) {
+  const sphere = box.getBoundingSphere(new THREE.Sphere());
+  const c = sphere.center;
+
+  // Where the headset user is put when the session starts: on the floor, a
+  // few paces off the near face, looking at it -- not inside a 26 m loading
+  // bay with their face in a tyre.
+  standSpot.set(c.x, 0, box.max.z + 3.0);
+
+  // OrbitControls assumes its camera lives in world space, but this one is a
+  // child of the player rig so that VR locomotion can move it. The two only
+  // agree while the rig sits at the origin, so the rig is parked there for
+  // the flat view and only moved to standSpot on sessionstart.
+  // ...except when a machine is swapped from inside VR, where the rig has to
+  // go to the new machine instead of back to the origin.
+  player.position.copy(renderer.xr.isPresenting ? standSpot : new THREE.Vector3());
+  player.rotation.set(0, 0, 0);
+
+  const fov = THREE.MathUtils.degToRad(camera.fov);
+  const dist = sphere.radius / Math.tan(fov / 2) * 0.95;
+  camera.position.set(c.x, Math.max(c.y, 1.7), c.z + dist);
+  orbit.target.copy(c);
+  orbit.update();
+}
+
+async function load(i) {
+  index = (i + machines.length) % machines.length;
+  const m = machines[index];
+  picker.value = String(index);
+  say("Loading " + m.name + "…", Math.round(m.bytes / 1024) + " KB");
+
+  if (current) {
+    scene.remove(current);
+    current.traverse(o => {
+      if (o.isMesh) {
+        o.geometry.dispose();
+        const mats = Array.isArray(o.material) ? o.material : [o.material];
+        mats.forEach(mt => mt && mt.dispose());
+      }
+    });
+    current = null;
+    mixer = null;
+  }
+
+  let gltf;
+  try {
+    gltf = await loader.loadAsync(m.model);
+  } catch (err) {
+    say("Could not load " + m.name, String(err && err.message || err));
+    return;
+  }
+
+  current = gltf.scene;
+  scene.add(current);
+  applyScale();
+
+  if (gltf.animations && gltf.animations.length) {
+    mixer = new THREE.AnimationMixer(current);
+    mixer.clipAction(gltf.animations[0]).play();
+  }
+
+  const box = new THREE.Box3().setFromObject(current);
+  frameModel(box);
+  const size = box.getSize(new THREE.Vector3());
+  say(m.name,
+      size.x.toFixed(1) + " × " + size.y.toFixed(1) + " × " + size.z.toFixed(1) +
+      " m" + (mixer ? " — animated" : "") +
+      ". Drag to look, scroll to zoom, or put the headset on and press " +
+      "<b>Enter VR</b>.");
+}
+
+/* ------------------------------------------------- controllers and XR */
+
+const RAY = new THREE.BufferGeometry().setFromPoints(
+  [new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, -1)]);
+
+const controllers = [];
+for (let i = 0; i < 2; i++) {
+  const c = renderer.xr.getController(i);
+  c.add(new THREE.Line(RAY, new THREE.LineBasicMaterial({ color: 0xf0b323 })));
+  player.add(c);
+  controllers.push(c);
+}
+
+const MOVE_SPEED = 2.6;          // m/s, a brisk walk
+const SNAP_TURN = Math.PI / 6;   // 30 degrees
+const DEAD = 0.18;
+let turnReady = true;
+let scaleReady = true;
+let nextReady = true;
+
+function readSticks(dt) {
+  const session = renderer.xr.getSession();
+  if (!session) return;
+
+  const head = new THREE.Vector3();
+  camera.getWorldDirection(head);
+  head.y = 0;
+  if (head.lengthSq() < 1e-6) return;
+  head.normalize();
+  const right = new THREE.Vector3(-head.z, 0, head.x);
+
+  for (const src of session.inputSources) {
+    const gp = src.gamepad;
+    if (!gp) continue;
+    // Quest reports the thumbstick on axes 2 and 3; 0 and 1 are the
+    // touchpad that these controllers do not have.
+    const ax = gp.axes.length > 3 ? gp.axes[2] : gp.axes[0] || 0;
+    const ay = gp.axes.length > 3 ? gp.axes[3] : gp.axes[1] || 0;
+    const pressed = n => gp.buttons[n] && gp.buttons[n].pressed;
+
+    if (src.handedness === "right") {
+      if (Math.abs(ax) > 0.75 && turnReady) {
+        // Snap, not smooth: continuous turning is the fastest way to make
+        // someone sick, and a classroom cannot afford that.
+        const sign = ax > 0 ? -1 : 1;
+        const pivot = new THREE.Vector3();
+        camera.getWorldPosition(pivot);
+        player.position.sub(pivot);
+        player.position.applyAxisAngle(new THREE.Vector3(0, 1, 0), sign * SNAP_TURN);
+        player.position.add(pivot);
+        player.rotation.y += sign * SNAP_TURN;
+        turnReady = false;
+      } else if (Math.abs(ax) < 0.35) {
+        turnReady = true;
+      }
+    } else {
+      if (Math.abs(ax) > DEAD || Math.abs(ay) > DEAD) {
+        const step = MOVE_SPEED * dt;
+        player.position.addScaledVector(head, -ay * step);
+        player.position.addScaledVector(right, ax * step);
+      }
+    }
+
+    if (pressed(4)) {            // A on the right grip, X on the left
+      if (scaleReady) {
+        scaleStep = (scaleStep + 1) % SCALES.length;
+        applyScale();
+        scaleReady = false;
+      }
+    } else if (!pressed(4)) {
+      scaleReady = true;
+    }
+
+    if (pressed(5)) {            // B or Y
+      if (nextReady) {
+        nextReady = false;
+        load(index + 1);
+      }
+    } else if (!pressed(5)) {
+      nextReady = true;
+    }
+  }
+}
+
+/* ------------------------------------------------------------- frame */
+
+renderer.setAnimationLoop(() => {
+  const dt = Math.min(clock.getDelta(), 0.1);
+  if (mixer) mixer.update(dt);
+  if (renderer.xr.isPresenting) readSticks(dt);
+  else orbit.update();
+  renderer.render(scene, camera);
+});
+
+window.addEventListener("resize", () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+/* --------------------------------------------------------------- UI */
+
+scaleBtn.addEventListener("click", () => {
+  scaleStep = (scaleStep + 1) % SCALES.length;
+  applyScale();
+});
+
+picker.addEventListener("change", () => load(Number(picker.value)));
+
+const panel = document.getElementById("panel");
+renderer.xr.addEventListener("sessionstart", () => {
+  panel.style.display = "none";
+  statusEl.style.display = "none";
+  // Put the user on the floor by the machine, rather than wherever the
+  // flat-screen orbit camera happened to be hovering.
+  player.position.copy(standSpot);
+  player.rotation.set(0, 0, 0);
+});
+renderer.xr.addEventListener("sessionend", () => {
+  panel.style.display = "";
+  statusEl.style.display = "";
+  if (current) frameModel(new THREE.Box3().setFromObject(current));
+});
+
+const vrButton = VRButton.createButton(renderer);
+vrButton.style.position = "static";
+vrButton.style.transform = "none";
+vrButton.style.width = "auto";
+vrButton.className = "vrbtn";
+enterBtn.replaceWith(vrButton);
+
+fetch("data/catalog.json", { cache: "no-cache" })
+  .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+  .then(cat => {
+    machines = cat.machines;
+    picker.innerHTML = machines
+      .map((m, i) => '<option value="' + i + '">' + m.name + "</option>")
+      .join("");
+    const want = new URLSearchParams(location.search).get("m");
+    const start = Math.max(0, machines.findIndex(m => m.id === want));
+    return load(start);
+  })
+  .catch(err => say("Could not load the machine list",
+                    "Serve this folder over HTTP rather than opening the " +
+                    "file directly. (" + err.message + ")"));
+</script>
+</body>
+</html>
