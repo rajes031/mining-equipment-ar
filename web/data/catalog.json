@@ -10,12 +10,12 @@
       "model": "models/mine-layout.glb",
       "extents_m": {
         "width_x": 2.49,
-        "height_y": 0.29,
-        "length_z": 2.17
+        "height_y": 0.35,
+        "length_z": 2.26
       },
-      "bytes": 6552100,
-      "triangles": 76172,
-      "parts": 31
+      "bytes": 6881192,
+      "triangles": 79884,
+      "parts": 33
     },
     {
       "id": "dumper-detailed",

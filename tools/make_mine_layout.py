@@ -54,23 +54,27 @@ WEB = HERE.parent / "web"
 SCALE = 1.0 / 700.0
 CELL = 8.0
 X0, X1 = -504.0, 1240.0
-Z0, Z1 = -760.0, 760.0
-BASE = -110.0
+Z0, Z1 = -760.0, 800.0
+BASE = -150.0
 
-COAL_TOP, COAL_FLOOR = -66.0, -86.0
+DL_LEVEL = -72.0                       # dragline bench
+COAL_TOP, COAL_FLOOR = -100.0, -120.0
 PIT_HALF = 560.0                       # half-length of the pit along strike
 RAMP_GRADE = 1.0 / 16.0
 RAMP_HALF_W = 14.0                     # 28 m: over 3x a 7.7 m wide truck
 
-# highwall section, crest to coal floor: (x, level) corners
-HW_X = [-2000, -360, -352, -304, -296, -240, -232, -160, -152, -112, -104,
-        -64, -56, 16]
-HW_Y = [0, 0, -12, -12, -24, -24, -36, -36, COAL_TOP, COAL_TOP, -76, -76,
+# highwall section, crest to coal floor: (x, level) corners. Five 12 m
+# shovel-dumper benches (the second a 48 m working bench, the rest 24 m
+# safety berms), the dragline bench, then the coal in two benches.
+HW_X = [-2000, -360, -352, -328, -320, -272, -264, -240, -232, -208, -200,
+        -176, -168, -104, -96, -72, -64, -40, -32, 16]
+HW_Y = [0, 0, -12, -12, -24, -24, -36, -36, -48, -48, -60, -60,
+        DL_LEVEL, DL_LEVEL, COAL_TOP, COAL_TOP, -110, -110,
         COAL_FLOOR, COAL_FLOOR]
 SPOIL_TOE_X = 16.0
 SPOIL_SLOPE = 0.75                     # tan 37 degrees, angle of repose
 VOID_X1 = 500.0                        # mined-out void runs this far east
-SUMP = dict(x0=-40.0, x1=8.0, z0=-232.0, z1=-184.0, depth=-92.0)
+SUMP = dict(x0=-28.0, x1=8.0, z0=-178.0, z1=-146.0)
 
 # The big terraced dump: a rounded rectangle at ground level, built up in
 # 10 m lifts to a planted top 80 m above ground. Below ground its lifts carry
@@ -78,21 +82,28 @@ SUMP = dict(x0=-40.0, x1=8.0, z0=-232.0, z1=-184.0, depth=-92.0)
 # long staircase of ~17 terraces -- tight on the pit side, wider on the far
 # side, with the top pushed off-centre, as big Singrauli dumps look from
 # above.
-DUMP = dict(x0=274.0, x1=1200.0, z0=-700.0, z1=660.0, r=240.0)
 LIFT = 10.0
+BERM_PIT, BERM_FAR, BERM_SPREAD = 30.0, 26.0, 200.0
+# the ground-level outline sits 12 lifts in from the coal-floor toe
+DUMP = dict(x0=SPOIL_TOE_X - COAL_FLOOR / LIFT * BERM_PIT, x1=1200.0,
+            z0=-700.0, z1=660.0, r=240.0)
 FACE = LIFT / SPOIL_SLOPE              # 13.3 m of slope per lift
 DUMP_TOP = 80.0
-BERM_PIT, BERM_FAR, BERM_SPREAD = 30.0, 26.0, 200.0
 TOP_Z = -120.0                         # the planted top sits south of centre
 
+# short ramps joining each dump terrace to the next, 1 in 16, switching
+# direction at every lift so a dumper climbs from the coal floor to the top
+DUMP_RAMP_ZC = -20.0
+DUMP_RAMP_LEN = LIFT / RAMP_GRADE      # 160 m per 10 m lift
+
 # plantation road: along the ground to the dump toe, then up the south flank
-DUMP_ROAD = [(1180.0, -760.0), (1150.0, -690.0), (640.0, -220.0)]
+DUMP_ROAD = [(1180.0, -760.0), (1150.0, -690.0), (740.0, -200.0)]
 DUMP_ROAD_HALF_W = 7.0
 
 # haul ramp centre line: floor -> up through the end wall -> switchbacks
-RAMP_PATH = [(-20.0, 240.0), (-20.0, 600.0), (-330.0, 600.0),
+RAMP_PATH = [(-10.0, 0.0), (-10.0, 600.0), (-330.0, 600.0),
              (-330.0, 648.0), (-20.0, 648.0), (-20.0, 696.0),
-             (-330.0, 696.0)]
+             (-330.0, 696.0), (-330.0, 744.0), (-20.0, 744.0)]
 
 
 # ---------------------------------------------------------------- terrain
@@ -162,6 +173,25 @@ def dump_height(x, z):
     return np.minimum(LIFT * (k + np.minimum(run / FACE, 1.0)), DUMP_TOP)
 
 
+def dump_ramp(x, z):
+    """Mask and level of the bench-to-bench ramps on the dump's pit face.
+
+    Each ramp lies against one terrace face, over the face and half the
+    berm below it, and climbs one lift along strike. Alternate lifts climb
+    in opposite directions, so the top of one ramp is the foot of the next.
+    """
+    s = berm_spacing(x, z)
+    u = dump_inset(x, z) / s
+    k = np.floor(u + 0.5 * (s - FACE) / s)
+    run = (u - k) * s
+    t = (z - (DUMP_RAMP_ZC - DUMP_RAMP_LEN / 2)) / DUMP_RAMP_LEN
+    t = np.where(np.mod(k, 2) == 0, t, 1.0 - t)
+    cx = (DUMP["x0"] + DUMP["x1"]) / 2
+    on = ((run <= FACE) & (t >= 0) & (t <= 1) & (x > 0) & (x < cx)
+          & (k >= COAL_FLOOR / LIFT) & (k < DUMP_TOP / LIFT))
+    return on, LIFT * (k + np.clip(t, 0, 1))
+
+
 def dump_road_level(x, z):
     d, s = path_field(DUMP_ROAD, x, z)
     (ax, az), (bx, bz) = DUMP_ROAD[0], DUMP_ROAD[1]
@@ -177,9 +207,11 @@ def height(x, z):
     void = np.where(x < VOID_X1, COAL_FLOOR, 0.0)
     cut = np.maximum(np.where(x <= SPOIL_TOE_X, hw(x), void), end_wall)
     h = np.where(x > SPOIL_TOE_X, np.maximum(cut, dump_height(x, z)), cut)
+    on, level = dump_ramp(x, z)
+    h = np.where(on, level, h)
     in_sump = ((x > SUMP["x0"]) & (x < SUMP["x1"]) &
                (z > SUMP["z0"]) & (z < SUMP["z1"]))
-    h = np.where(in_sump, SUMP["depth"], h)
+    h = np.where(in_sump, COAL_FLOOR - 6.0, h)
     d, level = ramp_field(x, z)
     h = np.where(d <= RAMP_HALF_W, level, h)
     d, level = dump_road_level(x, z)
@@ -193,6 +225,8 @@ def classify(cx, cz, avg, flat):
     d, _ = dump_road_level(cx, cz)
     if d <= DUMP_ROAD_HALF_W:
         return "dump_road"
+    if dump_ramp(cx, cz)[0]:
+        return "dump_ramps"
     if flat and avg >= DUMP_TOP - 0.01:
         return "reclaimed_top"
     if avg > 0.5 or (cx > SPOIL_TOE_X and avg > COAL_FLOOR + 0.1
@@ -204,7 +238,7 @@ def classify(cx, cz, avg, flat):
         return "coal_floor"
     if avg <= COAL_TOP + 0.01:
         return "coal_seam"
-    if avg <= -36.0 + 0.01:
+    if avg <= DL_LEVEL + 0.01:
         return "dragline_bench"
     return "overburden_benches"
 
@@ -289,30 +323,37 @@ TERRAIN = {
         "Upper overburden, drilled, blasted and removed by rope shovels and "
         "dumpers in 12 m benches. Benches are kept wider than they are "
         "high, and each working bench wide enough for the shovel, a truck "
-        "spotting and a truck passing.", (-300, -12, -300), (-0.3, 1, 0)),
+        "spotting and a truck passing.", (-296, -24, -360), (-0.3, 1, 0)),
     "dragline_bench": ("overburden_dark", "Dragline bench & highwall",
-        "The dragline sits on this bench, about 36 m down, and digs the "
-        "30 m of overburden below it down to the top of the coal, casting "
+        "The dragline sits on this bench, about 72 m down, and digs the "
+        "28 m of overburden below it down to the top of the coal, casting "
         "it across the pit onto the spoil side. The steep face below it is "
         "the highwall -- watch it for cracks after every blast.",
-        (-196, -34, -250), (0, 1, 0)),
+        (-136, -72, -120), (0, 1, 0)),
     "coal_seam": ("coal", "Coal seam (approx. 20 m, two benches)",
         "A thick seam, worked in two 10 m benches by shovels and surface "
         "miners. Partings and the roof and floor contact are mined "
         "carefully to keep dilution down; fires start on long-exposed coal "
-        "benches, so they are not left standing.", (-132, -64, -320),
+        "benches, so they are not left standing.", (-84, -100, 80),
         (0, 1, 0)),
     "coal_floor": ("floor_rock", "Coal floor (pit bottom)",
-        "The working floor at about 86 m depth, 70 m wide -- room for the "
-        "loading shovel, trucks turning and the sump. It is kept graded "
+        "The working floor at about 120 m depth, about 50 m wide -- room "
+        "for the loading shovel, trucks turning and the sump. It is kept graded "
         "towards the sump so water does not stand on the haul route.",
-        (-20, -85, 0), (0, 1, 0)),
+        (4, -120, -60), (0, 1, 0)),
     "haul_ramp": ("road", "Haul ramp (1 in 16, 28 m wide)",
         "Gradient not steeper than 1 in 16 and width at least three times "
-        "the widest truck. At that grade, climbing 86 m takes about 1.4 km "
-        "of ramp -- which is why it switches back three times in the end "
-        "wall. Berms of at least axle height on every open edge.",
+        "the widest truck. At that grade, climbing 120 m takes nearly 2 km "
+        "of ramp -- which is why it runs the length of the floor and then "
+        "switches back four times in the end wall. Berms of at least axle height on every open edge.",
         (-175, -40, 648), (0, 1, 0)),
+    "dump_ramps": ("road", "Dump ramps (terrace to terrace, 1 in 16)",
+        "A short ramp on every terrace face, 160 m long and about 22 m "
+        "wide, climbing one 10 m lift. The ramps alternate direction, so a "
+        "loaded dumper drives up one ramp, turns on the berm and takes the "
+        "next -- from the coal floor right up to the dump top. Every berm "
+        "used as a road keeps a safety bund on its open edge.",
+        (200, -60, -20), (-0.3, 1, 0)),
     "internal_dump": ("spoil_light", "Terraced overburden dump (10 m lifts)",
         "Overburden put back into the mined-out void and then built up "
         "above ground: about 17 terraces from the coal floor to a top 80 m "
@@ -357,7 +398,7 @@ def build() -> Builder:
 
     parts = {}
     for key, (mat, label, note, hot, nrm) in TERRAIN.items():
-        if key in ("internal_dump", "reclaimed_top", "dump_road"):
+        if key != "original_ground":
             y = float(height(np.array([hot[0]]), np.array([hot[2]]))[0])
             hot = (hot[0], y + 1.0, hot[2])
         parts[key] = b.part(key, mat, label=label, note=note, hotspot=hot,
@@ -373,8 +414,8 @@ def build() -> Builder:
               "and are pumped out. Before the monsoon the pumps are sized "
               "for the worst storm on record -- a flooded pit floor stops "
               "the mine and can trap machines."),
-        hotspot=(-16, -87, -208), hotspot_normal=(0, 1, 0))
-    sump.box(center=((SUMP["x0"] + SUMP["x1"]) / 2, -88.5,
+        hotspot=(-10, COAL_FLOOR - 1, -162), hotspot_normal=(0, 1, 0))
+    sump.box(center=((SUMP["x0"] + SUMP["x1"]) / 2, COAL_FLOOR - 2.5,
                      (SUMP["z0"] + SUMP["z1"]) / 2),
              size=(SUMP["x1"] - SUMP["x0"], 7.0, SUMP["z1"] - SUMP["z0"]))
     drain = b.part(
@@ -425,9 +466,10 @@ def build() -> Builder:
              "are kept separate from light-vehicle routes wherever possible "
              "-- a 220 t truck driver cannot see a jeep.",
         hotspot=(-390, 0.5, 120), hotspot_normal=(0, 1, 0))
-    roads.box(center=(-390, 0.2, 40), size=(28, 0.4, 1320))
-    roads.box(center=(-367, 0.2, 696), size=(74, 0.4, 28))
-    roads.box(center=(-42, 0.2, -600), size=(724, 0.4, 28))     # to the dump
+    roads.box(center=(-390, 0.2, 87), size=(28, 0.4, 1414))
+    roads.box(center=(-20, 0.2, 769), size=(28, 0.4, 50))      # ramp exit
+    roads.box(center=(-205, 0.2, 780), size=(398, 0.4, 28))
+    roads.box(center=(8, 0.2, -600), size=(824, 0.4, 28))      # to the dump
 
     chp = b.part(
         "coal_handling_plant", "concrete",
@@ -539,22 +581,30 @@ def build() -> Builder:
         return added
 
     fleet = {}
-    fleet["dl_house"] = place(make_dragline.build(), "dl_", -196, -36, 40,
-                              yaw=-90)
+    climb = -math.degrees(math.atan(RAMP_GRADE))
+    fleet["dl_house"] = place(make_dragline.build(), "dl_", -136, DL_LEVEL,
+                              40, yaw=-90)
     fleet["rs_machinery_house"] = place(make_rope_shovel.build(), "rs_",
-                                        -274, -24, -160, yaw=90)
-    fleet["t1_dump_body"] = place(make_dumper.build(), "t1_", -262, -24,
+                                        -298, -24, -160, yaw=90)
+    fleet["t1_dump_body"] = place(make_dumper.build(), "t1_", -286, -24,
                                   -134, yaw=0)
-    fleet["hs_superstructure"] = place(make_shovel.build(), "hs_", -44, -86,
-                                       120, yaw=90)
-    fleet["t2_dump_body"] = place(make_dumper.build(), "t2_", -30, -86, 100)
-    ramp_y = COAL_FLOOR + (400 - 240) * RAMP_GRADE
-    fleet["t3_dump_body"] = place(make_dumper.build(), "t3_", -20, ramp_y,
-                                  400, yaw=180,
-                                  pitch=-math.degrees(math.atan(RAMP_GRADE)))
-    fleet["sm_chassis"] = place(make_surface_miner.build(), "sm_", -132, -66,
-                                -40)
-    fleet["dz_engine_hood"] = place(make_dozer.build(), "dz_", 580, DUMP_TOP,
+    fleet["hs_superstructure"] = place(make_shovel.build(), "hs_", -16,
+                                       COAL_FLOOR, -96, yaw=90)
+    fleet["t2_dump_body"] = place(make_dumper.build(), "t2_", -2, COAL_FLOOR,
+                                  -118)
+    fleet["t3_dump_body"] = place(make_dumper.build(), "t3_", -10,
+                                  COAL_FLOOR + 400 * RAMP_GRADE, 400,
+                                  yaw=180, pitch=climb)
+    # a loaded dumper half-way up the dump ramp that climbs from 20 m to 30 m
+    xs_ = np.arange(SPOIL_TOE_X, DUMP["x0"] + 400, 1.0)
+    on, lv = dump_ramp(xs_, np.full_like(xs_, DUMP_RAMP_ZC))
+    pick = np.flatnonzero(on & (np.abs(lv - 25.0) < 0.01))
+    t4_x = float(xs_[pick].mean())
+    fleet["t4_dump_body"] = place(make_dumper.build(), "t4_", t4_x, 25.0,
+                                  DUMP_RAMP_ZC, yaw=180, pitch=climb)
+    fleet["sm_chassis"] = place(make_surface_miner.build(), "sm_", -84,
+                                COAL_TOP, -40)
+    fleet["dz_engine_hood"] = place(make_dozer.build(), "dz_", 690, DUMP_TOP,
                                     -150, yaw=-90)
     fleet["gr_cab"] = place(make_grader.build(), "gr_", -390, 0.4, 200)
 
@@ -580,6 +630,10 @@ def build() -> Builder:
         "t3_dump_body": ("Loaded dumper on the ramp",
             "Climbing at 1 in 16. A loaded 220 t truck manages about "
             "10-12 km/h on this grade."),
+        "t4_dump_body": ("Dumper climbing the dump ramps",
+            "Carrying overburden from the pit up the dump: one 160 m ramp "
+            "per terrace, a turn on the berm, then the next ramp, until it "
+            "reaches the lift being tipped."),
         "sm_chassis": ("Surface miner on the coal bench",
             "Cutting the top coal bench in thin layers with no blasting, "
             "loading straight into trucks."),
@@ -632,20 +686,21 @@ SPECS = {
         "typical dimensions -- not a copy of any real mine."),
     "specs": [
         ["Model scale", "1:700 -- 1 cm on the model is 7 m in the mine"],
-        ["Area shown", "approx. 1.75 km x 1.5 km"],
-        ["Pit depth to coal floor", "approx. 86 m"],
-        ["Overburden", "approx. 66 m: 3 shovel benches (36 m) + dragline cut (30 m)"],
+        ["Area shown", "approx. 1.75 km x 1.56 km"],
+        ["Pit depth to coal floor", "approx. 120 m"],
+        ["Overburden", "approx. 100 m: 6 benches of 12 m (72 m) + dragline cut (28 m)"],
         ["Coal seam", "approx. 20 m, two 10 m benches"],
-        ["Bench height (shovel-dumper)", "12 m, benches 48-56 m wide"],
-        ["Dragline bench", "at approx. 36 m depth, 72 m wide"],
-        ["Pit floor width", "approx. 72 m"],
-        ["Haul ramp", "1 in 16, 28 m wide, approx. 1.4 km long"],
+        ["Bench height (shovel-dumper)", "12 m; working bench 48 m wide, safety berms 24 m"],
+        ["Dragline bench", "at approx. 72 m depth, 64 m wide"],
+        ["Pit floor width", "approx. 48 m"],
+        ["Haul ramp", "1 in 16, 28 m wide, approx. 2 km long, four switchbacks"],
         ["Spoil slope", "approx. 37 degrees (angle of repose)"],
-        ["Overburden dump", "10 m lifts, approx. 17 terraces from coal floor to top"],
+        ["Overburden dump", "10 m lifts, 20 terraces from the coal floor to the top"],
+        ["Dump ramps", "one per terrace, 1 in 16, 160 m long, alternating direction"],
         ["Dump top", "80 m above original ground, topsoiled and planted"],
-        ["Dump footprint above ground", "approx. 0.9 km x 1.35 km"],
+        ["Dump footprint above ground", "approx. 0.8 km x 1.35 km"],
         ["Dump access road", "approx. 1 in 9, up the south flank"],
-        ["Stripping ratio (this section)", "approx. 2.4 m3 of overburden per tonne of coal"],
+        ["Stripping ratio (this section)", "approx. 3.6 m3 of overburden per tonne of coal"],
     ],
     "safety": [
         "Haul roads: gradient not steeper than 1 in 16, width at least three "
