@@ -1,0 +1,625 @@
+{
+  "id": "mine-layout",
+  "name": "Opencast coal mine layout",
+  "subtitle": "Generic Singrauli-style dragline + shovel-dumper mine -- 1:500 scale model",
+  "category": "Mine layout",
+  "summary": "A whole opencast coal mine as a table-top model: the dragline stripping overburden and casting it into the void, shovel-dumper benches above it, the coal worked in two benches, a 1 in 16 haul ramp switching back out of the pit, internal and external dumps, and the coal handling plant loading a train. A typical layout built from typical dimensions -- not a copy of any real mine.",
+  "specs": [
+    [
+      "Model scale",
+      "1:500 -- 1 cm on the model is 5 m in the mine"
+    ],
+    [
+      "Area shown",
+      "approx. 1.0 km x 1.5 km"
+    ],
+    [
+      "Pit depth to coal floor",
+      "approx. 86 m"
+    ],
+    [
+      "Overburden",
+      "approx. 66 m: 3 shovel benches (36 m) + dragline cut (30 m)"
+    ],
+    [
+      "Coal seam",
+      "approx. 20 m, two 10 m benches"
+    ],
+    [
+      "Bench height (shovel-dumper)",
+      "12 m, benches 48-56 m wide"
+    ],
+    [
+      "Dragline bench",
+      "at approx. 36 m depth, 72 m wide"
+    ],
+    [
+      "Pit floor width",
+      "approx. 72 m"
+    ],
+    [
+      "Haul ramp",
+      "1 in 16, 28 m wide, approx. 1.4 km long"
+    ],
+    [
+      "Spoil slope",
+      "approx. 37 degrees (angle of repose)"
+    ],
+    [
+      "Internal dump top",
+      "approx. 30 m above original ground"
+    ],
+    [
+      "Stripping ratio (this section)",
+      "approx. 2.4 m3 of overburden per tonne of coal"
+    ]
+  ],
+  "safety": [
+    "Haul roads: gradient not steeper than 1 in 16, width at least three times the widest vehicle, berms of at least axle height on every open edge.",
+    "Bench height within the digging height of the machine working it, and benches wide enough for the shovel, a spotting truck and a passing truck.",
+    "Garland drains and sump pumps ready before the monsoon.",
+    "Dump toes are never undercut and dump edges always carry a berm; most dump accidents start there.",
+    "Explosives magazine isolated at licence distances; blasting only with the danger zone cleared and guarded."
+  ],
+  "ar_tips": [
+    "Place it on an open floor: at 1:500 it is about 2 m by 3 m. Kneel at the end to look up the haul ramp the way a truck driver would.",
+    "Find each machine -- the labels say what it is doing in the mining cycle -- then open its own page to see it full size."
+  ],
+  "model": "models/mine-layout.glb",
+  "extents_m": {
+    "width_x": 1.97,
+    "height_y": 0.32,
+    "length_z": 3.04
+  },
+  "triangles": 39736,
+  "bytes": 3489304,
+  "parts": [
+    {
+      "node": "original_ground",
+      "label": "Original ground (surface)",
+      "note": "The undisturbed surface. Topsoil is stripped ahead of mining and stored separately -- it is the most valuable material for reclamation, and losing it under the dumps is the commonest reclamation failure.",
+      "position": [
+        -0.86,
+        0.002,
+        -0.84
+      ],
+      "normal": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 454
+    },
+    {
+      "node": "overburden_benches",
+      "label": "Overburden benches (shovel-dumper)",
+      "note": "Upper overburden, drilled, blasted and removed by rope shovels and dumpers in 12 m benches. Benches are kept wider than they are high, and each working bench wide enough for the shovel, a truck spotting and a truck passing.",
+      "position": [
+        -0.6,
+        -0.024,
+        -0.6
+      ],
+      "normal": [
+        -0.2873478855663454,
+        0.9578262852211513,
+        0.0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 3052
+    },
+    {
+      "node": "dragline_bench",
+      "label": "Dragline bench & highwall",
+      "note": "The dragline sits on this bench, about 36 m down, and digs the 30 m of overburden below it down to the top of the coal, casting it across the pit onto the spoil side. The steep face below it is the highwall -- watch it for cracks after every blast.",
+      "position": [
+        -0.392,
+        -0.068,
+        -0.5
+      ],
+      "normal": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 592
+    },
+    {
+      "node": "coal_seam",
+      "label": "Coal seam (approx. 20 m, two benches)",
+      "note": "A thick seam, worked in two 10 m benches by shovels and surface miners. Partings and the roof and floor contact are mined carefully to keep dilution down; fires start on long-exposed coal benches, so they are not left standing.",
+      "position": [
+        -0.264,
+        -0.128,
+        -0.64
+      ],
+      "normal": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 2060
+    },
+    {
+      "node": "coal_floor",
+      "label": "Coal floor (pit bottom)",
+      "note": "The working floor at about 86 m depth, 70 m wide -- room for the loading shovel, trucks turning and the sump. It is kept graded towards the sump so water does not stand on the haul route.",
+      "position": [
+        -0.04,
+        -0.17,
+        0.0
+      ],
+      "normal": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 1410
+    },
+    {
+      "node": "haul_ramp",
+      "label": "Haul ramp (1 in 16, 28 m wide)",
+      "note": "Gradient not steeper than 1 in 16 and width at least three times the widest truck. At that grade, climbing 86 m takes about 1.4 km of ramp -- which is why it switches back three times in the end wall. Berms of at least axle height on every open edge.",
+      "position": [
+        -0.35000000000000003,
+        -0.08,
+        1.296
+      ],
+      "normal": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 1272
+    },
+    {
+      "node": "internal_dump",
+      "label": "Internal dump (dragline spoil & backfill)",
+      "note": "Overburden put back into the mined-out void. The dragline's cast lies at its angle of repose, about 37 degrees, and trucks backfill on top in terraces. Internal dumping shortens hauls and starts reclamation behind the advancing pit.",
+      "position": [
+        0.6,
+        0.062,
+        -0.3
+      ],
+      "normal": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 8240
+    },
+    {
+      "node": "external_dump",
+      "label": "External overburden dump",
+      "note": "Overburden from the first box cut, before there was a void to put it in. Built in terraces with benches and drains, then graded, top-soiled and planted. Dump slope failures are a major cause of accidents -- the toe must never be undercut.",
+      "position": [
+        0.16,
+        0.074,
+        -1.4000000000000001
+      ],
+      "normal": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 1548
+    },
+    {
+      "node": "sump",
+      "label": "Sump (pit dewatering)",
+      "note": "The low point of the floor, where rain and seepage collect and are pumped out. Before the monsoon the pumps are sized for the worst storm on record -- a flooded pit floor stops the mine and can trap machines.",
+      "position": [
+        -0.032,
+        -0.17400000000000002,
+        -0.41600000000000004
+      ],
+      "normal": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 12
+    },
+    {
+      "node": "garland_drain",
+      "label": "Garland drain",
+      "note": "A drain round the pit crest that catches surface run-off before it can pour over the highwall, flood the pit or soften the benches. A statutory requirement before the monsoon.",
+      "position": [
+        -0.736,
+        0.001,
+        0.6
+      ],
+      "normal": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 12
+    },
+    {
+      "node": "surface_roads",
+      "label": "Surface haul roads",
+      "note": "Coal goes to the CHP, overburden to the external dump. Roads are kept separate from light-vehicle routes wherever possible -- a 220 t truck driver cannot see a jeep.",
+      "position": [
+        -0.78,
+        0.001,
+        0.24
+      ],
+      "normal": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 36
+    },
+    {
+      "node": "coal_handling_plant",
+      "label": "Coal handling plant (CHP)",
+      "note": "Trucks tip into the receiving hopper; the coal is crushed to a sized product (typically under 100 mm) and belted to the silo. For a pit-head power station it may go straight onto a merry-go-round train or a long conveyor.",
+      "position": [
+        -0.9400000000000001,
+        0.062,
+        1.12
+      ],
+      "normal": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 24
+    },
+    {
+      "node": "conveyor_to_silo",
+      "label": "Conveyor gallery",
+      "note": "An enclosed, inclined belt from the crusher to the top of the silo -- enclosed to keep coal dust in and rain out. Belt inclines are kept under about 16-18 degrees or the coal rolls back.",
+      "position": [
+        -0.9400000000000001,
+        0.07200000000000001,
+        0.98
+      ],
+      "normal": [
+        0.7071067811865475,
+        0.7071067811865475,
+        0.0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 48
+    },
+    {
+      "node": "loading_silo",
+      "label": "Rapid loading silo",
+      "note": "Holds a train-load or more, and loads each wagon to its weight in about a minute as the rake creeps underneath. Accurate loading avoids under-loaded wagons and overload penalties.",
+      "position": [
+        -0.916,
+        0.06,
+        0.81
+      ],
+      "normal": [
+        0.9578262852211513,
+        0.2873478855663454,
+        0.0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 128
+    },
+    {
+      "node": "railway_siding",
+      "label": "Railway siding",
+      "note": "Coal leaves by rail in rakes of about 58 wagons, nearly 4000 t each. At pit-head power stations a merry-go-round loop runs trains continuously between silo and boiler.",
+      "position": [
+        -0.9400000000000001,
+        0.004,
+        -0.08
+      ],
+      "normal": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 36
+    },
+    {
+      "node": "coal_rake",
+      "label": "Coal rake (wagons)",
+      "note": "Open wagons being loaded under the silo, about 60 t of coal each.",
+      "position": [
+        -0.932,
+        0.01,
+        0.6
+      ],
+      "normal": [
+        0.9578262852211513,
+        0.2873478855663454,
+        0.0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 168
+    },
+    {
+      "node": "workshop",
+      "label": "Heavy-equipment workshop",
+      "note": "Bays tall enough to tip a dumper body and lift a dragline motor. Most of a machine's availability is won or lost here.",
+      "position": [
+        -0.868,
+        0.034,
+        -0.24
+      ],
+      "normal": [
+        0.8944271909999159,
+        0.4472135954999579,
+        0.0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 20
+    },
+    {
+      "node": "mine_office",
+      "label": "Mine office & first aid",
+      "note": "Manager's office, shift control room, first-aid room and the statutory registers. The muster point for an emergency.",
+      "position": [
+        -0.868,
+        0.022,
+        -0.52
+      ],
+      "normal": [
+        0.8944271909999159,
+        0.4472135954999579,
+        0.0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 12
+    },
+    {
+      "node": "substation",
+      "label": "Substation (6.6 kV feed)",
+      "note": "Steps down the grid supply and feeds the dragline and rope shovels through trailing cables. Only authorised electrical staff work here.",
+      "position": [
+        -0.868,
+        0.014,
+        0.08
+      ],
+      "normal": [
+        0.8944271909999159,
+        0.4472135954999579,
+        0.0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 36
+    },
+    {
+      "node": "explosives_magazine",
+      "label": "Explosives magazine",
+      "note": "Far from everything else, behind earth mounds, fenced and guarded, at the distances set by the licence. Bulk explosive is now usually mixed in the hole by a pump truck, so far less is stored.",
+      "position": [
+        -0.88,
+        0.012,
+        -1.44
+      ],
+      "normal": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 28
+    },
+    {
+      "node": "dl_house",
+      "label": "Dragline at work",
+      "note": "Sitting on its bench, digging the lower overburden and casting it straight across the pit onto the spoil side -- no trucks. Its bucket is nearly 90 m out from the tub.",
+      "position": [
+        -0.3140873827689831,
+        0.04968372974482418,
+        0.08
+      ],
+      "normal": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "pivot": [
+        -0.392,
+        -0.0676,
+        0.08
+      ],
+      "parent": null,
+      "triangles": 24
+    },
+    {
+      "node": "rs_machinery_house",
+      "label": "Rope shovel loading a dumper",
+      "note": "Working the upper overburden bench face. The truck spots beside it on the operator's side; three or four passes load it.",
+      "position": [
+        -0.556706088594159,
+        -0.005595809517042781,
+        -0.32
+      ],
+      "normal": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "pivot": [
+        -0.548,
+        -0.042,
+        -0.32
+      ],
+      "parent": null,
+      "triangles": 36
+    },
+    {
+      "node": "t1_dump_body",
+      "label": "Dumper under the shovel",
+      "note": "Overburden goes to the internal dump by in-pit roads, or up and out to the external dump.",
+      "position": [
+        -0.524,
+        -0.030879999999999998,
+        -0.2681
+      ],
+      "normal": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "pivot": [
+        -0.524,
+        -0.041299999999999996,
+        -0.258
+      ],
+      "parent": null,
+      "triangles": 84
+    },
+    {
+      "node": "hs_superstructure",
+      "label": "Hydraulic shovel on coal",
+      "note": "Loading coal from the bottom bench at the pit floor. Coal loading needs a clean floor and care at the seam floor to keep stone out of the product.",
+      "position": [
+        -0.09407,
+        -0.15161675125767787,
+        0.24007
+      ],
+      "normal": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "pivot": [
+        -0.088,
+        -0.1682,
+        0.24
+      ],
+      "parent": null,
+      "triangles": 24
+    },
+    {
+      "node": "t2_dump_body",
+      "label": "Coal dumper",
+      "note": "Loaded at the face, out along the floor and up the ramp to the CHP.",
+      "position": [
+        -0.06,
+        -0.15488,
+        0.1999
+      ],
+      "normal": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "pivot": [
+        -0.06,
+        -0.1653,
+        0.21
+      ],
+      "parent": null,
+      "triangles": 84
+    },
+    {
+      "node": "t3_dump_body",
+      "label": "Loaded dumper on the ramp",
+      "note": "Climbing at 1 in 16. A loaded 220 t truck manages about 10-12 km/h on this grade.",
+      "position": [
+        -0.04,
+        -0.1340759189644406,
+        0.7993737220070021
+      ],
+      "normal": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "pivot": [
+        -0.04,
+        -0.14593683058571646,
+        0.7896015396979315
+      ],
+      "parent": null,
+      "triangles": 84
+    },
+    {
+      "node": "sm_chassis",
+      "label": "Surface miner on the coal bench",
+      "note": "Cutting the top coal bench in thin layers with no blasting, loading straight into trucks.",
+      "position": [
+        -0.264,
+        -0.11626782249609979,
+        -0.0909193523155934
+      ],
+      "normal": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 12
+    },
+    {
+      "node": "dz_engine_hood",
+      "label": "Dozer on the dump",
+      "note": "Spreading backfill and keeping the dump edge and its berm safe for the trucks tipping there.",
+      "position": [
+        0.6008794049726314,
+        0.07196,
+        -0.12
+      ],
+      "normal": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 24
+    },
+    {
+      "node": "gr_cab",
+      "label": "Grader on the haul road",
+      "note": "Keeping the surface haul road smooth and crowned to shed water.",
+      "position": [
+        -0.7799082277701839,
+        0.012360000000000001,
+        0.39967
+      ],
+      "normal": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 112
+    }
+  ],
+  "thumbnail": "models/mine-layout.png"
+}

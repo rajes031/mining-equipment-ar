@@ -30,6 +30,7 @@ import make_dumper
 import make_gallery
 import make_grader
 import make_loading_cycle
+import make_mine_layout
 import make_roof_support
 import make_rope_shovel
 import make_shovel
@@ -51,6 +52,7 @@ GENERATORS = [
     make_blast_pattern,
     make_gallery,
     make_loading_cycle,
+    make_mine_layout,          # last: it absorbs the other generators
 ]
 
 # Built by tools/make_dumper_glb.py and tools/make_drill_glb.py under Blender.
@@ -61,6 +63,7 @@ CONVERTED = ["dumper-detailed", "drill-rig"]
 # underground. It follows the opencast cycle rather than the order the files
 # happen to be built in.
 ORDER = [
+    "mine-layout",             # the whole mine first, then its machines
     "dumper-detailed",
     "dumper",
     "shovel",

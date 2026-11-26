@@ -244,6 +244,11 @@ VIEWS = {
         "-front": dict(azimuth=-90.0, elevation=4.0, distance_factor=1.1),
         "-rear": dict(azimuth=35.0, elevation=22.0),
     },
+    "mine-layout": {
+        "": dict(azimuth=150.0, elevation=35.0),
+        "-front": dict(azimuth=210.0, elevation=30.0),
+        "-rear": dict(azimuth=20.0, elevation=40.0),
+    },
     "rope-shovel": {
         "": dict(azimuth=140.0, elevation=16.0),
         "-front": dict(azimuth=-90.0, elevation=4.0, distance_factor=1.2),
@@ -251,7 +256,7 @@ VIEWS = {
     },
 }
 
-MODELS = ("dumper", "shovel", "rope-shovel", "dragline", "surface-miner",
+MODELS = ("mine-layout", "dumper", "shovel", "rope-shovel", "dragline", "surface-miner",
           "dozer", "grader", "loading-cycle", "roof-support",
           "blast-pattern", "gallery")
 

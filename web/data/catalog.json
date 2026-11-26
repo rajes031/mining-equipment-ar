@@ -2,6 +2,22 @@
   "title": "Mining Equipment AR",
   "machines": [
     {
+      "id": "mine-layout",
+      "name": "Opencast coal mine layout",
+      "subtitle": "Generic Singrauli-style dragline + shovel-dumper mine -- 1:500 scale model",
+      "category": "Mine layout",
+      "thumbnail": "models/mine-layout.png",
+      "model": "models/mine-layout.glb",
+      "extents_m": {
+        "width_x": 1.97,
+        "height_y": 0.32,
+        "length_z": 3.04
+      },
+      "bytes": 3489304,
+      "triangles": 39736,
+      "parts": 29
+    },
+    {
       "id": "dumper-detailed",
       "name": "Rear-dump truck — detailed model",
       "subtitle": "220 t payload class — full mesh, 20 400 triangles",
