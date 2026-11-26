@@ -4,18 +4,18 @@
     {
       "id": "mine-layout",
       "name": "Opencast coal mine layout",
-      "subtitle": "Generic Singrauli-style dragline + shovel-dumper mine -- 1:700 scale model",
+      "subtitle": "Generic opencast coal mine, 80 m deep -- 1:1000 scale model",
       "category": "Mine layout",
       "thumbnail": "models/mine-layout.png",
       "model": "models/mine-layout.glb",
       "extents_m": {
-        "width_x": 2.49,
-        "height_y": 0.29,
-        "length_z": 2.17
+        "width_x": 2.6,
+        "height_y": 0.18,
+        "length_z": 1.75
       },
-      "bytes": 6382528,
-      "triangles": 73960,
-      "parts": 32
+      "bytes": 5326940,
+      "triangles": 61194,
+      "parts": 35
     },
     {
       "id": "dumper-detailed",
