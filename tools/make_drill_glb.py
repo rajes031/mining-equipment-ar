@@ -36,10 +36,12 @@ FBX, TEXDIR, OUT_GLB, OUT_JSON = argv[0], argv[1], argv[2], argv[3]
 # FBX UnitScaleFactor is 1, i.e. centimetres.
 UNIT = 0.01
 # Triangle budget for a tablet. The source is ~705k, which would stall AR.
-TRI_TARGET = 150000
+# The VR build on a PC has no such limit and overrides both of these: see
+# docs/08-unity-vr.md. Defaults unchanged, so the web build is unaffected.
+TRI_TARGET = int(os.environ.get("DRILL_TRI_TARGET", "150000"))
 # Textures are 4K; that is far more than a 7-inch screen can show and it
 # would dominate the download.
-TEX_SIZE = 1024
+TEX_SIZE = int(os.environ.get("DRILL_TEX_SIZE", "1024"))
 
 PBR = {
     "Piling_1_2_Piling_1": ("Piling_1_2_Piling_1_BaseColor.jpg",
