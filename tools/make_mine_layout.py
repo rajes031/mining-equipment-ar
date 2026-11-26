@@ -436,12 +436,8 @@ def build() -> Builder:
                                         S.SPUR_TOE, D.FLOOR, to_spur)
     fleet["t3_dump_body"] = place(make_dumper.build(), "t3_", S.OB_LOAD,
                                   D.FLOOR, to_spur)
-    a, p, c = D.HAUL[59], D.HAUL[60], D.HAUL[61]           # loaded, climbing
-    fleet["t4_dump_body"] = place(make_dumper.build(), "t4_", p, ground(*p),
-                                  (a[0] - c[0], a[1] - c[1]), climb)
-    a, p, c = D.DUMP_ROAD[59], D.DUMP_ROAD[60], D.DUMP_ROAD[61]
-    fleet["t5_dump_body"] = place(make_dumper.build(), "t5_", p, ground(*p),
-                                  (c[0] - a[0], c[1] - a[1]), climb)
+    # No parked trucks on the haul or dump road: in VR those roads are
+    # driven, and a display truck standing on one is a wall in the way.
     fleet["dz_engine_hood"] = place(make_dozer.build(), "dz_",
                                     (D.DUMP_C[0] + 40, D.DUMP_C[1] - 150),
                                     D.DUMP_TOP, (1, 0))
@@ -470,11 +466,6 @@ def build() -> Builder:
         "t3_dump_body": ("Overburden dumper under the shovel",
             "Loaded at the spur, then across the floor, up the haul road and "
             "out along the surface road to the dump."),
-        "t4_dump_body": ("Loaded dumper on the haul road",
-            "Climbing at 1 in 16. A loaded 220 t truck manages about "
-            "10-12 km/h on this grade."),
-        "t5_dump_body": ("Dumper climbing the dump road",
-            "Taking overburden up the spiral to the lift being tipped."),
         "dz_engine_hood": ("Dozer on the dump top",
             "Grading the final top and spreading topsoil ahead of the "
             "planters."),

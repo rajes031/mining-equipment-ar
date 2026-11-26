@@ -70,7 +70,7 @@ def yaw_for(heading):
 # ------------------------------------------------------------------ routes
 
 SURFACE_TO_CHP = [D.HAUL[0], (D.HAUL[0][0] - 200, D.HAUL[0][1] + 160),
-                  (-860, 560), (-960, 430)]
+                  (-860, 560), (-870, 470), (-885, 430)]    # to the hopper apron
 SURFACE_TO_DUMP = [D.HAUL[0], (D.HAUL[0][0] + 260, D.HAUL[0][1] + 120),
                    (620, 560), (D.DUMP_ROAD[0][0] - 40, D.DUMP_ROAD[0][1] + 30),
                    D.DUMP_ROAD[0]]
@@ -80,13 +80,16 @@ SURFACE_ROADS = [SURFACE_TO_CHP, SURFACE_TO_DUMP, SURFACE_SERVICE]
 # where the work is
 COAL_FACE_W = pit_pt(180, 205)                    # truck stands here to load
 SPUR_TOE = local_pt(40, -30)                      # rope shovel digs the spur
-OB_LOAD = local_pt(70, -15)
+OB_LOAD = local_pt(70, -15)                       # the parked display truck
+OB_BAY = local_pt(0, -12)                         # free bay, other side of the shovel
 CHP_TIP = (-900.0, 430.0)                         # reverse in to the hopper
 
-# floor legs to the bottom of the haul road, round the west sump
-FLOOR_FROM_COAL = [COAL_FACE_W, local_pt(-430, 15), local_pt(-380, 140),
-                   local_pt(-250, 170), D.HAUL[-1]]
-FLOOR_FROM_OB = [OB_LOAD, local_pt(-20, 60), D.HAUL[-1]]
+# Floor legs to the bottom of the haul road. The coal leg goes round the
+# inner (east) side of the west sump, well clear of its edge: a truck
+# cutting the corner between the sump and the wall ended up in it.
+FLOOR_FROM_COAL = [COAL_FACE_W, local_pt(-400, -55), local_pt(-250, -70),
+                   local_pt(-170, 30), local_pt(-150, 130), D.HAUL[-1]]
+FLOOR_FROM_OB = [OB_BAY, local_pt(-30, 60), D.HAUL[-1]]
 
 
 def dump_tip():
@@ -431,7 +434,7 @@ def drive_data():
         "spawn": pose(COAL_FACE_W, (-face_dir[0], -face_dir[1]),
                       "Coal face, west -- under the shovel"),
         "load_points": [pose(COAL_FACE_W, face_dir, "Coal shovel, west face"),
-                        pose(OB_LOAD, (SPUR_TOE[0] - OB_LOAD[0], SPUR_TOE[1] - OB_LOAD[1]),
+                        pose(OB_BAY, (SPUR_TOE[0] - OB_BAY[0], SPUR_TOE[1] - OB_BAY[1]),
                              "Rope shovel, overburden spur")],
         "tip_points": [pose(CHP_TIP, (-1.0, 0.0), "CHP receiving hopper"),
                        pose(tip, tip_dir, "Dump top, active tipping edge")],

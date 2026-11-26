@@ -109,21 +109,35 @@ def dump_point(th, d):
 def haul_road_path():
     """Serpentine down the north wall: four legs joined by hairpins."""
     pts = []
+    HAUL_FLAT.clear()
     t0, t1 = ROAD_TH
     pts.append(pit_point(t0, -40.0))                # on the surface
+    HAUL_FLAT.add(0)                                # the approach is level
     for k, d in enumerate(ROAD_INSETS):
         a, b = (t0, t1) if k % 2 == 0 else (t1, t0)
         for t in np.linspace(a, b, 40):
             pts.append(pit_point(t, d))
         if k + 1 < len(ROAD_INSETS):                # hairpin inwards
+            # Level round the bend. On a grade, the inside of a 30 m
+            # hairpin is twice as steep as the centre line -- a driven
+            # truck found 1 in 9 there.
+            HAUL_FLAT.add(len(pts) - 1)
             for phi in np.linspace(0, math.pi, 12)[1:-1]:
                 dd = d + HAIRPIN_R * (1 - math.cos(phi))
                 sign = 1 if k % 2 == 0 else -1
                 tt = b + sign * HAIRPIN_R * math.sin(phi) / float(pit_r(b))
+                HAUL_FLAT.add(len(pts))
                 pts.append(pit_point(tt, dd))
+    # Off the last leg and out onto the floor on a curve, not a square
+    # corner: a 13 m truck turning a right angle against the coal face
+    # clipped the face with its body and stuck there.
     end_t = ROAD_TH[1] if len(ROAD_INSETS) % 2 else ROAD_TH[0]
-    for d in (170.0, 200.0, 230.0):                 # out onto the floor
-        pts.append(pit_point(end_t, d))
+    del pts[-7:]                                    # the last ~60 m of the leg
+    a = np.array(pts[-1])
+    c = np.array(pit_point(end_t, ROAD_INSETS[-1]))
+    e = np.array(pit_point(end_t, 240.0))
+    for t in np.linspace(0, 1, 16)[1:]:
+        pts.append(tuple((1 - t) ** 2 * a + 2 * (1 - t) * t * c + t ** 2 * e))
     return pts
 
 
@@ -156,14 +170,28 @@ def polyline_field(path, x, y):
     return best_d, best_s
 
 
+HAUL_FLAT: set = set()        # segments i -> i+1 that are level
 HAUL = haul_road_path()
 DUMP_ROAD = dump_road_path()
 SHOULDER = 8.0
 
 
+def _haul_profile():
+    s, lv = [0.0], [0.0]
+    for i, ((ax, ay), (bx, by)) in enumerate(zip(HAUL, HAUL[1:])):
+        seg = math.hypot(bx - ax, by - ay)
+        s.append(s[-1] + seg)
+        lv.append(lv[-1] if i in HAUL_FLAT else max(FLOOR, lv[-1] - seg * GRADE))
+    return np.array(s), np.array(lv)
+
+
+HAUL_S, HAUL_LV = _haul_profile()
+
+
 def haul_level(s):
-    """Haul road level (m) at distance s along it from the surface end."""
-    return np.maximum(FLOOR, -np.maximum(np.asarray(s, float) - 40.0, 0) * GRADE)
+    """Haul road level (m) at distance s along it from the surface end:
+    1 in 16, level on the approach and round the hairpins."""
+    return np.interp(np.asarray(s, float), HAUL_S, HAUL_LV)
 
 
 def dump_road_level(s):
