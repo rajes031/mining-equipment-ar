@@ -78,10 +78,22 @@ SURFACE_SERVICE = [(-860, 560), (-860, -500), (-900, -620)]
 SURFACE_ROADS = [SURFACE_TO_CHP, SURFACE_TO_DUMP, SURFACE_SERVICE]
 
 # where the work is
-COAL_FACE_W = pit_pt(180, 205)                    # truck stands here to load
+COAL_SHOVEL_W = pit_pt(180, 178)                  # hydraulic shovel, facing the face
+
+
+def _beside(p, deg, inset, metres):
+    """A point `metres` along the wall from a shovel -- where a truck
+    stands to be loaded: within the bucket's reach, beside the machine."""
+    a, b = pit_pt(deg - 1, inset), pit_pt(deg + 1, inset)
+    t = np.subtract(b, a)
+    t /= np.linalg.norm(t)
+    return (p[0] + t[0] * metres, p[1] + t[1] * metres)
+
+
+COAL_FACE_W = _beside(COAL_SHOVEL_W, 180, 178, 15.0)   # truck stands here to load
 SPUR_TOE = local_pt(40, -30)                      # rope shovel digs the spur
 OB_LOAD = local_pt(70, -15)                       # the parked display truck
-OB_BAY = local_pt(0, -12)                         # free bay, other side of the shovel
+OB_BAY = local_pt(18, -30)                        # beside the rope shovel, in reach
 CHP_TIP = (-900.0, 430.0)                         # reverse in to the hopper
 
 # Floor legs to the bottom of the haul road. The coal leg goes round the

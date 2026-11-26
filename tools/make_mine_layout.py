@@ -419,8 +419,8 @@ def build() -> Builder:
     fleet = {}
     fleet["s1_superstructure"] = place(make_shovel.build(), "s1_",
                                        pit_pt(180, 178), D.FLOOR, outward(180))
-    fleet["t1_dump_body"] = place(make_dumper.build(), "t1_", pit_pt(172, 186),
-                                  D.FLOOR, outward(90))
+    # The west face and the spur load the VR haul fleet, so no parked
+    # trucks stand in their bays.
     fleet["s2_superstructure"] = place(make_shovel.build(), "s2_",
                                        pit_pt(8, 178), D.FLOOR, outward(8))
     fleet["t2_dump_body"] = place(make_dumper.build(), "t2_", pit_pt(14, 188),
@@ -434,8 +434,7 @@ def build() -> Builder:
     to_spur = (s_[0] - o[0], s_[1] - o[1])                 # local -v, south
     fleet["rs_machinery_house"] = place(make_rope_shovel.build(), "rs_",
                                         S.SPUR_TOE, D.FLOOR, to_spur)
-    fleet["t3_dump_body"] = place(make_dumper.build(), "t3_", S.OB_LOAD,
-                                  D.FLOOR, to_spur)
+
     # No parked trucks on the haul or dump road: in VR those roads are
     # driven, and a display truck standing on one is a wall in the way.
     fleet["dz_engine_hood"] = place(make_dozer.build(), "dz_",
@@ -450,9 +449,7 @@ def build() -> Builder:
         "s1_superstructure": ("Shovel on the west coal face",
             "Loading coal at the floor. Coal loading needs a clean floor and "
             "care at the seam floor to keep stone out of the product."),
-        "t1_dump_body": ("Coal dumper (west face)",
-            "Loaded at the face, then across the floor and up the haul road "
-            "to the CHP."),
+
         "s2_superstructure": ("Shovel on the east coal face",
             "The second coal face, across the spur from the first."),
         "t2_dump_body": ("Coal dumper (east face)",
@@ -463,9 +460,7 @@ def build() -> Builder:
         "rs_machinery_house": ("Rope shovel digging the overburden spur",
             "Working from the floor at the toe of the spur, loading blasted "
             "overburden; three or four passes fill a truck."),
-        "t3_dump_body": ("Overburden dumper under the shovel",
-            "Loaded at the spur, then across the floor, up the haul road and "
-            "out along the surface road to the dump."),
+
         "dz_engine_hood": ("Dozer on the dump top",
             "Grading the final top and spreading topsoil ahead of the "
             "planters."),
