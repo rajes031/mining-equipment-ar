@@ -4,18 +4,18 @@
     {
       "id": "mine-layout",
       "name": "Opencast coal mine layout",
-      "subtitle": "Generic opencast coal mine, 80 m deep -- 1:1000 scale model",
+      "subtitle": "Generic opencast coal mine, 80 m deep -- true size (1:1) for VR",
       "category": "Mine layout",
       "thumbnail": "models/mine-layout.png",
       "model": "models/mine-layout.glb",
       "extents_m": {
-        "width_x": 2.6,
-        "height_y": 0.18,
-        "length_z": 1.75
+        "width_x": 2600.0,
+        "height_y": 184.98,
+        "length_z": 1752.0
       },
-      "bytes": 5326940,
-      "triangles": 61194,
-      "parts": 35
+      "bytes": 5684456,
+      "triangles": 65334,
+      "parts": 36
     },
     {
       "id": "dumper-detailed",

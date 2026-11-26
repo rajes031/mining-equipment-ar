@@ -1,13 +1,13 @@
 {
   "id": "mine-layout",
   "name": "Opencast coal mine layout",
-  "subtitle": "Generic opencast coal mine, 80 m deep -- 1:1000 scale model",
+  "subtitle": "Generic opencast coal mine, 80 m deep -- true size (1:1) for VR",
   "category": "Mine layout",
   "summary": "A whole opencast coal mine as a table-top model: an oval pit 80 m deep with 15 m benches and 30 m berms all round, one 1 in 16 haul road zig-zagging down the north wall, a dark coal floor with two water-filled sumps and an overburden spur between them, a terraced dump with a planted top, the dewatering system, and the coal handling plant loading a train. Typical values -- not a copy of any real mine. The matching contour plan is in docs/mine-layout-draft.png.",
   "specs": [
     [
       "Model scale",
-      "1:1000 -- 1 cm on the model is 10 m in the mine"
+      "1:1 true size; the VR app has a 1:1000 table-top view"
     ],
     [
       "Area shown",
@@ -66,26 +66,26 @@
     "No structures inside the safety line; the magazine is isolated at licence distances."
   ],
   "ar_tips": [
-    "Place it on an open floor: at 1:1000 it is about 2.6 m by 1.75 m. Look down from the rim to see the 80 m of benches, then follow the haul road from the floor up the north wall.",
-    "The machines are small at this scale -- kneel at the pit edge, then open each machine's own page to see it full size."
+    "This model is the real size of the mine -- 2.6 km by 1.75 km. In the VR app, walk it, or press Y to jump between stations: pit rim, haul road, coal face, dragline, dump top and CHP.",
+    "Press A in VR for the 1:1000 table-top view of the whole site."
   ],
   "model": "models/mine-layout.glb",
   "extents_m": {
-    "width_x": 2.6,
-    "height_y": 0.18,
-    "length_z": 1.75
+    "width_x": 2600.0,
+    "height_y": 184.98,
+    "length_z": 1752.0
   },
-  "triangles": 61194,
-  "bytes": 5326940,
+  "triangles": 65334,
+  "bytes": 5684456,
   "parts": [
     {
       "node": "original_ground",
       "label": "Original ground (RL 300)",
       "note": "The undisturbed surface. Topsoil is stripped ahead of mining and stored separately -- it is the most valuable material for reclamation, and losing it under the dumps is the commonest reclamation failure.",
       "position": [
-        -0.65,
-        0.002,
-        -0.52
+        -650.0,
+        2.0,
+        -520.0
       ],
       "normal": [
         0.0,
@@ -101,9 +101,9 @@
       "label": "Overburden benches (15 m high, 30 m wide)",
       "note": "Overburden, drilled, blasted and removed by shovels and dumpers in four benches of 15 m, from RL 300 down to RL 240. Each berm is 30 m wide -- twice the bench height, room for the shovel, a truck spotting and a truck passing -- and each face stands at about 62 degrees.",
       "position": [
-        -0.033627990037725465,
-        -0.013000000000000001,
-        0.3843696849679394
+        -33.62799003772547,
+        -13.0,
+        384.36968496793935
       ],
       "normal": [
         0.0,
@@ -119,9 +119,9 @@
       "label": "Coal seam (20 m, RL 240 to RL 220)",
       "note": "The coal, 20 m thick, at the bottom of the pit. It is cut by surface miners or blasted and loaded by shovels. Fires start on long-exposed coal, so faces are not left standing.",
       "position": [
-        -0.3170947256554775,
-        -0.058,
-        0.2660740673457718
+        -317.09472565547753,
+        -58.0,
+        266.0740673457718
       ],
       "normal": [
         0.0,
@@ -137,9 +137,9 @@
       "label": "Pit floor (RL 220, 80 m deep)",
       "note": "The bottom of the pit, about 0.95 km by 0.45 km. Room for the loading shovels, trucks turning and the sumps. It is graded towards the sumps so water does not stand on the roads.",
       "position": [
-        -0.023293714059226867,
-        -0.078,
-        -0.08693332436601615
+        -23.293714059226865,
+        -78.0,
+        -86.93332436601615
       ],
       "normal": [
         0.0,
@@ -155,9 +155,9 @@
       "label": "Haul road (1 in 16, 28 m wide)",
       "note": "The one road between the pit floor and the surface: three legs and two hairpins down the north wall. No steeper than 1 in 16, 28 m wide -- more than three times the widest truck -- with a bund of at least axle height on the open edge.",
       "position": [
-        -0.37847085594559055,
-        -0.03501833016259159,
-        -0.2650081463257836
+        -378.47085594559053,
+        -35.018330162591596,
+        -265.0081463257836
       ],
       "normal": [
         0.0,
@@ -173,9 +173,9 @@
       "label": "Overburden spur",
       "note": "A tongue of overburden left running down into the pit from the south wall. It splits the floor into two working areas, each with its own sump, and is mined out or used for internal dumping as the pit advances.",
       "position": [
-        0.09816541342514251,
-        -0.043000000000000003,
-        0.2118101782423849
+        98.1654134251425,
+        -43.0,
+        211.8101782423849
       ],
       "normal": [
         0.0,
@@ -191,9 +191,9 @@
       "label": "Overburden dump (4 lifts of 15 m)",
       "note": "Overburden from the pit, built in four 15 m lifts with 30 m berms to RL 360, 60 m above ground. Each face stands at the 37 degree angle of repose; the toe is never undercut and every berm slopes back into the dump with a drain.",
       "position": [
-        1.2542318611048306,
-        0.032,
-        -0.0985234817320585
+        1254.2318611048306,
+        32.0,
+        -98.52348173205849
       ],
       "normal": [
         0.0,
@@ -209,9 +209,9 @@
       "label": "Reclaimed dump top (plantation)",
       "note": "Once a dump reaches its final height its top is graded, covered with stored topsoil and planted -- grass first, then native trees.",
       "position": [
-        1.06,
-        0.062,
-        -0.33
+        1060.0,
+        62.0,
+        -330.0
       ],
       "normal": [
         0.0,
@@ -227,9 +227,9 @@
       "label": "Dump road (1 in 16, spiral)",
       "note": "Spirals up the dump from its pit-side toe so loaded dumpers can reach every lift being tipped.",
       "position": [
-        0.788971923813589,
-        0.01616945224131731,
-        -0.4094381975195597
+        788.971923813589,
+        16.16945224131731,
+        -409.43819751955965
       ],
       "normal": [
         0.0,
@@ -245,9 +245,9 @@
       "label": "Sumps (pit dewatering)",
       "note": "The low points of the floor, where rain and seepage collect and are pumped out. Before the monsoon the pumps are sized for the worst storm on record -- a flooded floor stops the mine.",
       "position": [
-        0.30013050969082133,
-        -0.08,
-        -0.039008680479193494
+        300.1305096908213,
+        -80.0,
+        -39.008680479193494
       ],
       "normal": [
         0.0,
@@ -263,9 +263,9 @@
       "label": "Garland drain",
       "note": "A drain round the pit, 30 m outside the crest, that catches surface run-off before it can pour over the benches, flood the pit or soften the walls. A statutory requirement before the monsoon.",
       "position": [
-        0.32271127466250005,
-        0.001,
-        0.32271127466249994
+        322.71127466250005,
+        1.0,
+        322.71127466249993
       ],
       "normal": [
         0.0,
@@ -281,9 +281,9 @@
       "label": "Sump pumps & pipeline",
       "note": "Pumps in the west sump lift the water up the wall in a pipeline laid beside the benches to the settling pond on the surface, where the silt drops out before the water is discharged or reused for dust suppression.",
       "position": [
-        -0.3291082844794934,
-        -0.074,
-        0.04677325183226912
+        -329.1082844794934,
+        -74.0,
+        46.77325183226912
       ],
       "normal": [
         0.0,
@@ -299,9 +299,9 @@
       "label": "Settling pond",
       "note": "Pit water is held here long enough for the suspended coal and clay to settle, so only clear water leaves the lease.",
       "position": [
-        -0.8,
-        0.002,
-        -0.71
+        -800.0,
+        2.0,
+        -710.0
       ],
       "normal": [
         0.0,
@@ -317,9 +317,9 @@
       "label": "Plantation on the dump top",
       "note": "Native species -- sal, khair, neem, bamboo -- planted at about 2500 per hectare on the topsoiled top. In a few years the canopy closes and the dump reads as forest from above.",
       "position": [
-        1.06,
-        0.076,
-        -0.33
+        1060.0,
+        76.0,
+        -330.0
       ],
       "normal": [
         0.0,
@@ -335,9 +335,9 @@
       "label": "Surface roads",
       "note": "Coal goes from the pit exit to the CHP, overburden to the dump. Light vehicles are kept on separate routes wherever possible -- a 220 t truck driver cannot see a jeep.",
       "position": [
-        -0.86,
-        0.001,
-        -0.1
+        -860.0,
+        1.0,
+        -100.0
       ],
       "normal": [
         0.0,
@@ -353,9 +353,9 @@
       "label": "Coal handling plant (CHP)",
       "note": "Trucks tip into the receiving hopper; the coal is crushed to a sized product and belted to the silo.",
       "position": [
-        -0.96,
-        0.032,
-        -0.43
+        -960.0,
+        32.0,
+        -430.0
       ],
       "normal": [
         0.0,
@@ -371,9 +371,9 @@
       "label": "Conveyor gallery",
       "note": "An enclosed belt from the crusher to the top of the silo.",
       "position": [
-        -1.01,
-        0.04,
-        -0.5
+        -1010.0,
+        40.0,
+        -500.0
       ],
       "normal": [
         0.7071067811865475,
@@ -389,9 +389,9 @@
       "label": "Rapid loading silo",
       "note": "Holds a train-load and loads each wagon to its weight in about a minute as the rake creeps underneath.",
       "position": [
-        -1.06,
-        0.048,
-        -0.56
+        -1060.0,
+        48.0,
+        -560.0
       ],
       "normal": [
         0.9578262852211513,
@@ -407,9 +407,9 @@
       "label": "Railway siding",
       "note": "Coal leaves by rail in rakes of about 58 wagons, nearly 4000 t each.",
       "position": [
-        -1.06,
-        0.002,
-        0.3
+        -1060.0,
+        2.0,
+        300.0
       ],
       "normal": [
         0.0,
@@ -425,9 +425,9 @@
       "label": "Coal rake (wagons)",
       "note": "Open wagons being loaded under the silo, about 60 t each.",
       "position": [
-        -1.06,
-        0.006,
-        -0.4
+        -1060.0,
+        6.0,
+        -400.0
       ],
       "normal": [
         0.9578262852211513,
@@ -443,9 +443,9 @@
       "label": "Heavy-equipment workshop",
       "note": "Bays tall enough to tip a dumper body and lift a shovel motor.",
       "position": [
-        -0.93,
-        0.02,
-        0.15
+        -930.0,
+        20.0,
+        150.0
       ],
       "normal": [
         0.8944271909999159,
@@ -461,9 +461,9 @@
       "label": "Mine office & first aid",
       "note": "Manager's office, control room, first aid -- the muster point.",
       "position": [
-        -0.93,
-        0.012,
-        0.33
+        -930.0,
+        12.0,
+        330.0
       ],
       "normal": [
         0.8944271909999159,
@@ -479,9 +479,9 @@
       "label": "Substation",
       "note": "Feeds the shovels, pumps and plant. Authorised staff only.",
       "position": [
-        -0.93,
-        0.008,
-        -0.11
+        -930.0,
+        8.0,
+        -110.0
       ],
       "normal": [
         0.8944271909999159,
@@ -497,9 +497,9 @@
       "label": "Explosives magazine",
       "note": "Far from everything else, mounded, fenced and guarded at the distances set by the licence.",
       "position": [
-        1.3800000000000001,
-        0.006,
-        0.76
+        1380.0,
+        6.0,
+        760.0
       ],
       "normal": [
         0.0,
@@ -515,9 +515,9 @@
       "label": "Shovel on the west coal face",
       "note": "Loading coal at the floor. Coal loading needs a clean floor and care at the seam floor to keep stone out of the product.",
       "position": [
-        -0.4506453898292459,
-        -0.06980837562883893,
-        0.12025944704645655
+        -450.6453898292459,
+        -69.80837562883893,
+        120.25944704645654
       ],
       "normal": [
         0.0,
@@ -525,9 +525,9 @@
         0.0
       ],
       "pivot": [
-        -0.4478639199926181,
-        -0.0781,
-        0.12000477568105888
+        -447.8639199926181,
+        -78.1,
+        120.00477568105889
       ],
       "parent": null,
       "triangles": 24
@@ -537,9 +537,9 @@
       "label": "Coal dumper (west face)",
       "note": "Loaded at the face, then across the floor and up the haul road to the CHP.",
       "position": [
-        -0.4534267081791036,
-        -0.07144,
-        0.05562391402496597
+        -453.42670817910357,
+        -71.44,
+        55.62391402496597
       ],
       "normal": [
         0.0,
@@ -547,9 +547,9 @@
         0.0
       ],
       "pivot": [
-        -0.45211967200133585,
-        -0.07665000000000001,
-        0.06050183944772577
+        -452.11967200133586,
+        -76.65,
+        60.501839447725764
       ],
       "parent": null,
       "triangles": 84
@@ -559,9 +559,9 @@
       "label": "Shovel on the east coal face",
       "note": "The second coal face, across the spur from the first.",
       "position": [
-        0.453145258099496,
-        -0.06980837562883893,
-        -0.19191240866643336
+        453.145258099496,
+        -69.80837562883893,
+        -191.91240866643335
       ],
       "normal": [
         0.0,
@@ -569,9 +569,9 @@
         0.0
       ],
       "pivot": [
-        0.45057814992379164,
-        -0.0781,
-        -0.19125907737696515
+        450.5781499237916,
+        -78.1,
+        -191.25907737696514
       ],
       "parent": null,
       "triangles": 24
@@ -581,9 +581,9 @@
       "label": "Coal dumper (east face)",
       "note": "Waits to spot beside the shovel on the operator's side.",
       "position": [
-        0.396604291250168,
-        -0.07144,
-        -0.21978432003923687
+        396.604291250168,
+        -71.44,
+        -219.78432003923686
       ],
       "normal": [
         0.0,
@@ -591,9 +591,9 @@
         0.0
       ],
       "pivot": [
-        0.39447006902837745,
-        -0.07665000000000001,
-        -0.22436117436377195
+        394.47006902837745,
+        -76.65,
+        -224.36117436377194
       ],
       "parent": null,
       "triangles": 84
@@ -603,9 +603,9 @@
       "label": "Surface miner on the coal bench",
       "note": "Cutting the coal in thin layers with no blasting, loading straight into trucks.",
       "position": [
-        -0.32012536006566095,
-        -0.0521339112480499,
-        0.2622934550199166
+        -320.1253600656609,
+        -52.1339112480499,
+        262.29345501991656
       ],
       "normal": [
         0.0,
@@ -621,9 +621,9 @@
       "label": "Rope shovel on the first bench",
       "note": "Loading blasted overburden on the 15 m bench; three or four passes fill a truck.",
       "position": [
-        -0.03320528129739871,
-        0.00620209524147861,
-        0.3855745100606305
+        -33.20528129739871,
+        6.2020952414786095,
+        385.5745100606305
       ],
       "normal": [
         0.0,
@@ -631,9 +631,9 @@
         0.0
       ],
       "pivot": [
-        -0.03336652280948249,
-        -0.012,
-        0.3813811008736641
+        -33.36652280948249,
+        -12.0,
+        381.3811008736641
       ],
       "parent": null,
       "triangles": 36
@@ -643,9 +643,9 @@
       "label": "Overburden dumper",
       "note": "Carries the overburden up and out to the dump.",
       "position": [
-        0.03219553500540198,
-        -0.0064399999999999995,
-        0.3673706699191962
+        32.19553500540198,
+        -6.4399999999999995,
+        367.3706699191962
       ],
       "normal": [
         0.0,
@@ -653,9 +653,9 @@
         0.0
       ],
       "pivot": [
-        0.027164751780038666,
-        -0.01165,
-        0.36786309986572047
+        27.164751780038667,
+        -11.65,
+        367.86309986572047
       ],
       "parent": null,
       "triangles": 84
@@ -665,9 +665,9 @@
       "label": "Loaded dumper on the haul road",
       "note": "Climbing at 1 in 16. A loaded 220 t truck manages about 10-12 km/h on this grade.",
       "position": [
-        -0.20089646583739715,
-        -0.043001443117401374,
-        -0.2705394805630104
+        -200.89646583739713,
+        -43.00144311740137,
+        -270.5394805630104
       ],
       "normal": [
         0.0,
@@ -675,9 +675,9 @@
         0.0
       ],
       "pivot": [
-        -0.19582626996585045,
-        -0.04764690623324258,
-        -0.2714333952530275
+        -195.82626996585046,
+        -47.64690623324258,
+        -271.4333952530275
       ],
       "parent": null,
       "triangles": 84
@@ -687,9 +687,9 @@
       "label": "Dumper climbing the dump road",
       "note": "Taking overburden up the spiral to the lift being tipped.",
       "position": [
-        0.9173466394760914,
-        0.03775207853571204,
-        -0.6116985186886776
+        917.3466394760914,
+        37.75207853571204,
+        -611.6985186886776
       ],
       "normal": [
         0.0,
@@ -697,9 +697,9 @@
         0.0
       ],
       "pivot": [
-        0.9129845173581916,
-        0.03310661541987083,
-        -0.6089751299410777
+        912.9845173581916,
+        33.10661541987083,
+        -608.9751299410777
       ],
       "parent": null,
       "triangles": 84
@@ -709,9 +709,9 @@
       "label": "Dozer on the dump top",
       "note": "Grading the final top and spreading topsoil ahead of the planters.",
       "position": [
-        1.1004397024863155,
-        0.06598,
-        -0.18
+        1100.4397024863156,
+        65.97999999999999,
+        -180.0
       ],
       "normal": [
         0.0,
@@ -727,9 +727,9 @@
       "label": "Grader on the surface road",
       "note": "Keeping the road smooth and crowned to shed water.",
       "position": [
-        -0.8599541138850918,
-        0.006180000000000001,
-        -0.00016500000000000003
+        -859.9541138850918,
+        6.38,
+        -0.16500000000000004
       ],
       "normal": [
         0.0,
@@ -739,6 +739,134 @@
       "pivot": null,
       "parent": null,
       "triangles": 112
+    },
+    {
+      "node": "dl_house",
+      "label": "Dragline at the east crest",
+      "note": "Standing on the surface outside the crest, reaching nearly 90 m out over the benches to dig overburden and cast it back towards the dump -- no trucks. It works from the surface so the walls below it are never loaded by its 3000 t weight.",
+      "position": [
+        621.6909414994475,
+        60.84186487241209,
+        -268.947190708964
+      ],
+      "normal": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "pivot": [
+        655.8507322436858,
+        2.2,
+        -278.3921190300732
+      ],
+      "parent": null,
+      "triangles": 24
+    }
+  ],
+  "vr_stations": [
+    {
+      "name": "Pit rim, south",
+      "pos": {
+        "x": 119.44957626261396,
+        "y": 0.0,
+        "z": 445.79188755464855
+      },
+      "look": {
+        "x": 0.0,
+        "y": -80.0,
+        "z": -0.0
+      }
+    },
+    {
+      "name": "Haul road, top",
+      "pos": {
+        "x": 200.12605739998085,
+        "y": -0.0,
+        "z": -429.171715068552
+      },
+      "look": {
+        "x": -84.39079163464348,
+        "y": -17.898805660057697,
+        "z": -339.1194321852333
+      }
+    },
+    {
+      "name": "Haul road, first hairpin",
+      "pos": {
+        "x": -378.47085594559053,
+        "y": -37.018330162591596,
+        "z": -265.0081463257836
+      },
+      "look": {
+        "x": -200.54037129474483,
+        "y": -51.30227380193616,
+        "z": -270.63462332146025
+      }
+    },
+    {
+      "name": "Pit floor, west coal face",
+      "pos": {
+        "x": -402.46540615703185,
+        "y": -80.0,
+        "z": 107.84028056124043
+      },
+      "look": {
+        "x": -447.8639199926181,
+        "y": -80.0,
+        "z": 120.00477568105889
+      }
+    },
+    {
+      "name": "Overburden spur",
+      "pos": {
+        "x": 82.63627071899126,
+        "y": -45.0,
+        "z": 153.8546286650408
+      },
+      "look": {
+        "x": 0.0,
+        "y": -80.0,
+        "z": -0.0
+      }
+    },
+    {
+      "name": "Dragline",
+      "pos": {
+        "x": 720.2860719853566,
+        "y": 0.0,
+        "z": -345.74329802432237
+      },
+      "look": {
+        "x": 655.8507322436858,
+        "y": 0.0,
+        "z": -278.3921190300732
+      }
+    },
+    {
+      "name": "Dump top",
+      "pos": {
+        "x": 1000.0,
+        "y": 60.0,
+        "z": -210.0
+      },
+      "look": {
+        "x": 0.0,
+        "y": -80.0,
+        "z": -0.0
+      }
+    },
+    {
+      "name": "CHP and rail siding",
+      "pos": {
+        "x": -860,
+        "y": 0.0,
+        "z": -320
+      },
+      "look": {
+        "x": -1000,
+        "y": 0.0,
+        "z": -480
+      }
     }
   ],
   "thumbnail": "models/mine-layout.png"

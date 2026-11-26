@@ -66,6 +66,15 @@ def copy_notes(project: Path) -> int:
         io.open(out / src.name, "w", encoding="utf-8", newline="\n").write(
             json.dumps(slim, indent=1, ensure_ascii=False) + "\n")
         print(f"  notes  {src.stem:24s} {len(parts):3d} parts")
+        # A site model -- one walked at true size -- carries the places the
+        # VR player can jump to. MachineLibrary reads them at runtime.
+        if record.get("vr_stations"):
+            st = project / "Assets" / "Resources" / "Stations"
+            st.mkdir(parents=True, exist_ok=True)
+            io.open(st / src.name, "w", encoding="utf-8", newline="\n").write(
+                json.dumps({"stations": record["vr_stations"]}, indent=1,
+                           ensure_ascii=False) + "\n")
+            print(f"  sites  {src.stem:24s} {len(record['vr_stations']):3d} stations")
         total += len(parts)
     return total
 

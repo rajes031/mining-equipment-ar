@@ -289,7 +289,8 @@ def plan_image():
 
 def draw_symbol(d, X, Y, kind, f):
     colours = {"S": (232, 96, 40), "D": (240, 196, 30), "SM": (232, 150, 40),
-               "Dr": (60, 120, 200), "Dz": (240, 196, 30), "P": (40, 110, 190)}
+               "Dr": (60, 120, 200), "Dz": (240, 196, 30), "P": (40, 110, 190),
+               "DL": (200, 70, 30)}
     c = colours[kind]
     d.ellipse([X - 9, Y - 9, X + 9, Y + 9], fill=c, outline=(20, 20, 20), width=2)
     d.text((X, Y), kind, font=f, fill=(15, 15, 15), anchor="mm")
@@ -381,6 +382,7 @@ def main():
                           (14, 184, "D"), (205, 137, "SM"), (250, 23, "Dr"),
                           (262, 23, "Dr")):
         draw_symbol(d, *P(*pit_point(math.radians(th), ins)), kind, f10)
+    draw_symbol(d, *P(*pit_point(math.radians(8.0), -45.0)), "DL", f10)
     draw_symbol(d, *P(*HAUL[60]), "D", f10)
     draw_symbol(d, *P(*DUMP_ROAD[60]), "D", f10)
     draw_symbol(d, *P(DUMP_C[0] + 20, DUMP_C[1] + 20), "Dz", f10)
@@ -550,7 +552,8 @@ def main():
     key(line((30, 100, 50), 3, True), "Fault (assumed)")
     for kind, text in (("S", "Shovel at the face"), ("D", "Dumper"),
                        ("SM", "Surface miner on coal"), ("Dr", "Drill on bench"),
-                       ("Dz", "Dozer on dump"), ("P", "Dewatering pump")):
+                       ("Dz", "Dozer on dump"), ("DL", "Dragline at the crest"),
+                       ("P", "Dewatering pump")):
         key(sym(kind), text)
 
     OUT.parent.mkdir(parents=True, exist_ok=True)

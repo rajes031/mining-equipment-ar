@@ -1,5 +1,5 @@
 """
-make_mine_layout.py -- a generic opencast coal mine, as a 1:1000 model.
+make_mine_layout.py -- a generic opencast coal mine, at true size (1:1).
 
 Built from the same height field as the agreed 2D draft (draft_layout.py,
 docs/mine-layout-draft.png), so the model and the contour plan match:
@@ -17,7 +17,8 @@ docs/mine-layout-draft.png), so the model and the contour plan match:
 
 Typical values, not any real mine. Plan coordinates in draft_layout are x
 east, y north; here the model's z runs south (z = -y), y is up, and the whole
-thing is built in metres and shrunk to 1:1000 -- about 2.6 m x 1.75 m.
+thing is built and kept in metres -- 2.6 km x 1.75 km -- for walking round in
+VR at true size. The VR app offers a 1:1000 table-top view as well.
 
 Run:  python make_mine_layout.py
 """
@@ -32,6 +33,7 @@ import numpy as np
 
 import draft_layout as D
 import make_dozer
+import make_dragline
 import make_dumper
 import make_grader
 import make_rope_shovel
@@ -43,7 +45,7 @@ from machkit import bar, standard_materials, write_record
 HERE = Path(__file__).resolve().parent
 WEB = HERE.parent / "web"
 
-SCALE = 1.0 / 1000.0
+SCALE = 1.0                     # true size: metres in, metres out
 CELL = 8.0
 X0, X1 = D.XMIN, D.XMAX
 Z0, Z1 = -D.YMAX, -D.YMIN
@@ -174,6 +176,43 @@ def pit_pt(deg, inset):
 SUMP_W = D.to_world(D.SUMPS[0][0], D.SUMPS[0][1], D.PIT_C, D.PIT_ROT)
 SUMP_E = D.to_world(D.SUMPS[1][0], D.SUMPS[1][1], D.PIT_C, D.PIT_ROT)
 
+
+def _outward(deg):
+    a, c = D.pit_point(math.radians(deg), 0.0), D.pit_point(math.radians(deg), 100.0)
+    n = math.hypot(a[0] - c[0], a[1] - c[1])
+    return ((a[0] - c[0]) / n, (a[1] - c[1]) / n)
+
+
+# dragline on the surface just outside the east crest, facing into the pit
+_o = _outward(8)
+DRAGLINE_AT = pit_pt(8, -45)
+DRAGLINE_FACING = (-_o[0], -_o[1])
+
+# VR stations: where the player is put, and what they look at (plan points)
+_PIT_MID = D.to_world(0, 0, D.PIT_C, D.PIT_ROT)
+STATIONS = [
+    ("Pit rim, south", pit_pt(-90, -70), _PIT_MID),
+    ("Haul road, top", D.HAUL[0], D.HAUL[20]),
+    ("Haul road, first hairpin", D.HAUL[40], D.HAUL[60]),
+    ("Pit floor, west coal face", pit_pt(180, 225), pit_pt(180, 178)),
+    ("Overburden spur", D.to_world(D.SPUR["u"], -170, D.PIT_C, D.PIT_ROT), _PIT_MID),
+    ("Dragline", (DRAGLINE_AT[0] + _o[0] * 70, DRAGLINE_AT[1] + _o[1] * 70 + 40),
+     DRAGLINE_AT),
+    ("Dump top", (D.DUMP_C[0] - 60, D.DUMP_C[1] - 120), _PIT_MID),
+    ("CHP and rail siding", (-860, 320), (-1000, 480)),
+]
+
+
+def vr_stations():
+    out = []
+    for name, p, look in STATIONS:
+        y = max(ground(*p), D.FLOOR)
+        out.append({"name": name,
+                    "pos": {"x": p[0], "y": y, "z": -p[1]},
+                    "look": {"x": look[0], "y": max(ground(*look), D.FLOOR),
+                             "z": -look[1]}})
+    return out
+
 TERRAIN = {
     "original_ground": ("ground", "Original ground (RL 300)",
         "The undisturbed surface. Topsoil is stripped ahead of mining and "
@@ -265,7 +304,7 @@ def build() -> Builder:
               "the pit or soften the walls. A statutory requirement before "
               "the monsoon."),
         hotspot=M(pit_pt(-60, -30), 1.0), hotspot_normal=(0, 1, 0))
-    ribbon(drain, [pit_pt(t, -30) for t in np.arange(0, 361, 4)], 4.0, 0.25)
+    ribbon(drain, [pit_pt(t, -30) for t in np.arange(0, 361, 4)], 4.0, 0.5)
 
     pipe = b.part(
         "pump_pipeline", "pipe", label="Sump pumps & pipeline",
@@ -327,7 +366,7 @@ def build() -> Builder:
                    [ex, (ex[0] + 260, ex[1] + 120), (620, 560),
                     (dst[0] - 40, dst[1] + 30), dst],
                    [(-860, 560), (-860, -500), (-900, -620)]):
-        ribbon(roads, route_, 24.0, 0.3)
+        ribbon(roads, route_, 24.0, 0.6)
 
     # -- surface plant -------------------------------------------------------
     chp = b.part(
@@ -424,7 +463,10 @@ def build() -> Builder:
     fleet["dz_engine_hood"] = place(make_dozer.build(), "dz_",
                                     (D.DUMP_C[0] + 40, D.DUMP_C[1] - 150),
                                     D.DUMP_TOP, (1, 0))
-    fleet["gr_cab"] = place(make_grader.build(), "gr_", (-860, 0), 0.4, (0, 1))
+    fleet["gr_cab"] = place(make_grader.build(), "gr_", (-860, 0), 0.6, (0, 1))
+    # dragline at the east crest, boom out over the benches
+    fleet["dl_house"] = place(make_dragline.build(), "dl_", DRAGLINE_AT, 0.0,
+                              DRAGLINE_FACING)
 
     roles = {
         "s1_superstructure": ("Shovel on the west coal face",
@@ -453,6 +495,11 @@ def build() -> Builder:
         "dz_engine_hood": ("Dozer on the dump top",
             "Grading the final top and spreading topsoil ahead of the "
             "planters."),
+        "dl_house": ("Dragline at the east crest",
+            "Standing on the surface outside the crest, reaching nearly "
+            "90 m out over the benches to dig overburden and cast it back "
+            "towards the dump -- no trucks. It works from the surface so "
+            "the walls below it are never loaded by its 3000 t weight."),
         "gr_cab": ("Grader on the surface road",
             "Keeping the road smooth and crowned to shed water."),
     }
@@ -465,7 +512,7 @@ def build() -> Builder:
         pp._hotspot = ((lo[0] + hi[0]) / 2, hi[1] + 2.0, (lo[2] + hi[2]) / 2)
         pp.hotspot_normal = (0, 1, 0)
 
-    # -- shrink to 1:1000 ------------------------------------------------------
+    # -- scale (1:1 -- kept as a step so a table-top build stays one line) ------------------------------------------------------
     s = np.diag([SCALE, SCALE, SCALE, 1.0])
     for pp in b._parts:
         n = np.asarray(pp.hotspot_normal, dtype=float)
@@ -483,7 +530,7 @@ def build() -> Builder:
 SPECS = {
     "id": "mine-layout",
     "name": "Opencast coal mine layout",
-    "subtitle": "Generic opencast coal mine, 80 m deep -- 1:1000 scale model",
+    "subtitle": "Generic opencast coal mine, 80 m deep -- true size (1:1) for VR",
     "category": "Mine layout",
     "summary": (
         "A whole opencast coal mine as a table-top model: an oval pit 80 m "
@@ -495,7 +542,7 @@ SPECS = {
         "any real mine. The matching contour plan is in "
         "docs/mine-layout-draft.png."),
     "specs": [
-        ["Model scale", "1:1000 -- 1 cm on the model is 10 m in the mine"],
+        ["Model scale", "1:1 true size; the VR app has a 1:1000 table-top view"],
         ["Area shown", "approx. 2.6 km x 1.75 km"],
         ["Pit at crest", "approx. 1.3 km x 0.8 km"],
         ["Pit depth", "80 m (RL 300 to RL 220)"],
@@ -522,11 +569,10 @@ SPECS = {
         "licence distances.",
     ],
     "ar_tips": [
-        "Place it on an open floor: at 1:1000 it is about 2.6 m by 1.75 m. "
-        "Look down from the rim to see the 80 m of benches, then follow "
-        "the haul road from the floor up the north wall.",
-        "The machines are small at this scale -- kneel at the pit edge, "
-        "then open each machine's own page to see it full size.",
+        "This model is the real size of the mine -- 2.6 km by 1.75 km. In "
+        "the VR app, walk it, or press Y to jump between stations: pit "
+        "rim, haul road, coal face, dragline, dump top and CHP.",
+        "Press A in VR for the 1:1000 table-top view of the whole site.",
     ],
 }
 
@@ -536,6 +582,7 @@ def main():
     record = write_record(b, SPECS, WEB, "mine-layout")
     keep = set(b.labelled)
     record["parts"] = [p for p in record["parts"] if p["node"] in keep]
+    record["vr_stations"] = vr_stations()
     (WEB / "data" / "mine-layout.json").write_text(
         json.dumps(record, indent=2, ensure_ascii=False), encoding="utf-8")
     return record

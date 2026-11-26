@@ -245,9 +245,10 @@ VIEWS = {
         "-rear": dict(azimuth=35.0, elevation=22.0),
     },
     "mine-layout": {
-        "": dict(azimuth=150.0, elevation=35.0),
-        "-front": dict(azimuth=210.0, elevation=30.0),
-        "-rear": dict(azimuth=20.0, elevation=40.0),
+        # true size, 2.6 km across: a 2 m reference grid would be 2600 lines
+        "": dict(azimuth=150.0, elevation=35.0, grid=False),
+        "-front": dict(azimuth=210.0, elevation=30.0, grid=False),
+        "-rear": dict(azimuth=20.0, elevation=40.0, grid=False),
     },
     "rope-shovel": {
         "": dict(azimuth=140.0, elevation=16.0),
