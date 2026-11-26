@@ -39,6 +39,7 @@ import make_grader
 import make_rope_shovel
 import make_shovel
 import make_surface_miner
+import mine_services
 from glbgen import Builder, compose, rotate, translate
 from machkit import bar, standard_materials, write_record
 
@@ -198,6 +199,10 @@ STATIONS = [
     ("Overburden spur", D.to_world(D.SPUR["u"], -170, D.PIT_C, D.PIT_ROT), _PIT_MID),
     ("Dragline", (DRAGLINE_AT[0] + _o[0] * 70, DRAGLINE_AT[1] + _o[1] * 70 + 40),
      DRAGLINE_AT),
+    ("Pump station, west sump",
+     D.pit_point(math.radians(158), 205), D.pit_point(math.radians(152), 190)),
+    ("Booster pump and pipeline",
+     D.pit_point(math.radians(143), 66), D.pit_point(math.radians(149), 66)),
     ("Dump top", (D.DUMP_C[0] - 60, D.DUMP_C[1] - 120), _PIT_MID),
     ("CHP and rail siding", (-860, 320), (-1000, 480)),
 ]
@@ -306,32 +311,8 @@ def build() -> Builder:
         hotspot=M(pit_pt(-60, -30), 1.0), hotspot_normal=(0, 1, 0))
     ribbon(drain, [pit_pt(t, -30) for t in np.arange(0, 361, 4)], 4.0, 0.5)
 
-    pipe = b.part(
-        "pump_pipeline", "pipe", label="Sump pumps & pipeline",
-        note=("Pumps in the west sump lift the water up the wall in a "
-              "pipeline laid beside the benches to the settling pond on the "
-              "surface, where the silt drops out before the water is "
-              "discharged or reused for dust suppression."),
-        hotspot=M(SUMP_W, D.FLOOR + 6), hotspot_normal=(0, 1, 0))
-    route = [SUMP_W] + [pit_pt(152, d) for d in (175, 140, 100, 60, 20)] + \
-        [pit_pt(150, -60), (-800, 660)]
-    fine = []
-    for p, q in zip(route, route[1:]):
-        for t in np.linspace(0, 1, 12, endpoint=False):
-            fine.append((p[0] + (q[0] - p[0]) * t, p[1] + (q[1] - p[1]) * t))
-    fine.append(route[-1])
-    for p, q in zip(fine, fine[1:]):
-        bar(pipe, M(p, max(ground(*p), D.FLOOR) + 1.5),
-            M(q, max(ground(*q), D.FLOOR) + 1.5), 1.6, 1.6)
-    for p in (SUMP_W, pit_pt(152, 60)):
-        pipe.box(center=M(p, max(ground(*p), D.FLOOR) + 2.5), size=(8, 5, 6))
-
-    pond = b.part(
-        "settling_pond", "water", label="Settling pond",
-        note=("Pit water is held here long enough for the suspended coal "
-              "and clay to settle, so only clear water leaves the lease."),
-        hotspot=M((-800, 710), 2.0), hotspot_normal=(0, 1, 0))
-    pond.box(center=M((-800, 710), 0.3), size=(160, 0.6, 100))
+    # pumps, pipelines, ponds, drivable road surfaces and bunds
+    service_labels = mine_services.build(b)
 
     # -- trees on the reclaimed dump top --------------------------------------
     trees = b.part(
@@ -361,11 +342,7 @@ def build() -> Builder:
               "dump. Light vehicles are kept on separate routes wherever "
               "possible -- a 220 t truck driver cannot see a jeep."),
         hotspot=M((-860, 100), 1.0), hotspot_normal=(0, 1, 0))
-    ex, dst = D.HAUL[0], D.DUMP_ROAD[0]
-    for route_ in ([ex, (ex[0] - 200, ex[1] + 160), (-860, 560), (-960, 430)],
-                   [ex, (ex[0] + 260, ex[1] + 120), (620, 560),
-                    (dst[0] - 40, dst[1] + 30), dst],
-                   [(-860, 560), (-860, -500), (-900, -620)]):
+    for route_ in mine_services.SURFACE_ROADS:
         ribbon(roads, route_, 24.0, 0.6)
 
     # -- surface plant -------------------------------------------------------
@@ -450,10 +427,15 @@ def build() -> Builder:
                                   D.FLOOR, outward(-80))
     fleet["sm_chassis"] = place(make_surface_miner.build(), "sm_",
                                 pit_pt(205, 137), D.COAL_TOP, outward(115))
+    # rope shovel on the floor, digging out the overburden spur from its toe
+    S = mine_services
+    o = D.to_world(0, 0, D.PIT_C, D.PIT_ROT)
+    s_ = D.to_world(0, -1, D.PIT_C, D.PIT_ROT)
+    to_spur = (s_[0] - o[0], s_[1] - o[1])                 # local -v, south
     fleet["rs_machinery_house"] = place(make_rope_shovel.build(), "rs_",
-                                        pit_pt(-110, 26), -15.0, outward(-110))
-    fleet["t3_dump_body"] = place(make_dumper.build(), "t3_", pit_pt(-100, 28),
-                                  -15.0, outward(-10))
+                                        S.SPUR_TOE, D.FLOOR, to_spur)
+    fleet["t3_dump_body"] = place(make_dumper.build(), "t3_", S.OB_LOAD,
+                                  D.FLOOR, to_spur)
     a, p, c = D.HAUL[59], D.HAUL[60], D.HAUL[61]           # loaded, climbing
     fleet["t4_dump_body"] = place(make_dumper.build(), "t4_", p, ground(*p),
                                   (a[0] - c[0], a[1] - c[1]), climb)
@@ -482,11 +464,12 @@ def build() -> Builder:
         "sm_chassis": ("Surface miner on the coal bench",
             "Cutting the coal in thin layers with no blasting, loading "
             "straight into trucks."),
-        "rs_machinery_house": ("Rope shovel on the first bench",
-            "Loading blasted overburden on the 15 m bench; three or four "
-            "passes fill a truck."),
-        "t3_dump_body": ("Overburden dumper",
-            "Carries the overburden up and out to the dump."),
+        "rs_machinery_house": ("Rope shovel digging the overburden spur",
+            "Working from the floor at the toe of the spur, loading blasted "
+            "overburden; three or four passes fill a truck."),
+        "t3_dump_body": ("Overburden dumper under the shovel",
+            "Loaded at the spur, then across the floor, up the haul road and "
+            "out along the surface road to the dump."),
         "t4_dump_body": ("Loaded dumper on the haul road",
             "Climbing at 1 in 16. A loaded 220 t truck manages about "
             "10-12 km/h on this grade."),
@@ -520,10 +503,11 @@ def build() -> Builder:
         pp.hotspot_normal = tuple(n / (np.linalg.norm(n) or 1.0))
 
     b.labelled = list(TERRAIN) + [
-        "garland_drain", "pump_pipeline", "settling_pond", "plantation",
+        "garland_drain", "plantation",
         "surface_roads", "coal_handling_plant", "conveyor_to_silo",
         "loading_silo", "railway_siding", "coal_rake", "workshop",
-        "mine_office", "substation", "explosives_magazine"] + list(roles)
+        "mine_office", "substation", "explosives_magazine"] + list(roles) \
+        + service_labels
     return b
 
 
@@ -583,6 +567,7 @@ def main():
     keep = set(b.labelled)
     record["parts"] = [p for p in record["parts"] if p["node"] in keep]
     record["vr_stations"] = vr_stations()
+    record["vr_drive"] = mine_services.drive_data()
     (WEB / "data" / "mine-layout.json").write_text(
         json.dumps(record, indent=2, ensure_ascii=False), encoding="utf-8")
     return record

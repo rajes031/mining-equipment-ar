@@ -75,6 +75,14 @@ def copy_notes(project: Path) -> int:
                 json.dumps({"stations": record["vr_stations"]}, indent=1,
                            ensure_ascii=False) + "\n")
             print(f"  sites  {src.stem:24s} {len(record['vr_stations']):3d} stations")
+        # Truck routes, loading and tipping points for driving a dumper
+        # through the site (mine_services.drive_data).
+        if record.get("vr_drive"):
+            dr = project / "Assets" / "Resources" / "Drive"
+            dr.mkdir(parents=True, exist_ok=True)
+            io.open(dr / src.name, "w", encoding="utf-8", newline="\n").write(
+                json.dumps(record["vr_drive"], indent=1, ensure_ascii=False) + "\n")
+            print(f"  drive  {src.stem:24s} {len(record['vr_drive']['routes']):3d} routes")
         total += len(parts)
     return total
 

@@ -158,6 +158,23 @@ def polyline_field(path, x, y):
 
 HAUL = haul_road_path()
 DUMP_ROAD = dump_road_path()
+SHOULDER = 8.0
+
+
+def haul_level(s):
+    """Haul road level (m) at distance s along it from the surface end."""
+    return np.maximum(FLOOR, -np.maximum(np.asarray(s, float) - 40.0, 0) * GRADE)
+
+
+def dump_road_level(s):
+    return np.minimum(np.maximum(np.asarray(s, float) - 20, 0) * GRADE, DUMP_TOP)
+
+
+def path_lengths(path):
+    out = [0.0]
+    for (ax, ay), (bx, by) in zip(path, path[1:]):
+        out.append(out[-1] + math.hypot(bx - ax, by - ay))
+    return np.array(out)
 
 
 def fields(x, y):
@@ -178,12 +195,14 @@ def fields(x, y):
     dh = np.interp(dump_inset(x, y), DUMP_X, DUMP_Y, left=0.0)
     dump_on = dh > 0
     h = np.where(dump_on, dh, h)
+    # Roads are levelled a shoulder wider than the running surface, so a
+    # truck's wheels never meet the slope of the bench beside the road.
     d, s = polyline_field(HAUL, x, y)
     road = d <= ROAD_HW
-    h = np.where(road, np.maximum(FLOOR, -np.maximum(s - 40.0, 0) * GRADE), h)
+    h = np.where(d <= ROAD_HW + SHOULDER, haul_level(s), h)
     d2, s2 = polyline_field(DUMP_ROAD, x, y)
     droad = (d2 <= DUMP_ROAD_HW) & (dh > 0)
-    h = np.where(droad, np.minimum(np.maximum(s2 - 20, 0) * GRADE, DUMP_TOP), h)
+    h = np.where((d2 <= DUMP_ROAD_HW + SHOULDER) & (dh > 0), dump_road_level(s2), h)
     return dict(h=h, inset=ins, water=water, spur=spur_on & ~road,
                 dump=dump_on, road=road, droad=droad,
                 top=dump_on & (dh >= DUMP_TOP - 0.01) & ~droad)
