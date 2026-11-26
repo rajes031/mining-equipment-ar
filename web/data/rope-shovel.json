@@ -1,0 +1,472 @@
+{
+  "id": "rope-shovel",
+  "name": "Electric rope shovel",
+  "subtitle": "approx. 40 m3 dipper, approx. 1000 t -- P&H 2800 / Cat 7395 class",
+  "category": "Loading",
+  "summary": "The big loading machine of large opencast mines. Electric, rope-operated and very long-lived -- 25 years or more -- it fills a 220-240 t dumper in three or four passes. Compare it with the hydraulic shovel: here the boom is fixed and the dipper is hoisted by ropes and pushed by a crowd, not driven by cylinders.",
+  "specs": [
+    [
+      "Dipper capacity",
+      "approx. 35-45 m3 (approx. 65-70 t a pass)"
+    ],
+    [
+      "Passes per 220-240 t truck",
+      "3 to 4"
+    ],
+    [
+      "Operating weight",
+      "approx. 1000 t"
+    ],
+    [
+      "Power",
+      "electric, 6.6 or 11 kV trailing cable"
+    ],
+    [
+      "Boom length",
+      "approx. 18 m at 45 degrees"
+    ],
+    [
+      "Cutting height",
+      "approx. 15-16 m"
+    ],
+    [
+      "Dumping height",
+      "approx. 9-10 m"
+    ],
+    [
+      "Swing radius, rear",
+      "approx. 9-10 m -- tail-swing zone"
+    ],
+    [
+      "Crawler width",
+      "approx. 10.3 m over shoes"
+    ],
+    [
+      "Cycle time",
+      "approx. 30-35 s"
+    ],
+    [
+      "Productivity",
+      "approx. 3000-4000 t/h in good digging"
+    ]
+  ],
+  "safety": [
+    "Approach only after the operator has seen you, grounded the dipper and signalled you in.",
+    "The rear of the house swings out about 9 m: keep vehicles and people out of the tail-swing zone.",
+    "The trailing cable is high-voltage. Never drive over it except on a bridge; only authorised electrical staff move it.",
+    "Face height must stay within the cutting height -- overhangs above the dipper are a fatal hazard."
+  ],
+  "ar_tips": [
+    "Place it next to the hydraulic shovel and the 220 t dumper to compare the two loaders, and to see the dipper over the truck.",
+    "Walk round to the back: the counterweight box sweeps a circle you would be standing in."
+  ],
+  "model": "models/rope-shovel.glb",
+  "extents_m": {
+    "width_x": 10.5,
+    "height_y": 19.18,
+    "length_z": 38.74
+  },
+  "triangles": 2096,
+  "bytes": 191824,
+  "parts": [
+    {
+      "node": "crawlers",
+      "label": "Crawlers",
+      "note": "Cast-steel shoes about 1.9 m wide. The shovel moves only a few metres at a time as the face advances, at under 2 km/h. Moving it far means unplugging and re-routing the trailing cable.",
+      "position": [
+        -5.300000000000001,
+        1.6,
+        1.0
+      ],
+      "normal": [
+        -1,
+        0.2,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 56
+    },
+    {
+      "node": "tumblers_rollers",
+      "label": "Drive tumblers & rollers",
+      "note": "Electric propel motors drive the rear tumblers through gearcases. Lower rollers carry the machine's 1000 t onto the shoes.",
+      "position": [
+        5.300000000000001,
+        1.3,
+        4.25
+      ],
+      "normal": [
+        1,
+        0,
+        0.3
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 736
+    },
+    {
+      "node": "car_body",
+      "label": "Car body & swing rack",
+      "note": "Joins the crawlers and carries the roller circle and swing rack the whole upper works turns on.",
+      "position": [
+        0.0,
+        3.0,
+        4.2
+      ],
+      "normal": [
+        0,
+        0.4,
+        1
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 124
+    },
+    {
+      "node": "trailing_cable",
+      "label": "Trailing cable",
+      "note": "Brings 6.6 kV (or 11 kV) from a substation to the shovel's collector rings. The machine stops if it is run over, and anyone handling it without authorisation can be killed. Vehicles cross it only on cable bridges.",
+      "position": [
+        3.4,
+        0.4,
+        9.0
+      ],
+      "normal": [
+        1,
+        1,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 64
+    },
+    {
+      "node": "machinery_house",
+      "label": "Machinery house",
+      "note": "Holds the hoist, crowd and swing motors and gearing and the AC drive cabinets -- several thousand kW in all. Some of the energy of lowering and swing-braking is regenerated back to the grid.",
+      "position": [
+        5.4,
+        7.5,
+        3.0
+      ],
+      "normal": [
+        1,
+        0.2,
+        0
+      ],
+      "pivot": [
+        0.0,
+        3.0,
+        0.0
+      ],
+      "parent": null,
+      "triangles": 36
+    },
+    {
+      "node": "counterweight",
+      "label": "Counterweight box",
+      "note": "Filled with several hundred tonnes of ballast to balance the loaded dipper. The rear of the house sweeps round during swing -- the tail-swing zone behind the shovel is no-go.",
+      "position": [
+        0.0,
+        5.0,
+        10.6
+      ],
+      "normal": [
+        0,
+        0.2,
+        1
+      ],
+      "pivot": [
+        0.0,
+        3.0,
+        0.0
+      ],
+      "parent": "machinery_house",
+      "triangles": 12
+    },
+    {
+      "node": "gantry",
+      "label": "Gantry (A-frame)",
+      "note": "Holds the boom suspension ropes. With the boom foot pinned low on the house, this triangle is the shovel's backbone.",
+      "position": [
+        1.5,
+        16.0,
+        2.0
+      ],
+      "normal": [
+        1,
+        0.4,
+        0
+      ],
+      "pivot": [
+        0.0,
+        3.0,
+        0.0
+      ],
+      "parent": "machinery_house",
+      "triangles": 208
+    },
+    {
+      "node": "operator_cab",
+      "label": "Operator's cab",
+      "note": "On the front left deck, about 10 m up, looking straight into the dipper. Trucks spot on the operator's side so the dipper never swings over a truck cab.",
+      "position": [
+        -5.2,
+        11.4,
+        -2.0
+      ],
+      "normal": [
+        -1,
+        0.2,
+        -0.3
+      ],
+      "pivot": [
+        0.0,
+        3.0,
+        0.0
+      ],
+      "parent": "machinery_house",
+      "triangles": 12
+    },
+    {
+      "node": "cab_glass",
+      "label": "Cab glazing",
+      "note": "Floor-to-roof front glass angled down at the dipper.",
+      "position": [
+        -3.8,
+        11.3,
+        -3.3
+      ],
+      "normal": [
+        0,
+        0.2,
+        -1
+      ],
+      "pivot": [
+        0.0,
+        3.0,
+        0.0
+      ],
+      "parent": "machinery_house",
+      "triangles": 24
+    },
+    {
+      "node": "boom",
+      "label": "Boom",
+      "note": "Fixed at about 45 degrees and held by ropes from the gantry. Unlike a hydraulic shovel, the boom does not move while digging: the dipper is driven by the hoist ropes and the crowd.",
+      "position": [
+        1.0,
+        14.592388155425118,
+        -14.19238815542512
+      ],
+      "normal": [
+        1,
+        0.4,
+        0
+      ],
+      "pivot": [
+        0.0,
+        4.8,
+        -5.0
+      ],
+      "parent": "machinery_house",
+      "triangles": 60
+    },
+    {
+      "node": "boom_point_sheaves",
+      "label": "Boom point sheaves",
+      "note": "The hoist ropes run over these, about 18 m up, and down to the dipper bail.",
+      "position": [
+        0.9,
+        18.527922061357856,
+        -18.52792206135786
+      ],
+      "normal": [
+        1,
+        0.3,
+        -0.3
+      ],
+      "pivot": [
+        0.0,
+        4.8,
+        -5.0
+      ],
+      "parent": "boom",
+      "triangles": 72
+    },
+    {
+      "node": "shipper_shaft_crowd",
+      "label": "Shipper shaft & crowd",
+      "note": "The crowd motor turns the shipper shaft through the boom. Pinions on it drive racks on the handle, pushing the dipper into the bank while the hoist pulls it up -- two forces together make the dig.",
+      "position": [
+        2.0,
+        11.563961030678929,
+        -11.36396103067893
+      ],
+      "normal": [
+        1,
+        0.2,
+        0
+      ],
+      "pivot": [
+        0.0,
+        4.8,
+        -5.0
+      ],
+      "parent": "boom",
+      "triangles": 72
+    },
+    {
+      "node": "dipper_handle",
+      "label": "Dipper handle",
+      "note": "Twin-leg handle straddling the boom, sliding in the saddle blocks as the crowd extends and retracts it.",
+      "position": [
+        1.8,
+        8.628251460234733,
+        -16.801807752898828
+      ],
+      "normal": [
+        1,
+        0.3,
+        0
+      ],
+      "pivot": [
+        0.0,
+        4.8,
+        -5.0
+      ],
+      "parent": "boom",
+      "triangles": 24
+    },
+    {
+      "node": "dipper",
+      "label": "Dipper (approx. 40 m3)",
+      "note": "About 65-70 t of blasted rock a pass: three to four passes fill a 220-240 t dumper. Matching dipper size to truck size is the basic decision of a shovel-dumper system.",
+      "position": [
+        2.4,
+        6.049087544142284,
+        -21.1738850075271
+      ],
+      "normal": [
+        1,
+        0.2,
+        0
+      ],
+      "pivot": [
+        0.0,
+        4.8,
+        -5.0
+      ],
+      "parent": "boom",
+      "triangles": 48
+    },
+    {
+      "node": "dipper_door",
+      "label": "Dipper door & trip",
+      "note": "The bottom of the dipper is a hinged door held by a latch. Over the truck the operator trips the latch and the load falls out; the door slams shut as the dipper swings back.",
+      "position": [
+        0.0,
+        3.4490875441422837,
+        -20.773885007527102
+      ],
+      "normal": [
+        0,
+        -0.6,
+        0.6
+      ],
+      "pivot": [
+        0.0,
+        4.8,
+        -5.0
+      ],
+      "parent": "boom",
+      "triangles": 12
+    },
+    {
+      "node": "dipper_teeth",
+      "label": "Lip & teeth",
+      "note": "Teeth on the front lip break into the bank as the crowd pushes. Tooth changes are done with the dipper grounded and the machine locked out.",
+      "position": [
+        0.0,
+        4.149087544142284,
+        -23.8738850075271
+      ],
+      "normal": [
+        0,
+        0.2,
+        -1
+      ],
+      "pivot": [
+        0.0,
+        4.8,
+        -5.0
+      ],
+      "parent": "boom",
+      "triangles": 72
+    },
+    {
+      "node": "bail",
+      "label": "Bail & equaliser",
+      "note": "Links the two hoist ropes to the dipper and keeps their tension equal.",
+      "position": [
+        0.8,
+        9.849087544142282,
+        -23.3738850075271
+      ],
+      "normal": [
+        1,
+        0.3,
+        0
+      ],
+      "pivot": [
+        0.0,
+        4.8,
+        -5.0
+      ],
+      "parent": "boom",
+      "triangles": 104
+    },
+    {
+      "node": "wire_ropes",
+      "label": "Hoist & suspension ropes",
+      "note": "Hoist ropes wind on a drum in the house, run up over the gantry and boom point and down to the bail. Suspension ropes hold the boom. Ropes are inspected every shift and replaced on hours.",
+      "position": [
+        0.8,
+        12.527922061357856,
+        -18.72792206135786
+      ],
+      "normal": [
+        1,
+        0,
+        0
+      ],
+      "pivot": [
+        0.0,
+        3.0,
+        0.0
+      ],
+      "parent": "machinery_house",
+      "triangles": 144
+    },
+    {
+      "node": "scale_figure",
+      "label": "1.8 m person (for scale)",
+      "note": "A person in PPE, 1.8 m tall, standing clear of the machine. Use the scale toggle to hide them. In real AR at 1:1 you can simply walk up to the machine yourself.",
+      "position": [
+        -7.5,
+        2.05,
+        -8.0
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 216
+    }
+  ],
+  "thumbnail": "models/rope-shovel.png"
+}

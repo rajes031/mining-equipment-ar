@@ -1,0 +1,443 @@
+{
+  "id": "dragline",
+  "name": "Walking dragline",
+  "subtitle": "24 m3 bucket on a 96 m boom -- the 24/96 class, approx. 2000+ t",
+  "category": "Overburden removal",
+  "summary": "The cheapest way to move overburden that exists, when the geology suits it. The dragline sits on the bench above the coal, digs the overburden below it and casts it directly into the mined-out void, with no trucks at all. In AR at full size it needs a playing field: this is a machine you stand under, not beside.",
+  "specs": [
+    [
+      "Bucket capacity",
+      "24 m3 (approx. 40-45 t of rock per pass)"
+    ],
+    [
+      "Boom length",
+      "96 m at about 32 degrees"
+    ],
+    [
+      "Dump radius",
+      "approx. 85-88 m"
+    ],
+    [
+      "Boom point height",
+      "approx. 57 m"
+    ],
+    [
+      "Operating weight",
+      "approx. 2000-2500 t"
+    ],
+    [
+      "Power",
+      "electric, several MW, 6.6-11 kV trailing cable"
+    ],
+    [
+      "Tub diameter",
+      "approx. 19 m"
+    ],
+    [
+      "Ground pressure (on tub)",
+      "approx. 2 kg/cm2"
+    ],
+    [
+      "Cycle time",
+      "approx. 55-65 s (drag, hoist, swing, dump, return)"
+    ],
+    [
+      "Walking",
+      "approx. 2 m per step, a few hundred m/h"
+    ],
+    [
+      "Output",
+      "roughly 10-15 Mm3 of overburden a year"
+    ]
+  ],
+  "safety": [
+    "Keep out of the swing radius of the house AND the radius of the bucket -- nearly 90 m from the machine.",
+    "Never stand in line with a drag rope under tension; a parted rope whips across the bench.",
+    "The trailing cable carries 6.6-11 kV. Only authorised electrical staff handle it, and vehicles cross it only on a cable bridge.",
+    "Bench stability under the tub is critical: watch for cracks at the highwall crest the dragline sits behind."
+  ],
+  "ar_tips": [
+    "Use an open ground at least 120 m long. Stand at the tub and look out along the boom to the bucket.",
+    "Walk out to the bucket: the 1.8 m figure is beside the tub, and the bucket alone is larger than a room.",
+    "If you have no space, view it at reduced scale on a table first -- then go outside."
+  ],
+  "model": "models/dragline.glb",
+  "extents_m": {
+    "width_x": 33.0,
+    "height_y": 58.84,
+    "length_z": 112.91
+  },
+  "triangles": 4356,
+  "bytes": 380684,
+  "parts": [
+    {
+      "node": "tub",
+      "label": "Tub (base)",
+      "note": "A circular base about 19 m across that the whole machine sits on while digging. Its huge area keeps ground pressure low, around 2 kg/cm2 for a machine of over 2000 t. The bench it sits on must be level and well drained.",
+      "position": [
+        -9.8,
+        1.2,
+        -2.0
+      ],
+      "normal": [
+        -1,
+        0.2,
+        -0.2
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 128
+    },
+    {
+      "node": "walking_shoes",
+      "label": "Walking shoes",
+      "note": "To move, eccentric cams lift the machine onto these shoes, shuffle it back about 2 m, and set the tub down -- walking, not driving. Top speed is a few hundred metres an hour, and a move to a new pit can take weeks.",
+      "position": [
+        -14.0,
+        1.6,
+        -11.5
+      ],
+      "normal": [
+        -0.4,
+        0.6,
+        -1
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 24
+    },
+    {
+      "node": "house",
+      "label": "Machinery house",
+      "note": "Holds the hoist, drag, swing and walk motors and the motor-generator sets or drives -- several megawatts in all, fed at 6.6-11 kV by a trailing cable. The whole house swings on a roller circle on top of the tub.",
+      "position": [
+        10.3,
+        8.0,
+        4.0
+      ],
+      "normal": [
+        1,
+        0.2,
+        0
+      ],
+      "pivot": [
+        0.0,
+        2.2,
+        0.0
+      ],
+      "parent": null,
+      "triangles": 24
+    },
+    {
+      "node": "walking_cams",
+      "label": "Walking cams & legs",
+      "note": "Each side has an eccentric cam driving a leg down to its shoe. Walking turns the whole 2000 t machine into a very slow, very heavy pair of crutches.",
+      "position": [
+        11.6,
+        7.5,
+        0.0
+      ],
+      "normal": [
+        1,
+        0,
+        0
+      ],
+      "pivot": [
+        0.0,
+        2.2,
+        0.0
+      ],
+      "parent": "house",
+      "triangles": 208
+    },
+    {
+      "node": "counterweight",
+      "label": "Counterweight",
+      "note": "Hundreds of tonnes of ballast at the back of the house, to balance a 96 m boom and a loaded bucket of 40 t or more at its end.",
+      "position": [
+        0.0,
+        6.0,
+        17.6
+      ],
+      "normal": [
+        0,
+        0.2,
+        1
+      ],
+      "pivot": [
+        0.0,
+        2.2,
+        0.0
+      ],
+      "parent": "house",
+      "triangles": 12
+    },
+    {
+      "node": "operator_cab",
+      "label": "Operator's cab",
+      "note": "At the front left, looking down the boom. The operator judges the bucket nearly 90 m away; skilled draglining is about swinging and dumping on the move, in a cycle of about a minute.",
+      "position": [
+        -8.2,
+        13.8,
+        -12.2
+      ],
+      "normal": [
+        -0.5,
+        0.3,
+        -1
+      ],
+      "pivot": [
+        0.0,
+        2.2,
+        0.0
+      ],
+      "parent": "house",
+      "triangles": 12
+    },
+    {
+      "node": "cab_glass",
+      "label": "Cab glazing",
+      "note": "Front and floor windows, angled down towards the bucket.",
+      "position": [
+        -7.6,
+        13.8,
+        -11.9
+      ],
+      "normal": [
+        0,
+        0.2,
+        -1
+      ],
+      "pivot": [
+        0.0,
+        2.2,
+        0.0
+      ],
+      "parent": "house",
+      "triangles": 24
+    },
+    {
+      "node": "fairlead",
+      "label": "Fairlead",
+      "note": "Sheaves that guide the drag ropes in from any angle as the house swings. Drag ropes wear fastest here and at the bucket -- a parted drag rope whips with lethal force.",
+      "position": [
+        3.0,
+        3.6,
+        -14.3
+      ],
+      "normal": [
+        0.4,
+        0.2,
+        -1
+      ],
+      "pivot": [
+        0.0,
+        2.2,
+        0.0
+      ],
+      "parent": "house",
+      "triangles": 140
+    },
+    {
+      "node": "a_frame",
+      "label": "A-frame",
+      "note": "The fixed tower on the house roof that anchors the back stays of the mast.",
+      "position": [
+        3.0,
+        22.0,
+        6.0
+      ],
+      "normal": [
+        1,
+        0.3,
+        0
+      ],
+      "pivot": [
+        0.0,
+        2.2,
+        0.0
+      ],
+      "parent": "house",
+      "triangles": 160
+    },
+    {
+      "node": "mast",
+      "label": "Mast",
+      "note": "A tall strut leaning out over the boom. It gives the boom suspension ropes enough angle to hold a 96 m lattice boom with a loaded bucket.",
+      "position": [
+        1.5,
+        30.0,
+        -22.0
+      ],
+      "normal": [
+        1,
+        0.3,
+        -0.3
+      ],
+      "pivot": [
+        0.0,
+        2.2,
+        0.0
+      ],
+      "parent": "house",
+      "triangles": 128
+    },
+    {
+      "node": "boom",
+      "label": "Boom (96 m lattice)",
+      "note": "A tapered tubular lattice, as long as a football pitch, held up only by ropes. Its angle is fixed while digging. Booms are inspected for cracks constantly: a dropped boom is the costliest accident a mine can have.",
+      "position": [
+        3.59,
+        26.04378587535636,
+        -39.40808153917784
+      ],
+      "normal": [
+        1,
+        0.5,
+        0
+      ],
+      "pivot": [
+        0.0,
+        6.0,
+        -12.0
+      ],
+      "parent": "house",
+      "triangles": 2624
+    },
+    {
+      "node": "boom_point_sheaves",
+      "label": "Boom point sheaves",
+      "note": "The hoist ropes run over these at the very end of the boom, about 57 m above the ground.",
+      "position": [
+        0.0,
+        59.27224936638767,
+        -94.4126172310169
+      ],
+      "normal": [
+        0,
+        1,
+        -0.4
+      ],
+      "pivot": [
+        0.0,
+        6.0,
+        -12.0
+      ],
+      "parent": "boom",
+      "triangles": 72
+    },
+    {
+      "node": "suspension_ropes",
+      "label": "Suspension ropes & back stays",
+      "note": "Fixed-length wire-rope pendants from the mast head to the boom, with back stays to the A-frame. They carry the whole boom. Pendants are replaced on a schedule, not when they look worn.",
+      "position": [
+        0.6,
+        46.0,
+        -60.0
+      ],
+      "normal": [
+        1,
+        0.3,
+        0
+      ],
+      "pivot": [
+        0.0,
+        2.2,
+        0.0
+      ],
+      "parent": "house",
+      "triangles": 144
+    },
+    {
+      "node": "bucket",
+      "label": "Bucket (24 m3)",
+      "note": "About 40 t of rock per pass. It is filled by being dragged towards the machine along the bench face, then hoisted, swung and dumped -- all by ropes, with nothing rigid between bucket and machine.",
+      "position": [
+        2.3,
+        5.0,
+        -76.0
+      ],
+      "normal": [
+        1,
+        0.2,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 92
+    },
+    {
+      "node": "bucket_teeth",
+      "label": "Lip & teeth",
+      "note": "The teeth face the machine: the bucket digs as it is pulled in. Lost teeth end up in the coal and can wreck a crusher.",
+      "position": [
+        0.0,
+        3.1999999999999997,
+        -72.9
+      ],
+      "normal": [
+        0,
+        0.3,
+        1
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 72
+    },
+    {
+      "node": "rigging_chains",
+      "label": "Hoist & drag chains, spreader bar",
+      "note": "Hoist chains lift the bucket from its trunnions through a spreader bar; drag chains pull it from the front. The dump rope holds the front up until drag tension is released -- then the bucket tips and empties.",
+      "position": [
+        2.7,
+        8.1,
+        -76.4
+      ],
+      "normal": [
+        1,
+        0.2,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 156
+    },
+    {
+      "node": "hoist_drag_ropes",
+      "label": "Hoist, drag & dump ropes",
+      "note": "Hoist ropes run over the boom point; drag ropes come in through the fairlead. Ropes of 75-100 mm diameter are consumables here, changed every few months. Nobody stands within the swing radius or under the boom.",
+      "position": [
+        0.4,
+        30.0,
+        -86.0
+      ],
+      "normal": [
+        1,
+        0,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 120
+    },
+    {
+      "node": "scale_figure",
+      "label": "1.8 m person (for scale)",
+      "note": "A person in PPE, 1.8 m tall, standing clear of the machine. Use the scale toggle to hide them. In real AR at 1:1 you can simply walk up to the machine yourself.",
+      "position": [
+        -6.0,
+        2.05,
+        -14.5
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 216
+    }
+  ],
+  "thumbnail": "models/dragline.png"
+}

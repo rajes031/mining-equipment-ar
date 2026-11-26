@@ -1,0 +1,398 @@
+{
+  "id": "grader",
+  "name": "Motor grader",
+  "subtitle": "16 ft (4.9 m) moldboard mine grader -- CAT 16 / GD825 / BG605 family",
+  "category": "Support equipment",
+  "summary": "The haul-road machine. A good road lets a loaded truck run faster, use less fuel and keep its tyres; a bad one costs more than the grader does. Graders keep the surface smooth and crowned, cut the drains, clear spillage and dress the berms.",
+  "specs": [
+    [
+      "Moldboard",
+      "4.9 m (16 ft) x approx. 0.8 m"
+    ],
+    [
+      "Operating weight",
+      "approx. 27-32 t"
+    ],
+    [
+      "Engine",
+      "approx. 220-250 kW diesel"
+    ],
+    [
+      "Tyres",
+      "6 x 23.5R25, approx. 1.6 m diameter"
+    ],
+    [
+      "Overall length",
+      "approx. 11 m with rear ripper"
+    ],
+    [
+      "Width over tyres",
+      "approx. 3.1 m"
+    ],
+    [
+      "Height to cab roof",
+      "approx. 3.6 m"
+    ],
+    [
+      "Frame articulation",
+      "approx. +/- 25 degrees"
+    ],
+    [
+      "Top speed",
+      "approx. 45 km/h"
+    ],
+    [
+      "Typical road crossfall",
+      "2-3 % to shed water"
+    ]
+  ],
+  "safety": [
+    "Trucks cannot see a grader close in front or behind them. Work with the beacon on and in radio contact with every truck on the road.",
+    "Grade with the traffic, not against it, and never park in a blind corner or over a crest.",
+    "Never stand in the articulation zone -- the frames swing together when the machine steers.",
+    "Leave windrows out of the travelled lane; a windrow can steer a truck tyre or hide a rock."
+  ],
+  "ar_tips": [
+    "Walk to the front: the moldboard is angled so it sweeps material to one side -- you can see where the windrow would form.",
+    "Place it beside the 220 t dumper to see who must give way to whom on a haul road."
+  ],
+  "model": "models/grader.glb",
+  "extents_m": {
+    "width_x": 4.17,
+    "height_y": 3.78,
+    "length_z": 11.81
+  },
+  "triangles": 2296,
+  "bytes": 207704,
+  "parts": [
+    {
+      "node": "tyres",
+      "label": "Tyres (23.5R25)",
+      "note": "Six driven or steered tyres about 1.6 m tall. A grader rarely wears out tyres -- it saves them on the trucks. A 40.00R57 truck tyre costs many lakhs, and most are lost to cuts from rock spill the grader should have cleared.",
+      "position": [
+        -1.6,
+        0.8,
+        1.3
+      ],
+      "normal": [
+        -1,
+        0,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 960
+    },
+    {
+      "node": "wheel_rims",
+      "label": "Rims & hubs",
+      "note": "Front wheels lean up to about 18 degrees so the grader can hold a line against the sideways push of an angled blade.",
+      "position": [
+        1.5,
+        0.8,
+        -5.2
+      ],
+      "normal": [
+        1,
+        0,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 240
+    },
+    {
+      "node": "tandem_drive",
+      "label": "Tandem drive",
+      "note": "Each side's two rear wheels are chain-driven from a tandem case that oscillates, so all four keep traction over rough ground. That is what lets a grader hold a blade height to a few centimetres.",
+      "position": [
+        0.85,
+        0.85,
+        2.2
+      ],
+      "normal": [
+        1,
+        0.2,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 36
+    },
+    {
+      "node": "front_axle",
+      "label": "Front axle (steer & lean)",
+      "note": "Steering, wheel lean and oscillation all happen here. Combined with the articulation the grader can crab -- tandem offset from the front -- to keep its wheels off a freshly cut windrow.",
+      "position": [
+        0.0,
+        0.8,
+        -5.5
+      ],
+      "normal": [
+        0,
+        0.3,
+        -1
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 24
+    },
+    {
+      "node": "front_frame",
+      "label": "Front frame (gooseneck)",
+      "note": "The long beam from the cab to the front axle. Everything the blade does is hung from it, so its length is what makes a grader so good at smoothing: the blade averages out the bumps between the axles.",
+      "position": [
+        0.4,
+        1.9,
+        -3.8
+      ],
+      "normal": [
+        0.6,
+        1,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 48
+    },
+    {
+      "node": "articulation",
+      "label": "Articulation joint",
+      "note": "The frame bends here, up to about 25 degrees each way. It halves the turning circle and lets the operator offset the rear wheels. Keep clear: the gap between frames closes with great force when the machine steers.",
+      "position": [
+        0.45,
+        1.25,
+        -0.3
+      ],
+      "normal": [
+        1,
+        0.3,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 48
+    },
+    {
+      "node": "drawbar",
+      "label": "Drawbar",
+      "note": "A-frame pulled from a ball joint at the front of the frame. It carries the circle and the blade, and is what the lift cylinders raise, lower and swing sideways.",
+      "position": [
+        0.5,
+        1.0,
+        -3.6
+      ],
+      "normal": [
+        0.6,
+        1,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 64
+    },
+    {
+      "node": "circle",
+      "label": "Circle (turntable)",
+      "note": "A geared ring that rotates the blade to any angle, and even right round for back-grading. Blade angle decides whether material rolls off the end or is carried.",
+      "position": [
+        0.95,
+        0.75,
+        -2.2
+      ],
+      "normal": [
+        1,
+        0.6,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 192
+    },
+    {
+      "node": "moldboard",
+      "label": "Moldboard (4.9 m)",
+      "note": "Angled about 30-45 degrees, the blade cuts high spots and rolls material along its face to fill the low ones, leaving a windrow. A mine road should keep a 2-3 % crossfall to shed water -- standing water is what makes potholes.",
+      "position": [
+        -1.6,
+        0.6,
+        -1.0
+      ],
+      "normal": [
+        -0.3,
+        0.4,
+        -1
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 36
+    },
+    {
+      "node": "blade_edge",
+      "label": "Cutting edge & end bits",
+      "note": "Hardened, bolt-on and replaceable. A worn edge leaves a rounded, washboard surface no matter how good the operator is.",
+      "position": [
+        1.6,
+        0.05,
+        -3.5
+      ],
+      "normal": [
+        0.3,
+        0.2,
+        -1
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 12
+    },
+    {
+      "node": "lift_cylinders",
+      "label": "Blade lift cylinders",
+      "note": "Raise, lower and tilt the blade independently at each end -- that is how a crossfall is cut. Never reach between the drawbar and the frame while the engine is running.",
+      "position": [
+        0.85,
+        1.45,
+        -2.7
+      ],
+      "normal": [
+        1,
+        0.4,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 96
+    },
+    {
+      "node": "rear_frame",
+      "label": "Rear frame",
+      "note": "Carries the engine, transmission and tandems, and the cab just ahead of them.",
+      "position": [
+        0.5,
+        1.1,
+        4.6
+      ],
+      "normal": [
+        1,
+        0.2,
+        0.4
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 36
+    },
+    {
+      "node": "engine_hood",
+      "label": "Engine compartment",
+      "note": "Diesel of about 220-250 kW and a powershift transmission. Graders work in a low gear at walking pace when cutting, and travel at up to about 45 km/h between jobs.",
+      "position": [
+        0.8,
+        2.0,
+        3.4
+      ],
+      "normal": [
+        1,
+        0.4,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 24
+    },
+    {
+      "node": "exhaust",
+      "label": "Exhaust stack",
+      "note": "Exhaust and intake are kept high and to the rear, away from the operator's view forward.",
+      "position": [
+        0.4,
+        3.1,
+        2.6
+      ],
+      "normal": [
+        0.3,
+        1,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 32
+    },
+    {
+      "node": "cab",
+      "label": "Cab with ROPS",
+      "note": "High, glassy cab ahead of the rear wheels so the operator can see both blade ends and the front tyres. Graders share the haul road with 220 t trucks whose drivers cannot see them: flashing beacon, buggy whip and radio contact, always.",
+      "position": [
+        -1.0,
+        2.8,
+        0.4
+      ],
+      "normal": [
+        -1,
+        0.3,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 112
+    },
+    {
+      "node": "cab_glass",
+      "label": "Cab glazing",
+      "note": "Glass down to the floor at the front, so the operator can see the blade toe and heel without leaning out.",
+      "position": [
+        0.0,
+        2.4,
+        -0.45
+      ],
+      "normal": [
+        0,
+        0.2,
+        -1
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 48
+    },
+    {
+      "node": "rear_ripper",
+      "label": "Rear ripper",
+      "note": "Breaks up a hard, compacted road surface or windrowed rock before the blade can cut it.",
+      "position": [
+        0.9,
+        0.7,
+        5.6
+      ],
+      "normal": [
+        1,
+        0.2,
+        0.5
+      ],
+      "pivot": [
+        0.0,
+        1.15,
+        5.0
+      ],
+      "parent": null,
+      "triangles": 72
+    },
+    {
+      "node": "scale_figure",
+      "label": "1.8 m person (for scale)",
+      "note": "A person in PPE, 1.8 m tall, standing clear of the machine. Use the scale toggle to hide them. In real AR at 1:1 you can simply walk up to the machine yourself.",
+      "position": [
+        -2.8,
+        2.05,
+        -6.4
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 216
+    }
+  ],
+  "thumbnail": "models/grader.png"
+}

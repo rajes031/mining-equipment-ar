@@ -1,0 +1,378 @@
+{
+  "id": "surface-miner",
+  "name": "Surface miner",
+  "subtitle": "2.5 m cutting width, approx. 100 t -- Wirtgen 2500 SM / L&T KSM class",
+  "category": "Continuous mining",
+  "summary": "Cuts coal or limestone directly from the bench in thin layers with a rotating drum, and loads it straight into trucks. No drilling, no blasting, no primary crushing -- which means no fly-rock or ground vibration near villages, and a clean, selective cut of thin seams and partings.",
+  "specs": [
+    [
+      "Cutting width",
+      "2.5 m"
+    ],
+    [
+      "Cutting depth",
+      "up to approx. 0.65 m per pass"
+    ],
+    [
+      "Cutting drum diameter",
+      "approx. 1.3 m with picks"
+    ],
+    [
+      "Operating weight",
+      "approx. 95-100 t"
+    ],
+    [
+      "Engine",
+      "approx. 750 kW diesel"
+    ],
+    [
+      "Discharge conveyor",
+      "approx. 11 m, slews +/- 60 degrees"
+    ],
+    [
+      "Discharge height",
+      "approx. 5-5.5 m"
+    ],
+    [
+      "Rock strength",
+      "economic up to roughly 50-60 MPa UCS"
+    ],
+    [
+      "Output",
+      "approx. 1000-2500 t/h, set by rock strength"
+    ],
+    [
+      "Product size",
+      "typically under 100-150 mm"
+    ],
+    [
+      "Overall length",
+      "approx. 20 m with conveyor"
+    ]
+  ],
+  "safety": [
+    "Nobody near the drum while it turns. Pick changes only with the drum isolated, locked out and the engine stopped.",
+    "Dust sprays must be working before cutting starts -- respirable silica and coal dust are the long-term killers.",
+    "Trucks load alongside on the operator's signal; never position a truck where the conveyor swings over its cab.",
+    "Mark out the cutting lane: the machine moves slowly but cannot stop a drum instantly."
+  ],
+  "ar_tips": [
+    "Walk round to the side and look under the frame: the drum is in the middle of the machine, between the front and rear crawlers.",
+    "Stand at the conveyor's head: that is where a truck body has to be, about 11 m ahead of the machine."
+  ],
+  "model": "models/surface-miner.glb",
+  "extents_m": {
+    "width_x": 3.7,
+    "height_y": 5.85,
+    "length_z": 20.52
+  },
+  "triangles": 1888,
+  "bytes": 172044,
+  "parts": [
+    {
+      "node": "crawler_units",
+      "label": "Four crawler units",
+      "note": "Four independently steered crawlers. The machine creeps forward at only a few metres a minute while cutting -- advance rate, not engine power, is what an operator tunes to the rock.",
+      "position": [
+        -1.9500000000000002,
+        0.6,
+        -3.4
+      ],
+      "normal": [
+        -1,
+        0.2,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 112
+    },
+    {
+      "node": "height_columns",
+      "label": "Height-adjustable columns",
+      "note": "Hydraulic legs between each crawler and the chassis. Raising or lowering them sets cutting depth and slope, controlled by sensors or GPS, which is how a surface miner cuts a seam floor flat to a few centimetres -- selective mining with very little dilution.",
+      "position": [
+        1.9500000000000002,
+        1.3,
+        3.4
+      ],
+      "normal": [
+        1,
+        0.2,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 192
+    },
+    {
+      "node": "chassis",
+      "label": "Machine frame",
+      "note": "A stiff box frame: the drum's reaction to cutting rock is taken by the full machine weight of about 100 t pressing down on it.",
+      "position": [
+        1.75,
+        2.2,
+        -2.0
+      ],
+      "normal": [
+        1,
+        0.2,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 12
+    },
+    {
+      "node": "drum_housing",
+      "label": "Drum housing",
+      "note": "Encloses the drum on top and sides, with a hydraulic scraper behind it that leaves a clean, level floor. The housing contains the cut material so the drum can load it.",
+      "position": [
+        1.55,
+        1.2,
+        0.5
+      ],
+      "normal": [
+        1,
+        0,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 48
+    },
+    {
+      "node": "cutting_drum",
+      "label": "Cutting drum (2.5 m wide)",
+      "note": "Rotates against the direction of travel (up-cut), lifting the cut material. Spiral rows of picks steer it to the centre. Cutting depth up to about 0.65 m; product size is set by the depth of cut and advance speed, typically under about 100-150 mm, so it can skip the primary crusher.",
+      "position": [
+        0.4,
+        0.4,
+        -0.26
+      ],
+      "normal": [
+        0,
+        0,
+        -1
+      ],
+      "pivot": [
+        0.0,
+        0.72,
+        0.5
+      ],
+      "parent": null,
+      "triangles": 72
+    },
+    {
+      "node": "picks",
+      "label": "Picks (cutting tools)",
+      "note": "Tungsten-carbide-tipped conical picks in rotating holders, about 100-150 on a drum. They wear fast in abrasive rock and are changed every shift; worn picks raise dust and fuel use. Isolate the drum before anyone goes near it.",
+      "position": [
+        -0.9,
+        1.38,
+        0.5
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "pivot": [
+        0.0,
+        0.72,
+        0.5
+      ],
+      "parent": "cutting_drum",
+      "triangles": 576
+    },
+    {
+      "node": "primary_conveyor",
+      "label": "Primary (loading) conveyor",
+      "note": "Takes the cut material from the drum and carries it forward and up through the machine to the discharge conveyor.",
+      "position": [
+        0.6,
+        1.4,
+        -2.6
+      ],
+      "normal": [
+        1,
+        0.4,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 12
+    },
+    {
+      "node": "discharge_conveyor",
+      "label": "Discharge conveyor",
+      "note": "Slews about +/- 60 degrees and luffs up and down, so the machine can load a truck driving alongside or behind it, or windrow the material on the floor for a loader. Discharge height about 5-5.5 m -- check it clears the truck body.",
+      "position": [
+        0.9,
+        4.2,
+        -10.0
+      ],
+      "normal": [
+        1,
+        0.3,
+        0
+      ],
+      "pivot": [
+        0.0,
+        2.35,
+        -4.8
+      ],
+      "parent": null,
+      "triangles": 84
+    },
+    {
+      "node": "conveyor_belt",
+      "label": "Belt & head pulley",
+      "note": "Never ride, cross or clear a running belt. Spillage is cleaned only with the conveyor isolated and locked out.",
+      "position": [
+        0.0,
+        5.866088751950104,
+        -15.319352315593388
+      ],
+      "normal": [
+        0,
+        1,
+        -0.3
+      ],
+      "pivot": [
+        0.0,
+        2.35,
+        -4.8
+      ],
+      "parent": "discharge_conveyor",
+      "triangles": 72
+    },
+    {
+      "node": "slew_cylinders",
+      "label": "Luff & slew cylinders",
+      "note": "Hold the conveyor's angle and swing. A conveyor swinging over a truck cab is the hazard to watch -- trucks are loaded from the side, never under the boom over the cab.",
+      "position": [
+        0.5,
+        2.9,
+        -6.0
+      ],
+      "normal": [
+        1,
+        0.5,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 64
+    },
+    {
+      "node": "engine_pack",
+      "label": "Engine & drum drive",
+      "note": "Diesel of about 750 kW. Most of it goes to the drum through a mechanical drive and clutch; the rest drives the crawlers, conveyors and water pumps hydraulically.",
+      "position": [
+        1.4,
+        3.6,
+        3.2
+      ],
+      "normal": [
+        1,
+        0.5,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 24
+    },
+    {
+      "node": "water_system",
+      "label": "Water tank & dust sprays",
+      "note": "Water is sprayed at the drum to cool the picks and keep down respirable dust -- the main health hazard of the machine. Blocked nozzles mean silica or coal dust in the operator's and helper's lungs.",
+      "position": [
+        1.65,
+        3.2,
+        -3.2
+      ],
+      "normal": [
+        1,
+        0.3,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 44
+    },
+    {
+      "node": "operator_cab",
+      "label": "Operator's cabin",
+      "note": "Sound-insulated, pressurised and filtered. From here the operator watches the cutting edge, the truck being loaded and the conveyor discharge.",
+      "position": [
+        -1.6,
+        3.6,
+        0.4
+      ],
+      "normal": [
+        -1,
+        0.3,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 72
+    },
+    {
+      "node": "cab_glass",
+      "label": "Cab glazing",
+      "note": "All-round glass: the work is ahead (cut), alongside (truck) and above (conveyor).",
+      "position": [
+        -0.6,
+        3.6,
+        -0.52
+      ],
+      "normal": [
+        0,
+        0.2,
+        -1
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 48
+    },
+    {
+      "node": "walkways_rails",
+      "label": "Walkways & handrails",
+      "note": "Access ladders at the side. Board only when the drum is stopped and the operator has acknowledged you.",
+      "position": [
+        1.75,
+        3.4,
+        1.0
+      ],
+      "normal": [
+        1,
+        0.3,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 240
+    },
+    {
+      "node": "scale_figure",
+      "label": "1.8 m person (for scale)",
+      "note": "A person in PPE, 1.8 m tall, standing clear of the machine. Use the scale toggle to hide them. In real AR at 1:1 you can simply walk up to the machine yourself.",
+      "position": [
+        -3.2,
+        2.05,
+        -2.4
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "pivot": null,
+      "parent": null,
+      "triangles": 216
+    }
+  ],
+  "thumbnail": "models/surface-miner.png"
+}

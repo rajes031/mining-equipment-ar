@@ -50,6 +50,22 @@
       "parts": 16
     },
     {
+      "id": "rope-shovel",
+      "name": "Electric rope shovel",
+      "subtitle": "approx. 40 m3 dipper, approx. 1000 t -- P&H 2800 / Cat 7395 class",
+      "category": "Loading",
+      "thumbnail": "models/rope-shovel.png",
+      "model": "models/rope-shovel.glb",
+      "extents_m": {
+        "width_x": 10.5,
+        "height_y": 19.18,
+        "length_z": 38.74
+      },
+      "bytes": 191824,
+      "triangles": 2096,
+      "parts": 19
+    },
+    {
       "id": "loading-cycle",
       "name": "Shovel–dumper loading cycle",
       "subtitle": "Animated — truck spots, four passes, truck away",
@@ -64,6 +80,70 @@
       "bytes": 410704,
       "triangles": 4452,
       "parts": 38
+    },
+    {
+      "id": "dragline",
+      "name": "Walking dragline",
+      "subtitle": "24 m3 bucket on a 96 m boom -- the 24/96 class, approx. 2000+ t",
+      "category": "Overburden removal",
+      "thumbnail": "models/dragline.png",
+      "model": "models/dragline.glb",
+      "extents_m": {
+        "width_x": 33.0,
+        "height_y": 58.84,
+        "length_z": 112.91
+      },
+      "bytes": 380684,
+      "triangles": 4356,
+      "parts": 18
+    },
+    {
+      "id": "surface-miner",
+      "name": "Surface miner",
+      "subtitle": "2.5 m cutting width, approx. 100 t -- Wirtgen 2500 SM / L&T KSM class",
+      "category": "Continuous mining",
+      "thumbnail": "models/surface-miner.png",
+      "model": "models/surface-miner.glb",
+      "extents_m": {
+        "width_x": 3.7,
+        "height_y": 5.85,
+        "length_z": 20.52
+      },
+      "bytes": 172044,
+      "triangles": 1888,
+      "parts": 16
+    },
+    {
+      "id": "dozer",
+      "name": "Crawler dozer",
+      "subtitle": "65-70 t class, semi-U blade and ripper -- D375A / D10 / BD355 family",
+      "category": "Support equipment",
+      "thumbnail": "models/dozer.png",
+      "model": "models/dozer.glb",
+      "extents_m": {
+        "width_x": 5.17,
+        "height_y": 3.98,
+        "length_z": 8.36
+      },
+      "bytes": 181468,
+      "triangles": 1980,
+      "parts": 18
+    },
+    {
+      "id": "grader",
+      "name": "Motor grader",
+      "subtitle": "16 ft (4.9 m) moldboard mine grader -- CAT 16 / GD825 / BG605 family",
+      "category": "Support equipment",
+      "thumbnail": "models/grader.png",
+      "model": "models/grader.glb",
+      "extents_m": {
+        "width_x": 4.17,
+        "height_y": 3.78,
+        "length_z": 11.81
+      },
+      "bytes": 207704,
+      "triangles": 2296,
+      "parts": 18
     },
     {
       "id": "drill-rig",

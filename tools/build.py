@@ -24,11 +24,16 @@ import json
 from pathlib import Path
 
 import make_blast_pattern
+import make_dozer
+import make_dragline
 import make_dumper
 import make_gallery
+import make_grader
 import make_loading_cycle
 import make_roof_support
+import make_rope_shovel
 import make_shovel
+import make_surface_miner
 import render_preview
 
 HERE = Path(__file__).resolve().parent
@@ -37,6 +42,11 @@ WEB = HERE.parent / "web"
 GENERATORS = [
     make_dumper,
     make_shovel,
+    make_rope_shovel,
+    make_dragline,
+    make_surface_miner,
+    make_dozer,
+    make_grader,
     make_roof_support,
     make_blast_pattern,
     make_gallery,
@@ -46,14 +56,20 @@ GENERATORS = [
 # Built by tools/make_dumper_glb.py and tools/make_drill_glb.py under Blender.
 CONVERTED = ["dumper-detailed", "drill-rig"]
 
-# Catalogue order: haulage and loading first, then the drilling and blasting
-# pair, then underground. It follows the opencast cycle rather than the order
-# the files happen to be built in.
+# Catalogue order: haulage and loading first, then overburden and continuous
+# mining, the support fleet, the drilling and blasting pair, then
+# underground. It follows the opencast cycle rather than the order the files
+# happen to be built in.
 ORDER = [
     "dumper-detailed",
     "dumper",
     "shovel",
+    "rope-shovel",
     "loading-cycle",
+    "dragline",
+    "surface-miner",
+    "dozer",
+    "grader",
     "drill-rig",
     "blast-pattern",
     "roof-support",

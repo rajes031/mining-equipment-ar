@@ -1,9 +1,9 @@
 # Mining Equipment AR
 
 Life-size augmented-reality models of opencast mining equipment for Android
-phones and tablets. Two machines so far — a 220 t rear-dump truck and a 140 t
-hydraulic front shovel — placed on the floor at 1:1, with every major component
-tappable and explained.
+phones and tablets — rear-dump truck, hydraulic and electric rope shovels,
+walking dragline, surface miner, crawler dozer, motor grader and drill rig —
+placed on the floor at 1:1, with every major component tappable and explained.
 
 ![The dumper, with a 1.8 m person for scale](web/models/dumper-rear.png)
 
@@ -58,6 +58,9 @@ mining-ar/
 │   ├── glbgen.py        glTF 2.0 / GLB writer -- boxes, cylinders, prisms
 │   ├── make_dumper.py   the rear-dump truck, to the published envelope
 │   ├── make_shovel.py   the hydraulic front shovel, posed mid-dig
+│   ├── make_rope_shovel.py, make_dragline.py, make_surface_miner.py,
+│   │   make_dozer.py, make_grader.py   the rest of the opencast fleet
+│   ├── machkit.py       shared palette, 3-D links, crawlers and tyres
 │   ├── figure.py        1.8 m person, for scale
 │   ├── render_preview.py offline renderer -- sanity checks and thumbnails
 │   ├── make_markers.py  vendors AR.js and builds printable markers
@@ -68,6 +71,7 @@ mining-ar/
 │   ├── print-markers.html  printable tracking markers
 │   └── vendor/          A-Frame + AR.js, vendored for offline use
 ├── unity/Scripts/       drop-in AR Foundation scripts for the native app
+├── unity-vr/            Unity VR project for the Quest -- see docs/08
 └── docs/                adding machines, optimisation, Unity, deployment
 ```
 
@@ -90,11 +94,18 @@ primitives, which means:
 
 Current envelopes, checked against published figures for each class:
 
-| | Dumper | Shovel |
-|---|---|---|
-| Overall L × W × H | 13.2 × 7.67 × 6.53 m | 15.1 × 5.13 × 8.19 m |
-| Triangles / size | 2 620 / 231 KB | 2 016 / 179 KB |
-| Named parts | 20 | 16 |
+| Machine | Overall L × W × H | Triangles / size | Named parts |
+|---|---|---|---|
+| Dumper (220 t) | 13.2 × 7.67 × 6.53 m | 2 620 / 231 KB | 20 |
+| Hydraulic shovel (140 t) | 15.1 × 5.13 × 8.19 m | 2 016 / 179 KB | 16 |
+| Electric rope shovel (~40 m³) | 38.7 × 10.5 × 19.2 m | 2 096 / 187 KB | 19 |
+| Walking dragline (24/96) | 112.9 × 33.0 × 58.8 m | 4 356 / 372 KB | 18 |
+| Surface miner (2.5 m cut) | 20.5 × 3.7 × 5.85 m | 1 888 / 168 KB | 16 |
+| Crawler dozer (70 t) | 8.4 × 5.2 × 4.0 m | 1 980 / 177 KB | 18 |
+| Motor grader (16 ft) | 11.8 × 4.2 × 3.8 m | 2 296 / 203 KB | 18 |
+
+Lengths include booms, conveyors and, for the rope shovel, the trailing cable
+laid out behind it.
 
 ## In the viewer
 
@@ -109,9 +120,15 @@ Current envelopes, checked against published figures for each class:
 ## Roadmap
 
 1. ~~Web AR, two machines~~ — done, this folder.
-2. More machines — rope shovel, dragline, surface miner, drill. See
+2. ~~More machines~~ — rope shovel, dragline, surface miner, dozer and grader
+   added. Next candidates: wheel loader, water sprinkler, underground LHD. See
    [docs/01](docs/01-adding-machines.md).
-3. Native Unity app for animation, offline use and interaction logging. The
+3. ~~VR~~ — done, twice. [`web/vr.html`](web/vr.html) runs in the headset's
+   own browser with nothing to install ([docs/07](docs/07-vr-on-a-quest.md));
+   `unity-vr/` is the Unity build for when the picture matters -- real
+   shadows, a 601k-triangle drill rig and cap-lamp lighting underground
+   ([docs/08](docs/08-unity-vr.md)).
+4. Native Unity AR app for animation, offline use and interaction logging. The
    models are already rigged for it; see [docs/03](docs/03-unity-ar-foundation.md)
    and `unity/Scripts/`.
 

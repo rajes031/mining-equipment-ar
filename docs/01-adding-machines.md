@@ -24,15 +24,21 @@ The pattern is always:
 4. For anything that moves, set `pivot=` to the joint in world coordinates and
    `parent=` to the part it hangs from.
 
+Rope shovel, dragline, surface miner, dozer and grader are now in the
+catalogue (`make_rope_shovel.py` and friends). Shared helpers live in
+`tools/machkit.py`: `link`/`bar`/`tube` for members between any two 3-D points
+(the dragline's tapered lattice boom is built from them), `crawler_profile`,
+`tyre`, the standard palette, and `write_record`, which writes the GLB and its
+data file in one call. Add a new generator to `GENERATORS` and `ORDER` in
+`build.py` and to `MODELS` in `render_preview.py`.
+
 Good candidates to add next, roughly in order of teaching value:
 
 | Machine | Why it earns its place |
 |---|---|
-| Rope (electric) shovel | The other half of "shovel"; completely different machine from the hydraulic one, and students conflate them |
-| Dragline | Nothing conveys a 100 m boom like standing under one |
-| Surface miner | Increasingly common in Indian limestone and coal, rarely seen by students |
-| Drill (blasthole) | Pairs with blast-design teaching |
-| Dozer / grader | Haul-road maintenance, the thing that actually limits truck speed |
+| Wheel loader | The flexible loader at stockpiles and for clean-up; pairs with the dumper |
+| Water sprinkler / tanker | Haul-road dust control, a statutory requirement |
+| Bucket-wheel excavator | Continuous lignite mining (Neyveli) |
 | Underground LHD and SDL | Different scale lesson entirely — tight headroom |
 
 ### Shapes the generator can make

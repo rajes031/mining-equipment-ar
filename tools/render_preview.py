@@ -221,9 +221,38 @@ VIEWS = {
         "-front": dict(azimuth=-14.0, elevation=8.0),
         "-rear": dict(azimuth=160.0, elevation=16.0),
     },
+    # The machines added later lead with their working end -- blade, drum,
+    # dipper or bucket -- since that is what the thumbnail has to show. A
+    # side elevation is the clearest view of a boom or a long conveyor.
+    "dozer": {
+        "": dict(azimuth=145.0, elevation=16.0),
+        "-front": dict(azimuth=-90.0, elevation=5.0, distance_factor=1.4),
+        "-rear": dict(azimuth=35.0, elevation=18.0),
+    },
+    "grader": {
+        "": dict(azimuth=145.0, elevation=20.0),
+        "-front": dict(azimuth=-90.0, elevation=5.0, distance_factor=1.3),
+        "-rear": dict(azimuth=35.0, elevation=18.0),
+    },
+    "surface-miner": {
+        "": dict(azimuth=140.0, elevation=18.0, distance_factor=1.3),
+        "-front": dict(azimuth=-90.0, elevation=5.0, distance_factor=1.2),
+        "-rear": dict(azimuth=40.0, elevation=18.0, distance_factor=1.4),
+    },
+    "dragline": {
+        "": dict(azimuth=130.0, elevation=18.0),
+        "-front": dict(azimuth=-90.0, elevation=4.0, distance_factor=1.1),
+        "-rear": dict(azimuth=35.0, elevation=22.0),
+    },
+    "rope-shovel": {
+        "": dict(azimuth=140.0, elevation=16.0),
+        "-front": dict(azimuth=-90.0, elevation=4.0, distance_factor=1.2),
+        "-rear": dict(azimuth=35.0, elevation=18.0),
+    },
 }
 
-MODELS = ("dumper", "shovel", "loading-cycle", "roof-support",
+MODELS = ("dumper", "shovel", "rope-shovel", "dragline", "surface-miner",
+          "dozer", "grader", "loading-cycle", "roof-support",
           "blast-pattern", "gallery")
 
 
