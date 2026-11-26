@@ -5796,16 +5796,16 @@
       }
     ],
     "spawn": {
-      "name": "Coal face, west -- under the shovel",
+      "name": "Pit floor, south of the west sump",
       "pos": {
-        "x": -421.7839226828132,
+        "x": -290.28542771411526,
         "y": -80.0,
-        "z": 113.01666146329083
+        "z": 191.66212577562936
       },
       "heading": {
-        "x": 53.12592044589877,
+        "x": -53.12592044589877,
         "y": 0.0,
-        "z": -14.235047480638642
+        "z": 14.235047480638642
       }
     },
     "load_points": [
@@ -5870,6 +5870,5 @@
       "floor": 20,
       "surface": 40
     }
-  },
-  "thumbnail": "models/mine-layout.png"
+  }
 }

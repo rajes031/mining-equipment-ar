@@ -431,8 +431,11 @@ def drive_data():
         "note": ("Plan routes for a driven dumper. y is the terrain level at "
                  "each point; raycast down for the exact running surface."),
         "routes": [{"name": k, "points": pts3(v)} for k, v in r.items()],
-        "spawn": pose(COAL_FACE_W, (-face_dir[0], -face_dir[1]),
-                      "Coal face, west -- under the shovel"),
+        # The student starts empty on the open floor south of the west sump,
+        # facing the coal face -- not in the loading bay, which the
+        # automatic fleet uses.
+        "spawn": pose(local_pt(-330, -110), face_dir,
+                      "Pit floor, south of the west sump"),
         "load_points": [pose(COAL_FACE_W, face_dir, "Coal shovel, west face"),
                         pose(OB_BAY, (SPUR_TOE[0] - OB_BAY[0], SPUR_TOE[1] - OB_BAY[1]),
                              "Rope shovel, overburden spur")],
