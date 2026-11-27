@@ -75,8 +75,8 @@
     "height_y": 184.98,
     "length_z": 1752.0
   },
-  "triangles": 79482,
-  "bytes": 6835420,
+  "triangles": 79650,
+  "bytes": 6850380,
   "parts": [
     {
       "node": "original_ground",
@@ -548,8 +548,8 @@
     },
     {
       "node": "conveyor_to_silo",
-      "label": "Conveyor gallery",
-      "note": "An enclosed belt from the crusher to the top of the silo.",
+      "label": "Belt conveyor to the silo",
+      "note": "An inclined belt from the crusher to the top of the silo, carrying sized coal at about 3.5 m/s. Belt inclines are kept under about 16-18 degrees or the coal rolls back.",
       "position": [
         -1010.0,
         40.0,
@@ -562,7 +562,7 @@
       ],
       "pivot": null,
       "parent": null,
-      "triangles": 12
+      "triangles": 168
     },
     {
       "node": "loading_silo",

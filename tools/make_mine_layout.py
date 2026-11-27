@@ -354,10 +354,28 @@ def build() -> Builder:
     chp.box(center=M((-960, 430), 15), size=(60, 30, 50))
     chp.box(center=M((-922, 430), 5), size=(16, 10, 24))
     conv = b.part(
-        "conveyor_to_silo", "steel", label="Conveyor gallery",
-        note="An enclosed belt from the crusher to the top of the silo.",
+        "conveyor_to_silo", "steel", label="Belt conveyor to the silo",
+        note=("An inclined belt from the crusher to the top of the silo, "
+              "carrying sized coal at about 3.5 m/s. Belt inclines are kept "
+              "under about 16-18 degrees or the coal rolls back."),
         hotspot=M((-1010, 500), 40), hotspot_normal=(1, 1, 0))
-    bar(conv, M((-975, 455), 28), M((-1060, 545), 46), 4.0, 3.5)
+    # Open, so the coal on it can be seen: two stringers, the belt between
+    # them (its own node, for the VR app to run coal along), trestles.
+    a3 = np.array(M((-975, 455), 28)); b3 = np.array(M((-1060, 545), 46))
+    d = b3 - a3
+    side = np.array([-d[2], 0.0, d[0]]); side /= np.linalg.norm(side)
+    for k in (-1, 1):
+        bar(conv, tuple(a3 + side * 1.3 * k - [0, 0.3, 0]),
+            tuple(b3 + side * 1.3 * k - [0, 0.3, 0]), 0.35, 0.9)
+    belt = b.part("chp_conveyor_belt", "rubber")
+    bar(belt, tuple(a3), tuple(b3), 1.8, 0.12)
+    for f in (0.15, 0.4, 0.65, 0.9):
+        p3 = a3 + d * f
+        for k in (-1, 1):
+            foot = p3 + side * 1.3 * k
+            conv.box(center=(foot[0], (foot[1] - 0.8) / 2, foot[2]),
+                     size=(0.5, foot[1] - 0.8, 0.5))
+        conv.box(center=(p3[0], p3[1] - 0.9, p3[2]), size=(3.0, 0.3, 0.5))
     silo = b.part(
         "loading_silo", "concrete", label="Rapid loading silo",
         note=("Holds a train-load and loads each wagon to its weight in "
