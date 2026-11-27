@@ -90,7 +90,7 @@ def _beside(p, deg, inset, metres):
     return (p[0] + t[0] * metres, p[1] + t[1] * metres)
 
 
-COAL_FACE_W = _beside(COAL_SHOVEL_W, 180, 178, 15.0)   # truck stands here to load
+COAL_FACE_W = _beside(COAL_SHOVEL_W, 180, 178, 10.5)   # truck stands here to load
 SPUR_TOE = local_pt(40, -30)                      # rope shovel digs the spur
 OB_LOAD = local_pt(70, -15)                       # the parked display truck
 OB_BAY = local_pt(18, -30)                        # beside the rope shovel, in reach
